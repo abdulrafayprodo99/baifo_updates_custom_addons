@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_mrp_production_form_inherit_stock_move" model="ir.ui.view">
+        <field name="name">mrp.production.form.inherit.stock.move</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+        <xpath expr="//form[1]/sheet[1]/group[1]/group[1]/field[@name='product_id']" position="after">
+             <field name="current_user_id" invisible="1"/>
+        </xpath>
+
+
+        <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='components']/field[@name='move_raw_ids']/tree[1]/field[@name='product_id']" position="after">
+            <field name="product_id_2"/>
+        </xpath>  
+
+        <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='components']/field[@name='move_raw_ids']/tree[1]/field[@name='product_id']" position="attributes">
+            <attribute name="options">{'no_create' : True}</attribute>
+            <attribute name="attrs">{'column_invisible' : [('parent.current_user_id', 'in', [7,9])]}</attribute>
+        </xpath>  
+
+        <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='components']/field[@name='move_raw_ids']/tree[1]/field[@name='product_id_2']" position="attributes">
+            <attribute name="attrs">{'column_invisible' : [('parent.current_user_id', 'not in', [7, 9])]}</attribute>
+        </xpath>  
+        </field>
+    </record>
+    
+</odoo>

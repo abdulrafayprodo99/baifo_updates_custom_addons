@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="view_hr_payslip_tree_with_bank_letter_button" model="ir.ui.view">
+        <field name="name">hr.payslip.tree.bank.letter</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <header>
+                    <button
+                        name="%(bank_letter.action_bank_letter_wizard)d"
+                        string="Generate Bank Letter"
+                        type="action"
+                        class="btn-primary"
+                    />
+                </header>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- For Tree View -->
+    <record id="view_rqi_model_tree" model="ir.ui.view">
+        <field name="name">view.rqi.model.tree</field>
+        <field name="model">rqi.model</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="state_approval"/>
+                <field name="team_id" />
+            </tree>
+        </field>
+    </record>
+        
+    <!-- For Form View -->
+    <record id="view_rqi_model_form" model="ir.ui.view">
+        <field name="name">view.rqi.model.form</field>
+        <field name="model">rqi.model</field>
+        <field name="arch" type="xml">
+            <form>
+                
+                <header>
+                    <button name="action_prepared" string="Prepared"  attrs="{'invisible': [('state_approval', '!=', False)]}" type="object" class="oe_highlight"/>
+                    <button name="action_approve"  attrs="{'invisible': [('state_approval', '!=', 'prepare')]}" string="Approve" type="object" class="oe_highlight"/>
+                    <button name="action_reject"  attrs="{'invisible': [('state_approval', 'not in', ['prepare'])]}" string="Reject" type="object" class="oe_highlight"/>
+                    <button name="action_measure" string="Measure" type="object" class="oe_highlight" attrs="{'invisible': [('state_approval', '=', 'cancel')]}"/>
+                    <field name="state_approval" widget="statusbar" statusbar_visible="prepare,approve,cancel"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group name="rqi_model_details">
+                        <group name="rqi_model_section_1">
+                            <field name="product_id" />
+                            <field name="team_id" />
+                            <field name="date" />
+                            <field name="team_id" />
+
+                            <field name="doc_refrence" />
+                            <field name="doc_date" />
+                            <field name="sample" />
+                        </group>
+
+                        <group name="rqi_model_section_2">
+                            <field name="partner_id"/>
+                            <field name="lot_id"/>
+                            <field name="prepared_by"/>
+                            <field name="prepared_by_timestamp"/>
+                            <field name="approved_by"/>
+                            <field name="approved_by_timestamp"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Lines" name="line_details">
+                            <field name="line_id" mode="tree">
+                                <tree string="Lines" editable="bottom">
+                                    <field name="point_id"/>
+                                    <field name="quality_title"/>
+                                    <field name="standards"/>
+                                    <field name="result"/>
+                                    <field name="remarks"/>
+                                    <field name="state"/>
+                                    <field name="status_qir"/>
+                                    <field name="fail_type" attrs="{'invisible': [('status_qir', '!=', 'not_approve')]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                       
+                    
+                        <page string="Note" name="note">
+                            <group name="note">
+                                <field name="note"/>
+                                <field name="reject_note"/>                       
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- For Menu Items -->
+    <record id="rqi_model_action" model="ir.actions.act_window">
+        <field name="name">Quality Inspection Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">rqi.model</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                 Create Your First Record
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="rqi_model_root" name="Quality Inspection Report" parent="quality_control.menu_quality_root" action="rqi_model_action" />
+</odoo>

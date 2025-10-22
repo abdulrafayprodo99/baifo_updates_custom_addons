@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+     <menuitem id="discipline_menuitem" action="action_discipline_view"
+                  parent="maintenance.menu_maintenance_configuration"
+                  name="PM Work Instructions"
+                  sequence="1" />
+    
+    <record model="ir.ui.menu" id="maintenance.menu_maintenance_teams">
+            <field name="sequence">2</field>
+    </record>
+
+    <record model="ir.ui.menu" id="maintenance.menu_maintenance_cat">
+            <field name="sequence">3</field>
+    </record>
+    
+    <!-- <menuitem
+        id="menu_maintenance_teams"
+        name="Maintenance Teams"
+        parent="maintenance.menu_maintenance_configuration"
+        action="maintenance.maintenance_team_action_settings"
+        groups="maintenance.group_equipment_manager"
+        sequence="2"/> -->
+    
+    <!-- <menuitem
+        id="menu_maintenance_cat"
+        name="Equipment Categories"
+        parent="maintenance.menu_maintenance_configuration"
+        action="maintenance.hr_equipment_category_action"
+        sequence="3"/> -->
+
+    <menuitem 
+        id="fault_category_menu_item" 
+        name="Fault Category"
+        action="action_fault_category_view"
+        parent="maintenance.menu_maintenance_configuration"
+        sequence="4" />
+    <record model="ir.ui.menu" id="maintenance.menu_maintenance_stage_configuration">
+            <field name="sequence">5</field>
+    </record>
+    <!-- <menuitem
+        id="menu_maintenance_stage_configuration"
+        name="Maintenance Stages"
+        parent="maintenance.menu_maintenance_configuration"
+        action="maintenance.hr_equipment_stage_action"
+        groups="base.group_no_one"
+        sequence="5" /> -->
+
+    <menuitem id="maintenance_menu_config_activity_type"
+        action="maintenance.mail_activity_type_action_config_maintenance"
+        parent="maintenance.menu_maintenance_configuration"
+        sequence="6"
+        groups="base.group_no_one"/>
+
+    <menuitem id="maintenance_menu_functional_location"
+        name="Functional ID"
+        action="maintenance_modification.action_functional_location_view"
+        parent="maintenance.menu_maintenance_configuration"
+        sequence="7"
+        groups="base.group_no_one"/>
+
+</odoo>

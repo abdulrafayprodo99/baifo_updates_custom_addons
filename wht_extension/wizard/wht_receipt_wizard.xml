@@ -1,0 +1,113 @@
+<!-- views/wht_receipt_wizard_view.xml -->
+<odoo>
+    <record id="view_wht_receipt_wizard_form" model="ir.ui.view">
+        <field name="name">wht.receipt.wizard.form</field>
+        <field name="model">wht.receipt.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Update Tax Details">
+                <group>
+                    <field name="tax_date"/>
+                    <field name="due_date"/>
+                    <field name="challan_no"/>
+                    <field name="bank_name"/>
+                    <field name="branch"/>
+                    <field name="cheque_to_be_issued"/>
+                </group>
+                <footer>
+                    <button name="apply_values" string="Apply" type="object" class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+
+    <record id="action_wht_receipt_wizard" model="ir.actions.act_window">
+        <field name="name">Update WHT Details</field>
+        <field name="res_model">wht.receipt.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="view_wht_receipt_wizard_form"/>
+    </record>
+
+
+
+
+    <!-- Filter and group by -->
+
+    <record id="view_payment_wht_receipt_search" model="ir.ui.view">
+        <field name="name">payment.wht.line.tax.receipt.search</field>
+        <field name="model">payment.wht.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <!-- Standard fields -->
+                <field name="cprm_no"/>
+                <field name="challan_no"/>
+                <field name="cheque_no"/>
+                <field name="account_type" />
+                <field name="tax_id"/>
+                <field name="tax_group"/>
+
+    
+                <group expand="1" string="Group By">
+                    <filter name="group_by_account_type" string="Account Type"
+                            context="{'group_by': 'account_type'}"/>
+                    <filter name="group_by_tax" string="Tax"
+                            context="{'group_by': 'tax_id'}"/>
+                    <filter name="group_by_label" string="Description"
+                            context="{'group_by': 'tax_description'}"/>
+                    <filter name="group_by_vendor" string="Vendor"
+                            context="{'group_by': 'vendor'}"/>
+                            <filter name="group_by_tax_group" string="Tax Group"
+                            context="{'group_by': 'tax_group'}"/>
+                </group>
+    
+                <separator/>
+    
+                <filter name="has_cprm" string="With CPRM No" domain="[('cprm_no', '!=', False)]"/>
+                <filter name="no_cprm" string="Without CPRM No" domain="[('cprm_no', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+
+
+    <record id="view_payment_wht_line_tree_header_button" model="ir.ui.view">
+        <field name="name">payment.wht.line.tree.header.button</field>
+        <field name="model">payment.wht.line</field>
+        <field name="inherit_id" ref="wht_extension.view_payment_wht_line_tree_header"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/header/button[1]" position="after">
+                    <button name="%(wht_extension.action_wht_receipt_wizard)d"
+                        type="action"
+                        string="Assign"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('id', '=', False)]}" />
+                    
+                    <button name="generate_report"
+                        type="object"
+                        string="Export"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('id', '=', False)]}" />
+                
+
+            </xpath>
+        </field>
+    </record>
+<!-- 
+    <record id="view_tax_group_tree_inherit_create_true" model="ir.ui.view">
+        <field name="name">account.tax.group.tree.inherit.create.true</field>
+        <field name="model">account.tax.group</field>
+        <field name="inherit_id" ref="account.view_tax_group_tree"/>
+        <field name="arch" type="xml">
+            <tree position="attributes">
+                <attribute name="create">True</attribute>
+            </tree>
+        </field>
+    </record> -->
+    
+
+
+    
+    
+</odoo>

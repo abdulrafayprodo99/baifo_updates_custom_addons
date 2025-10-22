@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_mrp_production_form_view_inherited" model="ir.ui.view">
+        <field name="name">mrp.production.form.view.inherit</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='bom_id']" position="replace">
+                <field name="compute_bom_domain" invisible="1"/>
+                <field name="bom_id" context="{'default_product_tmpl_id': product_tmpl_id}" 
+            attrs="{'readonly': [('state', '!=', 'draft')]}" 
+            domain="[('id', 'in', compute_bom_domain)]" 
+            required="1"/>
+
+            </xpath>    
+        </field>
+    </record>
+</odoo>

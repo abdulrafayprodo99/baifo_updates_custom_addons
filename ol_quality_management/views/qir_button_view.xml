@@ -1,0 +1,31 @@
+<!-- views/quality_check_button_view.xml -->
+<odoo>
+    <data>
+        <!-- Inherit the form view for quality.check -->
+        <record id="view_quality_check_form_custom" model="ir.ui.view">
+            <field name="name">quality.check.form.view.custom</field>
+            <field name="model">quality.check</field>
+            <field name="inherit_id" ref="quality_control.quality_check_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="inside">
+                    <header>
+                        <!-- Add custom button to the header -->
+                        <button name="action_create_qir" 
+                                string="Create QIR" 
+                                type="object" 
+                                class="oe_highlight" />
+                    </header>
+                </xpath>
+            </field>
+        </record>
+
+        <menuitem 
+        id="prodo_x_biafo_ext.rqi_model_root"
+        name="Quality Inspection Report" 
+        parent="quality_control.menu_quality_root" 
+        action="prodo_x_biafo_ext.rqi_model_action"
+        active="False"/>
+
+
+    </data>
+</odoo>

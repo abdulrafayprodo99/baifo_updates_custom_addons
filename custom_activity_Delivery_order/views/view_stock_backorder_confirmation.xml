@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_backorder_confirmation_inherited" model="ir.ui.view">
+        <field name="name">stock_barcode_backorder_confirmation_inherited</field>
+        <field name="model">stock.backorder.confirmation</field>
+        <field name="inherit_id" ref="stock.view_backorder_confirmation"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='process_cancel_backorder']" position="replace">
+                <button name="process_cancel_backorder" string="No Backorder" type="object" class="btn-primary" invisible="1" data-hotkey="w"/>
+            </xpath>
+
+            <xpath expr="//button[@special='cancel']" position="replace">
+                <button string="Cancel" class="btn-secondary" special="cancel" invisible="1" data-hotkey="z" />
+            </xpath>
+            
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,383 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+	<template id="product_report" name="Product Ledger Report">
+		<t t-call="aged_receviable_report.external_layout_product_report">
+			<t t-call="web.html_container">
+				<div class="center-content text-center">
+					<h2 style="color:black">Biafo Industry Limited</h2>
+					<h3>Product Ledger</h3>
+					<h4> (From date: <t t-esc="from_date" />,To date: <t t-esc="to_date" />,From
+						Product: <t t-esc="from_product" />,To Product: <t t-esc="to_product" />) </h4>
+				</div>
+				<table class="table table-condensed  py-5">
+					<thead
+						style="font-family:sans-serif;border-top: 2px solid black; border-top-color: black;   padding: 5 15px !important; border-right-color: white; border-left-color: white; text-align: center; margin-top: 15px;">
+						<tr>
+							<!--<th
+							rowspan="6" class="text-end fw-bold" style="border-bottom: 2px solid
+							black; color: black;border-top: 2px solid red; color: black;"/>-->
+							<th rowspan="2" class="text-start fw-bold"
+								style="border-bottom: 2px solid black; color: black;">Date</th>
+							<th rowspan="2" class="text-start fw-bold"
+								style="border-bottom: 2px solid black; color: black;">Reference No.</th>
+							<th rowspan="2" class="text-start fw-bold"
+								style="border-bottom: 2px solid black; color: black;">Product Range</th>
+							<th rowspan="2" class="text-start fw-bold"
+								style="border-bottom: 2px solid black; color: black;">From</th>
+							<th rowspan="2" class="text-start fw-bold"
+								style="border-bottom: 2px solid black; color: black;">To</th>
+							<th colspan="3" class="text-center fw-bold"
+								style="border-bottom: 2px solid black; color: black;">In</th>
+							<th colspan="3" class="text-center fw-bold"
+								style="border-bottom: 2px solid black; color: black;">Out</th>
+							<th colspan="3" class="text-center fw-bold"
+								style="border-bottom: 2px solid black; color: black;">Closing</th>
+						</tr>
+						<tr class="text-center">
+							<th class=" fw-bold"
+								style="border-bottom: 2px solid black; color: black;">Rate</th>
+							<th class=" fw-bold"
+								style="border-bottom: 2px solid black; color: black;">Quantity</th>
+							<th class=" fw-bold"
+								style="border-bottom: 2px solid black; color: black;">Amount</th>
+							<th class=" fw-bold"
+								style="border-bottom: 2px solid black; color: black;">Rate</th>
+							<th class=" fw-bold"
+								style="border-bottom: 2px solid black; color: black;">Quantity</th>
+							<th class=" fw-bold"
+								style="border-bottom: 2px solid black; color: black;">Amount</th>
+							<th class=" fw-bold"
+								style="border-bottom: 2px solid black; color: black;">Rate</th>
+							<th class=" fw-bold"
+								style="border-bottom: 2px solid black; color: black;">Quantity</th>
+							<th class=" fw-bold"
+								style="border-bottom: 2px solid black; color: black;">Amount</th>
+						</tr>
+					</thead>
+					<tbody style="border-color: white;">
+						<t t-foreach="grouped_data.items()" t-as="product">
+							<!-- Opening balance row -->
+							<tr>
+								<td colspan="2" class="text-start"
+									style="font-weight: bold; font-family: sans-serif">
+									<t t-esc="product[1]['opening'][0]" />
+									<!-- product[1][opening][0] -->
+								</td>
+								<td colspan="5" class="text-start"
+									style="font-weight: bold; font-family: sans-serif">
+									<t t-esc="product[1]['opening'][1]" />
+								</td>
+								<td colspan="4" class="text-end"
+									style="font-weight: bold; font-family: sans-serif">
+									Opening:
+								</td>
+								<td colspan="1" class="text-start">
+									<t t-esc="product[1]['opening'][2]" />
+								</td>
+							</tr>
+							<!-- Product Ledger data -->
+							<tr t-foreach="product[1]['moves']" t-as="data">
+								<td>
+									<t t-esc="data['date']" />
+								</td>
+								<td>
+									<t t-esc="data['reference']" />
+								</td>
+								<td>
+									<t t-esc="data['product_name']" />
+								</td>
+								<td>
+									<t t-esc="data['location_from']" />
+								</td>
+								<td>
+									<t t-esc="data['location_to']" />
+								</td>
+								<td class="text-center">
+									<t t-if="data['in_quantity'] &gt; 0">
+										<t t-esc="data['rate']" />
+									</t>
+									<t t-else="">
+										0
+									</t>
+								</td>
+								<td class="text-center">
+									<t t-if="data['in_quantity'] &gt; 0">
+										<t t-esc="data['in_quantity']" />
+									</t>
+									<t t-else="">
+										0
+									</t>
+								</td>
+								<td class="text-center">
+									<t t-if="data['in_quantity'] &gt; 0">
+										<t t-esc="data['amount_in']" />
+									</t>
+									<t t-else="">
+										0
+									</t>
+								</td>
+								<td class="text-center">
+									<t t-if="data['out_quantity'] &gt; 0">
+										<t t-esc="data['rate']" />
+									</t>
+									<t t-else="">
+										0
+									</t>
+								</td>
+								<td class="text-center">
+									<t t-if="data['out_quantity'] &gt; 0">
+										<t t-esc="data['out_quantity']" />
+									</t>
+									<t t-else="">
+										0
+									</t>
+								</td>
+								<td class="text-center">
+									<t t-if="data['out_quantity'] &gt; 0">
+										<t t-esc="data['out_amount']" />
+									</t>
+									<t t-else="">
+										0
+									</t>
+								</td>
+								<td class="text-center">
+									<t t-esc="data['rate']" />
+								</td>
+								<td class="text-center">
+									<t t-esc="data['closing_amount']" />
+								</td>
+								<td class="text-center">
+									<t t-esc="data['amount']" />
+								</td>
+							</tr>
+							<tr class='my-3'>
+								<td
+									style="font-weight: bold; font-family: sans-serif"
+									class="text-end" colspan="5">Total :</td>
+								<!-- Total Rate -->
+								<td
+									style="border-top-color: black; border-bottom-color: black; padding-y: 4px font-weight: bold; font-family: sans-serif"
+									class="text-center" colspan="1">
+									<t t-if="data['in_quantity'] &gt; 0">
+										<t t-esc="product[1]['total_for_each']['total_rate']" />
+									</t>
+									<t t-else="">
+										0
+									</t>
+								</td>
+								<!-- Total In Quantity -->
+								<td
+									style="border-top-color: black; border-bottom-color: black; padding-y: 4px; font-weight: bold; font-family: sans-serif"
+									class="text-center" colspan="1">
+									<t t-if="data['in_quantity'] &gt; 0">
+										<t t-esc="product[1]['total_for_each']['total_in_quantity']" />
+									</t>
+									<t t-else="">
+										0
+									</t>
+								</td>
+								<!-- Total Amount In -->
+								<td
+									style="border-top-color: black; border-bottom-color: black; padding-y: 4px; font-weight: bold; font-family: sans-serif"
+									class="text-center" colspan="1">
+									<t t-if="data['in_quantity'] &gt; 0">
+										<t t-esc="product[1]['total_for_each']['total_amount_in']" />
+									</t>
+									<t t-else="">
+										0
+									</t>
+								</td>
+								<!-- Total Rate -->
+								<td
+									style="border-top-color: black; border-bottom-color: black; padding-y: 4px; font-weight: bold; font-family: sans-serif"
+									class="text-center" colspan="1">
+									<t t-if="data['out_quantity'] &gt; 0">
+										<t t-esc="product[1]['total_for_each']['total_rate']" />
+									</t>
+									<t t-else="">
+										0
+									</t>
+								</td>
+								<!-- Total Out Quantity -->
+								<td
+									style="border-top-color: black; border-bottom-color: black; padding-y: 4px; font-weight: bold; font-family: sans-serif"
+									class="text-center" colspan="1">
+									<t t-if="data['out_quantity'] &gt; 0">
+										<t
+											t-esc="product[1]['total_for_each']['total_out_quantity']" />
+									</t>
+									<t t-else="">
+										0
+									</t>
+								</td>
+								<!-- Total Out Amount -->
+								<td
+									style="border-top-color: black; border-bottom-color: black; padding-y: 4px; font-weight: bold; font-family: sans-serif"
+									class="text-center" colspan="1">
+									<t t-if="data['out_quantity'] &gt; 0">
+										<t t-esc="product[1]['total_for_each']['total_out_amount']" />
+									</t>
+									<t t-else="">
+										0
+									</t>
+								</td>
+								<!-- Total Rate -->
+								<td
+									style="border-top-color: black; border-bottom-color: black; padding-y: 4px; font-weight: bold; font-family: sans-serif"
+									class="text-center" colspan="1">
+									<!--<t
+                                    t-if="data['closing_amount'] &gt; 0">-->
+									<!--</t>-->
+									<!--<t
+                                    t-else="">-->
+									<!--    0-->
+									<!--</t>-->
+									<t t-esc="product[1]['total_for_each']['total_rate']" />
+								</td>
+								<!-- Total Closing Balance -->
+								<td style="border-top-color: black; border-bottom-color: black; padding-y: 4px;font-weight: bold; font-family: sans-serif"
+									class="text-center" colspan="1">
+									<!--<t
+                                    t-if="data['closing_amount'] &gt; 0">-->
+									<!--</t>-->
+									<!--<t
+                                    t-else="">-->
+									<!--    0-->
+									<!--</t>-->
+									<t t-esc="product[1]['total_for_each']['total_closing_balance']" />
+								</td>
+								<!-- Total Closing Balance Amount -->
+								<td
+									style="border-top-color: black; border-bottom-color: black; padding-y: 4px; font-weight: bold; font-family: sans-serif"
+									class="text-center" colspan="1">
+									<!--<t
+                                    t-if="data['closing_amount'] &gt; 0">-->
+									<!--</t>-->
+									<!--<t
+                                    t-else="">-->
+									<!--    0-->
+									<!--</t>-->
+									<t
+										t-esc="product[1]['total_for_each']['total_closing_balance_amount']" />
+								</td>
+							</tr>
+						</t>
+						<tr>
+							<td style="font-weight: bold; font-family: sans-serif" class="text-end"
+								colspan='5'>Grand Total :</td>
+							<td
+								style="border-top-color: black; border-bottom-color: black; padding-y: 4px; font-weight: bold; font-family: sans-serif"
+								class="text-center"></td>
+							<!-- <td style="font-weight: bold; font-family: sans-serif"
+							class="text-center" t-esc='grand_total_rate'></td> -->
+							<td
+								style="border-top-color: black; border-bottom-color: black; padding-y: 4px; font-weight: bold; font-family: sans-serif"
+								class="text-center"></td>
+							<!-- <td style="font-weight: bold; font-family: sans-serif"
+							class="text-center" t-esc='grand_total_in_qty'></td> -->
+							<td
+								style="border-top-color: black; border-bottom-color: black; padding-y: 4px;  font-weight: bold; font-family: sans-serif"
+								class="text-center" t-esc='grand_total_amount_in'></td>
+							<td
+								style="border-top-color: black; border-bottom-color: black; padding-y: 4px;  font-weight: bold; font-family: sans-serif"
+								class="text-center"></td>
+							<!-- <td style="font-weight: bold; font-family: sans-serif"
+							class="text-center" t-esc='grand_total_rate'></td> -->
+							<td
+								style="border-top-color: black; border-bottom-color: black; padding-y: 4px ; font-weight: bold; font-family: sans-serif"
+								class="text-center"></td>
+							<!-- <td style="font-weight: bold; font-family: sans-serif"
+							class="text-center" t-esc='grand_total_out_qty'></td> -->
+							<td
+								style="border-top-color: black; border-bottom-color: black; padding-y: 4px ; font-weight: bold; font-family: sans-serif"
+								class="text-center" t-esc='grand_total_amount_out'></td>
+							<td
+								style="border-top-color: black; border-bottom-color: black; padding-y: 4px;  font-weight: bold; font-family: sans-serif"
+								class="text-center"></td>
+							<!-- <td style="font-weight: bold; font-family: sans-serif"
+							class="text-center" t-esc='grand_total_rate'></td> -->
+							<td
+								style="border-top-color: black; border-bottom-color: black; padding-y: 4px;  font-weight: bold; font-family: sans-serif"
+								class="text-center"></td>
+							<!-- <td style="font-weight: bold; font-family: sans-serif"
+							class="text-center" t-esc='grand_total_closing_balance'></td> -->
+							<td
+								style="border-top-color: black; border-bottom-color: black; padding-y: 4px;; font-weight: bold; font-family: sans-serif"
+								class="text-center" t-esc='grand_total_closing_balance_amount'></td>
+						</tr>
+					</tbody>
+				</table>
+			</t>
+		</t>
+	</template>
+	<template id="external_layout_product_report">
+		<t t-if="not o" t-set="o" t-value="doc" />
+		<t t-if="not company">
+			<!-- Multicompany -->
+			<t t-if="company_id">
+				<t t-set="company" t-value="company_id" />
+			</t>
+			<t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+				<t t-set="company" t-value="o.company_id.sudo()" />
+			</t>
+			<t t-else="else">
+				<t t-set="company" t-value="res_company" />
+			</t>
+		</t>
+		<!-- <t t-if="company.external_report_layout_id"
+		t-call="{{company.external_report_layout_id.sudo().key}}"> -->
+		<!-- <t t-out="0"/></t> -->
+		<!-- <t t-else="else" t-call="web.external_layout_standard"> -->
+		<!-- <t t-out="0"/></t> -->
+		<div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
+			<!-- heading -->
+		</div>
+		<div
+			t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout {{  'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}"
+			t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});"
+			t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+			t-att-data-oe-lang="o and o.env.context.get('lang')">
+			<div class="pt-5">
+				<!-- This div ensures that the address is not croppezd by the header. -->
+				<t t-call="web.address_layout" />
+			</div>
+			<t t-out="0" />
+		</div>
+		<div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+			<div class="text-center" style="border-top: 1px solid black;">
+				<ul class="list-inline mb4">
+					<div t-field="company.report_footer" />
+				</ul>
+				<!-- Page Number -->
+				<div t-if="report_type == 'pdf'" class="text-muted"> Page: <span class="page" /> / <span
+						class="topage" />
+				</div>
+				<div t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted">
+					<span t-field="o.name" />
+				</div>
+			</div>
+		</div>
+	</template>
+	<record id="paperformatproduct" model="report.paperformat">
+		<field name="name"></field>
+		<field name="default" eval="True" />
+		<field name="format">A4</field>
+		<field name="orientation">Landscape</field>
+		<field name="margin_top">13.00</field>
+		<field name="margin_bottom">13.00</field>
+		<field name="margin_left">8</field>
+		<field name="margin_right">8</field>
+		<field name="header_spacing">12</field>
+		<field name="disable_shrinking" eval="False" />
+		<field name="header_line" eval="False" />
+		<field name="dpi">110</field>
+	</record>
+	<record id="product_ledger_action" model="ir.actions.report">
+		<field name="name">Product Ledger Report</field>
+		<field name="model">product.ledger.wizard</field>
+		<field name="report_type">qweb-pdf</field>
+		<field name="report_name">aged_receviable_report.product_report</field>
+		<field name="report_file">aged_receviable_report.product_report</field>
+		<field name="paperformat_id" ref="paperformatproduct" />
+	</record>
+</odoo>

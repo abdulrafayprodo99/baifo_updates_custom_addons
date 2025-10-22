@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_purchase_request_form_inherit_custom" model="ir.ui.view">
+        <field name="name">purchase.request.form.inherit.custom</field>
+        <field name="model">purchase.request</field>
+        <field name="inherit_id" ref="purchase_request.view_purchase_request_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+        <record id="view_purchase_request_form_inheritted" model="ir.ui.view">
+        <field name="name">purchase.request.form.inheritted</field>
+        <field name="model">purchase.request</field>
+        <field name="inherit_id" ref="purchase_request_modification.purchase_request_form_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='purchase_order_created']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+<!--            <record id="view_purchase_request_form_inheritted_custom" model="ir.ui.view">-->
+<!--        <field name="name">purchase.request.form.inheritted.custom</field>-->
+<!--        <field name="model">purchase.request</field>-->
+<!--        <field name="inherit_id" ref="studio_customization.odoo_studio_purchase_fa9a71e5-93da-4d91-a82f-cff78f2fd6f2"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <xpath expr="//field[@name='readonly_check']" position="attributes">-->
+<!--                <attribute name="invisible">1</attribute>-->
+<!--            </xpath>-->
+
+<!--        </field>-->
+<!--    </record>-->
+
+         <record id="view_purchase_request_custom" model="ir.ui.view">
+        <field name="name">purchase.request.custom</field>
+        <field name="model">purchase.request</field>
+        <field name="inherit_id" ref="prodo_x_biafo_ext.purchase_request_inherited_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form[1]/sheet[1]/notebook[1]/page[@name='Info']/group[1]/group[1]/field[@name='reject_note']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+<!--        <record id="view_purchase_request_custom_business_case" model="ir.ui.view">-->
+<!--        <field name="name">purchase.request.custom.business.case</field>-->
+<!--        <field name="model">purchase.request</field>-->
+<!--        <field name="inherit_id" ref="studio_customization.odoo_studio_purchase_fa9a71e5-93da-4d91-a82f-cff78f2fd6f2"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <xpath expr="/form[1]/sheet[1]/notebook[1]/page[@name='studio_page_g6XmC']/group[@name='studio_group_g6XmC']/group[@name='studio_group_g6XmC_left']/field[@name='x_studio_subject']" position="attributes">-->
+<!--            <attribute name="required">1</attribute>-->
+<!--            </xpath>-->
+<!--            <xpath expr="/form[1]/sheet[1]/notebook[1]/page[@name='studio_page_g6XmC']/group[@name='studio_group_g6XmC']/group[@name='studio_group_g6XmC_left']/field[@name='x_studio_requirement']" position="attributes">-->
+<!--            <attribute name="required">1</attribute>-->
+<!--            </xpath>-->
+<!--            <xpath expr="/form[1]/sheet[1]/notebook[1]/page[@name='studio_page_g6XmC']/group[@name='studio_group_g6XmC']/group[@name='studio_group_g6XmC_left']/field[@name='scope_of_workboq']" position="attributes">-->
+<!--            <attribute name="required">1</attribute>-->
+<!--            </xpath>-->
+
+
+<!--        </field>-->
+<!--        </record>-->
+<!-- Inherit the base purchase request form view to add draft_number and approval_state -->
+    <record id="view_purchase_request_form_draft_number" model="ir.ui.view">
+        <field name="name">purchase.request.form.draft.number</field>
+        <field name="model">purchase.request</field>
+        <field name="inherit_id" ref="purchase_request.view_purchase_request_form"/>
+        <field name="arch" type="xml">
+            <!-- Add the approval_state field explicitly before it's used in attrs -->
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="approval_state" invisible="1"/>
+            </xpath>
+            <!-- Replace the name field with draft_number and name fields -->
+            <xpath expr="//field[@name='name']" position="replace">
+                <field name="draft_number" attrs="{'invisible': [('approval_state', '!=', 'initiated')]}" readonly="1"/>
+                <field name="name" attrs="{'invisible': [('approval_state', '=', 'initiated')]}" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Define the sequence for draft_number -->
+    <record id="seq_purchase_request_draft" model="ir.sequence">
+        <field name="name">Purchase Request Draft</field>
+        <field name="code">purchase.request.draft</field>
+        <field name="prefix">Draft/</field>
+        <field name="padding">4</field>
+        <field name="number_next">1</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    
+    </odoo>

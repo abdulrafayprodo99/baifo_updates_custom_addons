@@ -1,0 +1,25 @@
+<odoo>
+<record id="hr_equipment_request_view_form_inherit_enhancement" model="ir.ui.view">
+    <field name="name">maintenance.request.form.enhancement</field>
+    <field name="model">maintenance.request</field>
+    <field name="inherit_id" ref="maintenance.hr_equipment_request_view_form"/>
+    <field name="arch" type="xml">
+        <!-- Adding a notebook after the sheet -->
+        <xpath expr="//sheet" position="inside">
+            <notebook>
+                <page string="Additional Details">
+                    <group string="Request Details" col="4">
+                        <field name="request_by" readonly="1"/>
+                    </group>
+                    <group string="Completion Details" col="4">
+                        <field name="job_completed_by" readonly="1"/>
+                    </group>
+                    <group string="Approval Details" col="4">
+                        <field name="approved_by" readonly="1"/>
+                    </group>
+                </page>
+            </notebook>
+        </xpath>
+    </field>
+</record>
+</odoo>

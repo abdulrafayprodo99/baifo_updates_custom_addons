@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="purchase_order_inherit_form_close_pr" model="ir.ui.view">
+            <field name="name">purchase.order.form.inherit</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <!-- <xpath expr="//field[@name='state']" position="attributes">
+                    <attribute name="statusbar_visible">draft,sent,compartive,comparative_done,closed,to_appro</attribute>
+                </xpath> -->
+                
+                <xpath expr="//button[@name='action_create_invoice']" position="after">
+                    <button name="action_close_pr" attrs="{'invisible': [('state', '!=', 'purchase')]}" string="Close PO" type="object" class="btn"/>
+                </xpath>
+<!-- 
+                <xpath expr="/form[1]/sheet[1]/group[1]/group[2]/field[1]" position="before">
+                    <field name="check_edit_nonedit" invisible="1"/>
+                </xpath> -->
+
+                <xpath expr="//field[@name='order_line']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('state', '=', 'close_po')]}</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='effective_date']" position="after">
+                    <field name="close_reason" readonly="1" attrs="{'invisible': [('state', '!=', 'close_po')]}"/>
+                    <field name="cancel_reason" readonly="1" attrs="{'invisible': [('state', '!=', 'cancel')]}"/>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

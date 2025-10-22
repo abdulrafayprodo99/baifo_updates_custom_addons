@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_account_asset_form_inherited" model="ir.ui.view">
+        <field name="name">account.asset.form.inherit.asset.history.inherited</field>
+        <field name="model">account.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_form"/>
+        <field name="arch" type="xml">
+
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Associated JE(s)">
+                    <group>
+
+                        <field name="journal_entry" />
+                    </group>
+                   
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+
+
+
+
+</odoo>

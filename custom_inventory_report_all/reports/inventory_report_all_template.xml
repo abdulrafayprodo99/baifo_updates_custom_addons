@@ -1,0 +1,199 @@
+<odoo>
+	<template id="report_inventory_all_template">
+		<t t-call="web.html_container">
+			<t t-call="web.basic_layout">
+				<style>
+					* {
+						  font-family: 'Times New Roman', Times, serif;
+					}
+					
+					h1, h2, h5 {
+					  font-family: 'Times New Roman', Times, serif;
+					}
+						
+					  table {
+						  width: 100%;
+						  border-collapse: collapse;
+						  margin-top: 20px;
+					  }
+					  
+					  th, td {
+						  <!--padding: 8px;-->
+						  text-align: center;
+					  }
+	
+	
+					  td, tr, tbody, th, thead {
+						  border: none;
+					  }
+					  
+					  th {
+						  border-top: 2px solid black; 
+						  font-size: 11px;
+					  }
+	
+					  <!--td:first-child {-->
+					  <!--	border: 1px solid black; /* top right bottom left */-->
+					  <!--	border-left: 2px solid black; /* Thick left border */-->
+					  <!--}-->
+					  <!--/* Last column with a custom right border */-->
+					  tbody td {
+						font-size: 10px;
+					  }
+					  tbody tr:last-child td {
+						  font-weight: bold;
+						  border-top: 2px solid black;
+						  border-bottom: 2px solid black;
+						  font-size: 11px;
+						  text-align: "right";
+					  }
+	
+					  <!--th[rowspan="2"] {-->
+					  <!--	border-top: 2px solid black; -->
+					  <!--	border-bottom: 2px solid black; -->
+					  <!--}-->
+	
+					  <!--th[colspan="3"] {-->
+						  <!--border: 2px solid black;-->
+					  <!--	border-left: 1px solid black;-->
+					  <!--	border-right: 1px solid black;-->
+					  <!--}-->
+				  </style>
+				<div class="header">
+					<h5 class="text-center" style="font-family: 'Times New Roman', Times, serif; font-size: 16px; font-weight: bold; margin: 0px">Biafo Industries Limited</h5>
+					<h5 class="text-center" style="font-family: 'Times New Roman', Times, serif; font-size: 16px; font-weight: bold;">Inventory List</h5>
+					<h5 class="text-center" style="font-family: 'Times New Roman', Times, serif; font-size: 11px;"> (<t t-if="from_date" t-esc="'From: '+from_date +', To: '+to_date+','"/>
+								<t t-if="from_product" t-esc="'From: '+from_product +', To: '+to_product + ','"/> Rupees,
+						Stock Items) </h5>
+					<div class="row w-100">
+						<div class="col-6">
+							<p style="font-family: 'Times New Roman', Times, serif; font-size: 11px;"> Date: &amp;nbsp; <t t-esc="(datetime.datetime.now() + datetime.timedelta(hours=5)).strftime('%d-%b-%Y')"/>
+							</p>
+						</div>
+						<div class="col-6">
+							<p style="font-family: 'Times New Roman', Times, serif; text-align: right; font-size: 11px;"> Time: &amp;nbsp; <t t-esc="(datetime.datetime.now() + datetime.timedelta(hours=5)).strftime('%I:%M %p')"/>
+							</p>
+						</div>
+					</div>
+				</div>
+				<div class="page">
+					<table class="table" style="width: 100%;">
+						<thead>
+							<tr>
+								<th rowspan="2" style="vertical-align: middle; width: 8%; text-align: left;">Product Code</th>
+								<th rowspan="2" style="vertical-align: middle; width: 15%; text-align: left;">Description</th>
+								<th rowspan="2" style="vertical-align: middle; width: 3%; text-align: left;">Units</th>
+								<th rowspan="2" style="width: 0.25%;"/>
+								<th colspan="3" class="text-center" style="width: 18%;">Opening</th>
+								<th rowspan="2" style="width: 0.25%;"/>
+								<th colspan="3" class="text-center" style="width: 18%;">In</th>
+								<th rowspan="2" style="width: 0.25%;"/>
+								<th colspan="3" class="text-center" style="width: 18%;">Out</th>
+								<th rowspan="2" style="width: 0.25%;"/>
+								<th colspan="3" class="text-center" style="width: 18%;">Closing</th>
+								<!-- <th rowspan="2" style="width: 0.25%;"/> -->
+							</tr>
+							<tr>
+								<th style="text-align: right;">Quantity</th>
+								<th style="text-align: right;">Rate</th>
+								<th style="text-align: right;">Amount</th>
+
+								<th style="text-align: right;">Quantity</th>
+								<th style="text-align: right;">Rate</th>
+								<th style="text-align: right;">Amount</th>
+
+								<th style="text-align: right;">Quantity</th>
+								<th style="text-align: right;">Rate</th>
+								<th style="text-align: right;">Amount</th>
+
+								<th style="text-align: right;">Quantity</th>
+								<th style="text-align: right;">Rate</th>
+								<th style="text-align: right;">Amount</th>
+							</tr>
+						</thead>
+						<tbody>
+							<t t-set="total1" t-value="0"/>
+							<t t-set="total2" t-value="0"/>
+							<t t-set="total3" t-value="0"/>
+							<t t-set="total4" t-value="0"/>
+			
+							<t t-foreach="data" t-as="product_id">
+								<t t-set="move" t-value="data[product_id]"/>
+			
+								<tr>
+									<td t-esc="move['code']" style="text-align: left;"/>
+									<td t-esc="move['product_name']" style="text-align: left;"/>
+									<td t-esc="move['unit']" style="text-align: left;"/>
+									<td/>
+									<td t-esc="'{:,.4f}'.format(move['opening_quantity'])" style="text-align: right;"/>
+									<t t-if="move['product_type'] == 'product'">
+										<td t-esc="'{:,.4f}'.format(move['opening_rate'])" style="text-align: right;"/>
+										<td t-esc="'{:,.4f}'.format(move['opening_amount'])" style="text-align: right;"/>
+									</t>
+									<t t-else="">
+										<td/><td/>
+									</t>
+									<td/>
+									<td t-esc="'{:,.4f}'.format(move['in_quantity'])" style="text-align: right;"/>
+									<t t-if="move['product_type'] == 'product'">
+										<td t-esc="'{:,.4f}'.format(move['in_rate'])" style="text-align: right;"/>
+										<td t-esc="'{:,.4f}'.format(move['in_amount'])" style="text-align: right;"/>
+									</t>
+									<t t-else="">
+										<td/><td/>
+									</t>
+									<td/>
+									<td t-esc="'{:,.4f}'.format(move['out_quantity'])" style="text-align: right;"/>
+									<t t-if="move['product_type'] == 'product'">
+										<td t-esc="'{:,.4f}'.format(move['out_rate'])" style="text-align: right;"/>
+										<td t-esc="'{:,.4f}'.format(abs(move['out_amount']))" style="text-align: right;"/>
+									</t>
+									<t t-else="">
+										<td/><td/>
+									</t>
+									<td/>
+									<td t-esc="'{:,.4f}'.format(move['closing_quantity'])" style="text-align: right;"/>
+									<t t-if="move['product_type'] == 'product'">
+										<td t-esc="'{:,.4f}'.format(move['closing_rate'])" style="text-align: right;"/>
+										<td t-esc="'{:,.4f}'.format(abs(move['closing_amount']))" style="text-align: right;"/>
+									</t>
+									<t t-else="">
+										<td/><td/>
+									</t>
+								</tr>
+			
+								<!-- Accumulate totals -->
+								<t t-set="total1" t-value="total1 + move['opening_amount']"/>
+								<t t-set="total2" t-value="total2 + move['in_amount']"/>
+								<t t-set="total3" t-value="total3 + move['out_amount']"/>
+								<t t-set="total4" t-value="total4 + move['closing_amount']"/>
+							</t>
+							<tr>
+							  <td style="border: none;"/>
+							  <td style="border: none;"/>
+							  <td style="border: none; font-weight: bold; text-align: right;">Total:</td>
+							  <td style="border: none;"/>
+							  <td style="border: none;"/>
+							  <!--<td style="border: none;"/>-->
+							  <td t-esc="'{:,.4f}'.format(total1)" colspan="2" style="text-align: right;"/>
+							  <td style="border: none;"/>
+							  <td style="border: none;"/>
+							  <!--<td style="border: none;"/>-->
+							  <td t-esc="'{:,.4f}'.format(total2)" colspan="2" style="text-align: right;"/>
+							  <td style="border: none;"/>
+							  <td style="border: none;"/>
+							  <!--<td style="border: none;"/>-->
+							  <td t-esc="'{:,.4f}'.format(total3)" colspan="2" style="text-align: right;"/>
+							  <td style="border: none;"/>
+							  <td style="border: none;"/>
+							  <!--<td style="border: none;"/>-->
+							  <td t-esc="'{:,.4f}'.format(total4)" colspan="2" style="text-align: right;"/>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</t>
+		</t>
+	</template>
+</odoo>
+		

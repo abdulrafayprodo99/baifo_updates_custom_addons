@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding = 'utf-8'?>
+<odoo>
+    <record id="allowance_deduction_form" model="ir.ui.view">
+        <field name="name">allowances.deduction.view.form</field>
+        <field name="model">allowances.deduction</field>
+        <field name="arch" type="xml">
+            <form string="Allowances Deduction">
+                <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="emp_id"/>
+                        <field name="job_id"/>
+                        <field name="month"/>
+                        <field name="year"/>
+                    </group>
+                    <group name="allowances" string="Allowances">
+                        <field name="pf_employer_contribution"/>
+                        <field name="ss_employer_contribution"/>
+                        <field name="eobi_employer_contribution"/>
+                        <field name="food_employer_contribution"/>
+                        <field name="other_allowance"/>
+                    </group>
+
+                     <group name="deductions" string="Deductions">
+                        <field name="pf_employee_contribution"/>
+                        <field name="manual_eobi"/>
+                        <field name="eobi_contribution"/>
+                        <field name="food_employee_contribution"/>
+                        <field name="professional_tax"/>
+                        <field name="advance_from_employer"/>
+                        <field name="provident_fund_loan"/>
+                        <field name="overtime"/>
+                        <field name="excessive_leaves"/>
+                        <field name="other_deduction"/>
+                        <field name="arrears"/>
+                    </group>
+                        
+                    <group name="tax_adjustments" string="Tax Adjustment">
+                        <field name="zakat"/>
+                        <field name="donation"/>
+                        <field name="wht_on_property"/>
+                        <field name="wht_on_vehicle"/>
+                        <field name="wht_on_telephone"/>
+                        <field name="other_tax"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+        
+        
+        
+        <record id="allowance_deduction_tree" model="ir.ui.view">
+            <field name="name">allowances.deduction.tree</field>
+            <field name="model">allowances.deduction</field>
+            <field name="arch" type="xml">
+                <tree string="Allowances Deduction">
+                    <field name="emp_id"/>
+                    <field name="employee_id"/>
+                    <field name="job_id"/>
+                    <field name="month"/>
+                    <field name="pf_employee_contribution"/>
+                    <field name="pf_employer_contribution"/>
+                    <field name="food_employee_contribution"/>
+                    <field name="food_employer_contribution"/>
+                    <field name="ss_employer_contribution"/>
+                    <field name="manual_eobi"/>
+                    <field name="eobi_contribution"/>
+                    <field name="eobi_employer_contribution"/>
+                    <field name="professional_tax"/>
+                    <field name="year"/>
+                    <field name="arrears"/>
+                    
+                    <field name="other_allowance"/>
+                    <field name="advance_from_employer"/>
+                    <field name="other_deduction"/>
+                    <field name="zakat"/>
+                    <field name="donation"/>
+                    <field name="wht_on_property"/>
+                    <field name="wht_on_vehicle"/>
+                    <field name="wht_on_telephone"/>
+                    <field name="other_tax"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="action_allowances_deduction" model= "ir.actions.act_window">
+            <field name='name'>Allowances Deduction</field>
+            <field name='type'>ir.actions.act_window</field>
+        <field name='res_model'>allowances.deduction</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+    </record>
+
+
+    <menuitem id="allowances_deduction_parent"
+          name='Allowances Deduction'
+          parent='hr.menu_hr_root'
+          action='action_allowances_deduction'
+          sequence="101"/>
+</odoo>

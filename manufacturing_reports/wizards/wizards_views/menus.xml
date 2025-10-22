@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_daily_production_wizard" model="ir.actions.act_window">
+            <field name="name">daily Production</field>
+            <field name="res_model">daily.production.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="action_material_requirement_wizard" model="ir.actions.act_window">
+            <field name="name">Production Planning</field>
+            <field name="res_model">material.requirement.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="action_stock_sale_position_wizard" model="ir.actions.act_window">
+            <field name="name">Stock Sale Position</field>
+            <field name="res_model">stock.sale.position.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="action_bill_of_material_wizard" model="ir.actions.act_window">
+            <field name="name">Bill of Material Report</field>
+            <field name="res_model">bill.of.material.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!-- <menuitem id="menu_m_reports" name="Manufacturing Reports" sequence="10" parent="mrp.menu_mrp_reporting"/> -->
+        <menuitem id="menu_daily_production" name="Daily Production" parent="mrp.menu_mrp_reporting" action="action_daily_production_wizard"/>
+        <menuitem id="menu_material_requirement" name="Production Planning" parent="mrp.menu_mrp_reporting" action="action_material_requirement_wizard"/>
+        <menuitem id="menu_stock_sale_position" name="Stock Sale Position" parent="mrp.menu_mrp_reporting" action="action_stock_sale_position_wizard"/>
+        <menuitem id="menu_bill_of_material_report" 
+                  name="Bill of Material Report" 
+                  parent="mrp.menu_mrp_reporting" 
+                  action="action_bill_of_material_wizard"/>
+    </data>
+</odoo>

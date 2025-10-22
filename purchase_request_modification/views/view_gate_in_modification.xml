@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_view_gate_in_form" model="ir.ui.view">
+        <field name="name">gate.in.form.modifications</field>
+        <field name="model">gate.in</field>
+        <field name="inherit_id" ref="gate_module.view_gate_module_form"/>
+        <field name="arch" type="xml">
+            <!-- <xpath expr="//field[@name='line_id']/tree/field[@name='product_id']" position="after">
+                <field optional="show" name="specification" string="Specification"  />
+            </xpath> -->
+
+            <xpath expr="//field[@name='location_name']" position="attributes">
+                    <attribute name="required">1</attribute>
+            </xpath>
+
+<!--             <xpath expr="//field[@name='delivery_challan']" position="after">-->
+<!--                <field name="delivery_order" string="Delivery Order" domain="[('partner_id', '=', customer_id)]"/>-->
+<!--            </xpath>-->
+        </field>
+    </record>
+
+
+
+        <!-- Inherit the existing view -->
+        <record id="view_gate_out_module_form_inherit" model="ir.ui.view">
+            <field name="name">view.gate.out.module.form.inherit</field>
+            <field name="model">gate.out</field>
+            <field name="inherit_id" ref="gate_module.view_gate_out_module_form"/>
+            <field name="arch" type="xml">
+                <!-- Add the required attribute to the location_name field -->
+                <xpath expr="//field[@name='location_name']" position="attributes">
+                    <attribute name="required">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+
+<!--        <record id="stock_picking_inherited_form_remove_required" model="ir.ui.view">-->
+<!--                <field name="name">stock.picking.form.inherit.remove.required</field>-->
+<!--                <field name="model">stock.picking</field>-->
+<!--                <field name="inherit_id" ref="prodo_x_biafo_ext.stock_picking_inherited_form_"/> &lt;!&ndash; inherit your existing custom view &ndash;&gt;-->
+<!--                <field name="arch" type="xml">-->
+<!--                    <xpath expr="//field[@name='gate_in_return_id']" position="replace">-->
+<!--                       -->
+<!--                    </xpath>-->
+<!--                </field>-->
+<!--            </record>-->
+
+
+
+
+
+</odoo>

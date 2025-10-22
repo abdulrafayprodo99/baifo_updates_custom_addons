@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_customer_license_form_inherited" model="ir.ui.view">
+        <field name="name">customer.license.form.inherited</field>
+        <field name="model">customer.license</field>
+        <field name="inherit_id" ref="customer_license_app.view_customer_license_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                    <field name="state" widget="statusbar" options="{'clickable': 'True'}"/>
+
+                    <button name="action_verify" type="object" string="Verify" class="oe_highlight" 
+                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    
+                    <button name="action_approve" type="object" string="Approve" class="oe_highlight"
+                            attrs="{'invisible': [('state', '!=', 'verified')]}"/>
+            </xpath> 
+           <xpath expr="//field[@name='customer_code_old']" position="attributes">
+                <attribute name="attrs">{}</attribute>
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='customer_code_old']" position="after">
+                <xpath expr="//field[@name='customer_name']" position="move"/>
+                <xpath expr="//field[@name='customer_code_new']" position="move"/>
+            </xpath>
+            <xpath expr="//field[@name='validity_to']" position="before">
+                <xpath expr="//form[1]/sheet[1]/group[1]/group[1]/field[@name='name']" position="move"/>
+            </xpath>
+            <xpath expr="//field[@name='validity_to']" position="before">
+                <xpath expr="//field[@name='validity_from']" position="move"/>
+            </xpath>
+            <xpath expr="//form[1]/sheet[1]/group[1]/group[2]/field[@name='name']" position="attributes">
+                <attribute name="string">Customer License No</attribute>
+            </xpath>
+            <xpath expr="//field[@name='customer_code_new']" position="attributes">
+                <attribute name="string">Customer Code</attribute>
+            </xpath>
+            <xpath expr="//field[@name='validity_to']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='validity_from']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>   
+
+            <xpath expr="//field[@name='customer_name']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='customer_code_new']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>     
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>     
+  
+          </field>
+    </record>
+</odoo>

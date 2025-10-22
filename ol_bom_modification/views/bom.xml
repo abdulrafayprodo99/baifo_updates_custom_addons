@@ -1,0 +1,87 @@
+<odoo>
+
+    <data>
+    <record id="view_bom_fields" model="ir.ui.view">
+        <field name="name">bom.fields</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form" position="attributes">
+                <attribute name="js_class">view_form_disable</attribute>
+            </xpath>
+            <xpath expr="/form/sheet[1]" position="before">
+                <header>
+                    <button name="action_approve" type="object" string="Approve" attrs="{'invisible': [('state', '=', 'approved')]}"/>
+                    <button name="action_disapprove" type="object" string="Disapprove" attrs="{'invisible': [('state', '=', 'not_approved')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="not_approved,approved"/>
+                </header>
+            </xpath>
+
+
+            <xpath expr="//field[@name='type']" position="after">
+                <field name="standard_rate"/>
+                <field name="state_display"/>
+                <field name="bom_version_id"/>
+                <field name="total_cost" invisible="1" />
+            </xpath>
+        <xpath expr="//field[@name='product_uom_id']" position="before">
+            <label for="product_uom_id" string="Unit of Measure"/>
+        </xpath>
+            <xpath expr="//field[@name='product_tmpl_id']" position="after">
+                <field name="sequence"/>
+                <field name="batch_no"/>  
+                <field name="effective_date" />
+                <field name="end_date" />
+                <field name="readonly_check" invisible="1" />
+            </xpath>
+        </field>
+    </record>
+
+     <!-- Add Button in BoM Form View -->
+    <!-- <record id="view_mrp_bom_form" model="ir.ui.view">
+        <field name="name">mrp.bom.form.inherit</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_copy"
+                        type="object"
+                        string="Duplicate BoM"
+                        class="btn-primary"
+                        icon="fa-copy"/>
+            </xpath>
+        </field>
+    </record>
+     -->
+
+    <!-- M Azeem Task: 43167 -->
+    <record id="view_mrp_bom_tree_inherit" model="ir.ui.view">
+        <field name="name">mrp.bom.tree.inherit</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sequence']" position="attributes">
+                <attribute name="widget"/>
+            </xpath>
+            
+            <xpath expr="//field[@name='product_tmpl_id']" position="after">
+                <field name="batch_no" optional="show"/>
+                <field name="bom_version_id" optional="show"/>
+            </xpath>
+            <xpath expr="//field[@name='code']" position="after">
+                <field name="effective_date" optional="show"/>
+                <field name="end_date" optional="show"/>
+                <!-- <field name="state" optional="show"/> -->
+            </xpath>
+            <xpath expr="//field[@name='type']" position="replace">
+                <!-- <attribute name="attrs">{}</attribute> -->
+                <field name="state"/>
+                <!-- <attribute name="invisible">1</attribute> -->
+            </xpath>
+        </field>
+    </record>
+    <!-- M Azeem Task: 43167 -->
+    
+    </data>
+
+</odoo>

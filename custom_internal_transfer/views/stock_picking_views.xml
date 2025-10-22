@@ -1,0 +1,18 @@
+<odoo>
+    <data>
+
+        <!-- Inherit the stock.picking form view -->
+        <record id="view_picking_form" model="ir.ui.view">
+            <field name="name">stock.picking.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.studio_customization.odoo_studio_stock_pi_fb47219f-a64b-4efe-a3ce-44af7e140e89"/>
+            <field name="arch" type="xml">
+                <!-- Hide the vendor field if the picking type is 'internal' -->
+                <xpath expr="//field[@name='x_studio_vendor']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('picking_type_id.code', '=', 'internal')]}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_stock_landed_cost_form_inherited" model="ir.ui.view">
+        <field name="name">stock.landed.cost.form.inherit</field>
+        <field name="model">stock.landed.cost</field>
+        <field name="inherit_id" ref="prodo_x_biafo_ext.stock_landed_cost_inherited_form_new"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vendor_bill_id']" position="after">
+                <field name="partner"/>
+                <field name="analytical_field" widget="analytic_distribution" />
+                <field name="expense_bill_id" string="Source Document" />
+            </xpath>
+            <xpath expr="//header/button[@name='action_checked']" position="replace">
+                <button name="action_checked" string="Checked" type="object" class="oe_highlight" attrs="{'invisible': 1}"/>
+            </xpath>
+            <xpath expr="//header/button[@name='action_verify']" position="replace">
+                <button name="action_verify" attrs="{'invisible': 1}" string="Verifed" type="object" class="oe_highlight"/>
+            </xpath>
+            <xpath expr="//header/button[@name='action_approve']" position="replace">
+                <button name="action_approve" attrs="{'invisible': [('approval_state', '==', 'approve')]}" string="Approved" type="object" class="oe_highlight"/>
+            </xpath>
+            <xpath expr="//header/field[@name='approval_state']" position="replace">
+                <field name="approval_state" widget="statusbar" statusbar_visible="approve"/>
+            </xpath>
+            <xpath expr="//field[@name='picking_ids']" position="replace">
+                <field name="picking_ids" widget="many2many_tags" options="{'no_create_edit': True}" attrs="{'invisible': [('target_model', '!=', 'picking')]}" domain="[('company_id', '=', company_id), ('move_ids.picking_id.approval_state', '!=', False)]"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_stock_landed_cost_search_view_inherited" model="ir.ui.view">
+        <field name="name">stock.landed.cost.search.view.inherit</field>
+        <field name="model">stock.landed.cost</field>
+        <field name="inherit_id" ref="stock_landed_costs.view_stock_landed_cost_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter string="Partner" name="partner" context="{'group_by': 'partner'}"/>
+                <filter string="Analytical Field" name="analytical_field"  context="{'group_by': 'analytical_field_name'}"/>
+            </xpath>    
+        </field>
+    </record>
+    
+    <record id="view_stock_landed_cost_tree_view_inherited" model="ir.ui.view">
+        <field name="name">stock.landed.cost.tree.view.inherit</field>
+        <field name="model">stock.landed.cost</field>
+        <field name="inherit_id" ref="stock_landed_costs.view_stock_landed_cost_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='activity_exception_decoration']" position="after">
+                <field name="partner"/>
+                <field name="analytical_field" widget="analytic_distribution" />
+                <field name="expense_bill_id" string="Source Document" />
+                <field name="amount_total" />
+
+            </xpath>    
+        </field>
+    </record>
+</odoo>

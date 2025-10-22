@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="crossovered_budget_form_inherit_for_remaining_budget" model="ir.ui.view">
+        <field name="name">crossovered.budget.form.inherit.for.remaining.budget</field>
+        <field name="model">crossovered.budget</field>
+        <field name="inherit_id" ref="account_budget.crossovered_budget_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook[1]//page[@name='budget_lines']//field[@name='crossovered_budget_line']//tree[1]//field[@name='theoritical_amount']" position="after">
+                <field name="remaining_budget" />
+            </xpath>
+
+            <xpath expr="//header" position="inside">
+                <field name="hide_update_budget_button" invisible="1"/> <!-- Rao Abdul Rehman-->
+                <button string="Update Budget" name="action_prepared" type="object" class="oe_highlight" attrs="{'invisible':[('hide_update_budget_button','==', True)]}"/> 
+            </xpath>
+
+        </field>
+    </record>
+
+
+
+</odoo>

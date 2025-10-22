@@ -1,0 +1,341 @@
+<odoo>
+    <record id="custom_sale_order_form_view" model="ir.ui.view">
+        <field name="name">custom.sale.order.form.view</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Target the product_template_id field -->
+            <xpath expr="//field[@name='product_template_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="custom_account_move_form_view" model="ir.ui.view">
+        <field name="name">custom.account.move.form.view</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <!-- Target the product_template_id field -->
+            <xpath expr="//field[@name='product_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+
+    <record id="custom_stock_move_form_view" model="ir.ui.view">
+        <field name="name">custom.stock.move.form.view</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <!-- Target the product_template_id field -->
+            <xpath expr="//page[@name='operations']/field/tree/field[@name='product_id']" position="replace">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <!-- <attribute name="options">{'no_create': True,}</attribute> -->
+                <field name="product_id" 
+                required="1" 
+                attrs="{'readonly': ['|', '&amp;', ('state', '!=', 'draft'), ('additional', '=', False), ('move_lines_count', '>', 0)]}" 
+                options="{'no_create': True}"/>
+         
+            </xpath>
+
+
+
+        </field>
+    </record>
+
+
+    <record id="custom_mrp_form_view" model="ir.ui.view">
+        <field name="name">custom.mrp.form.view</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <!-- Target the product_template_id field -->
+            <xpath expr="//field[@name='product_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+
+<!--    <record id="custom_mrp_form_view_2" model="ir.ui.view">-->
+<!--        <field name="name">custom.mrp.form.view.second</field>-->
+<!--        <field name="model">mrp.production</field>-->
+<!--        <field name="inherit_id" ref="prodo_x_biafo_ext.view_mrp_production_form_inherit_stock_move"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            &lt;!&ndash; Target the product_template_id field &ndash;&gt;-->
+<!--            <xpath expr="//field[@name='product_id_2']" position="attributes">-->
+<!--                &lt;!&ndash; Make the field readonly to prevent edits &ndash;&gt;-->
+<!--                &lt;!&ndash; Prevent creation and opening of the field (disable create/edit) &ndash;&gt;-->
+<!--                <attribute name="options">{'no_create': True}</attribute>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
+
+    <record id="custom_purchase_request_form_view" model="ir.ui.view">
+        <field name="name">custom.purchase.request.form.view.second</field>
+        <field name="model">purchase.request</field>
+        <field name="inherit_id" ref="purchase_request.view_purchase_request_form"/>
+        <field name="arch" type="xml">
+            <!-- Target the product_template_id field -->
+            <xpath expr="//field[@name='product_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="custom_reciepts_mjt_wht_payment_form_view" model="ir.ui.view">
+        <field name="name">custom.reciepts.mjt_wht_payment.form.view.second</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="mjt_wht_payment.mjt_view_account_payment_form_inherit"/>
+        <field name="arch" type="xml">
+            <!-- Target the product_template_id field -->
+            <xpath expr="//field[@name='account_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="custom_account_id_move_form_view" model="ir.ui.view">
+        <field name="name">custom.account.move.form.view.account_id</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <!-- Target the product_template_id field -->
+
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='partner_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+
+            <xpath expr="//form/sheet/group[2]/field[@name='account_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+
+            <xpath expr="//form/group/field[@name='account_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+
+            <xpath expr="//form/group/field[@name='partner_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+
+
+            <xpath expr="//page[@name='aml_tab']/field/tree/field[@name='account_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+
+            <xpath expr="//page[@name='aml_tab']/field/tree/field[@name='partner_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+
+
+            <xpath expr="//group/group[@id='header_left_group']/field[@name='partner_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+
+
+        </field>
+    </record>
+
+
+
+    <record id="custom_contact_vendor_form_view" model="ir.ui.view">
+        <field name="name">custom.contact.vendor.form.view.second</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+                  
+            <xpath expr="//sheet/group/group/field[@name='partner_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <!-- <attribute name="options">{'no_create': True,}</attribute> -->
+            
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+
+
+            <xpath expr="//page[@name='operations']/field/tree/field[@name='partner_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <!-- <attribute name="options">{'no_create': True,}</attribute> -->
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="custom_contact_vendor_form_view_customer_id" model="ir.ui.view">
+        <field name="name">custom.contact.vendor.form.view.second</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="prodo_x_biafo_ext.stock_picking_inherited_form_"/>
+        <field name="arch" type="xml">
+                  
+            <xpath expr="//field[@name='customer_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <!-- <attribute name="options">{'no_create': True,}</attribute> -->
+            
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+    
+
+
+    <record id="custom_purchase_request_view" model="ir.ui.view">
+        <field name="name">custom.purchase.request.view</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+                  
+            <xpath expr="//sheet/group/group/field[@name='partner_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <!-- <attribute name="options">{'no_create': True,}</attribute> -->
+            
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="custom_sale_quotation_view" model="ir.ui.view">
+        <field name="name">custom.sale.quotation.view</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+                  
+            <xpath expr="//sheet/group/group[@name='partner_details']/field[@name='partner_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <!-- <attribute name="options">{'no_create': True,}</attribute> -->
+            
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+
+
+
+    <record id="custom_gate_in_view" model="ir.ui.view">
+        <field name="name">custom.gate.in.view</field>
+        <field name="model">gate.in</field>
+        <field name="inherit_id" ref="gate_module.view_gate_module_form"/>
+        <field name="arch" type="xml">
+                  
+            <xpath expr="//sheet/group/group/field[@name='partner_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <!-- <attribute name="options">{'no_create': True,}</attribute> -->
+            
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+
+            <xpath expr="//sheet/group/group/field[@name='customer_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <!-- <attribute name="options">{'no_create': True,}</attribute> -->
+            
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+
+            <xpath expr="//page/field/tree/field[@name='product_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <!-- <attribute name="options">{'no_create': True,}</attribute> -->
+            
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+
+            <xpath expr="//page/field[@name='return_line_ids']/tree/field[@name='product_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <!-- <attribute name="options">{'no_create': True,}</attribute> -->
+            
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+
+    <record id="custom_gate_out_view" model="ir.ui.view">
+        <field name="name">custom.gate.out.view</field>
+        <field name="model">gate.out</field>
+        <field name="inherit_id" ref="gate_module.view_gate_out_module_form"/>
+        <field name="arch" type="xml">
+                  
+            <xpath expr="//sheet/group/group/field[@name='partner_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <!-- <attribute name="options">{'no_create': True,}</attribute> -->
+            
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+
+            <xpath expr="//page/field/tree/field[@name='product_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <!-- <attribute name="options">{'no_create': True,}</attribute> -->
+            
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+
+            <xpath expr="//page/field[2]/tree/field[@name='product_id']" position="attributes">
+                <!-- Make the field readonly to prevent edits -->
+                <!-- Prevent creation and opening of the field (disable create/edit) -->
+                <!-- <attribute name="options">{'no_create': True,}</attribute> -->
+            
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+
+
+    
+
+
+
+
+
+
+
+
+</odoo>

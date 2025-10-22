@@ -1,0 +1,449 @@
+<odoo>
+    <data>
+        <!-- Defining the paper format for the payroll report -->
+        <record id="paperformat_summary_report_payroll" model="report.paperformat">
+            <field name="name">Salary Summary Report Format</field>
+            <field name="format">Legal</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">10</field>
+            <field name="margin_bottom">25</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+            <field name="header_line">False</field>
+            <field name="disable_shrinking">False</field>
+        </record>
+
+        <!-- Defining the report action for generating the PDF -->
+        <record id="action_summary_report_pdf" model="ir.actions.report">
+            <field name="name">Salary Summary Report</field>
+            <field name="model">salary.summary.report</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">payroll_salary_summary_report.summary_payroll_pdf</field>
+            <field name="report_file">payroll_salary_summary_report.summary_payroll_pdf</field>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="payroll_salary_summary_report.paperformat_summary_report_payroll"/>
+            <field name="print_report_name">'Salary Summary Report'</field>
+        </record>
+
+        <!-- Template for the payroll report PDF -->
+        <template id="summary_payroll_pdf">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <!-- Custom Footer -->
+                    <div class="footer" style="font-family: Segoe UI; font-size: 10px; margin-bottom: 30px;">
+                        <!--<div class="row mt-5" style="font-family: Segoe UI; font-size: 10px; padding: 10px 0; max-width: 100%; box-sizing: border-box;">-->
+                          <div style="margin-bottom: 0px; margin-top: 20px;">
+                              <span style="padding-left:5%;">Prepared by: _______________</span>
+                              <span style="padding-left:10%;">Checked by: _______________</span>
+                              <span style="padding-left:10%;">Verified by: _______________</span>
+                              <span style="padding-left:10%;">Approved by: _______________</span>
+                              <span style="padding-left:10%;">Audited by: _______________</span>
+                          </div>
+                        <!--</div>-->
+                        <div class="row" style="border:1px solid black; margin-top:30px"/>
+                        <div class="row mt-1">
+                            <div class="col-1">
+                                <span>Odoo</span>
+                            </div>
+                            <div class="col-6" style="text-align: center;">
+                                <span>Powered By Odolution</span>
+                            </div>
+                            <div class="col-5" style="text-align: right;">
+                                <t t-set="current_time" t-value="time.strftime('%d/%m/%Y %H:%M:%S')"/>
+                                <span t-esc="current_time"/>
+                                <t t-if="report_type == 'pdf'">
+                                    <span style="margin-left: 15px;">Page: <span class="page"/> / <span class="topage"/></span>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page">
+                        <!-- Report Title and Date Range -->
+                        <h2 style="text-align: center; font-size: 16px; font-weight: bold; color: black;">
+                            BIAFO INDUSTRIES LIMITED - Salary Summary Report
+                        </h2>
+                        <p style="text-align: center; font-size: 12px; color: black;">
+                        (From: <t t-esc="report_data['date_from']"/> To: <t t-esc="report_data['date_to']"/>)
+                        </p>
+                        <!-- Shared Table Headings -->
+                        <t t-set="shared_headings">
+                            <thead>
+                                <tr style="background-color: #f2f2f2;">
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 2%; padding: 8px; font-size: 9px;">S.No.</th>
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 10%; padding: 8px; font-size: 9px;">Category</th>
+                                    <th style="text-align: right; font-weight: bold; color: black; width: 6%; padding: 8px; font-size: 9px;">Salary as on 30-06-2023</th>
+                                    <th style="text-align: right; font-weight: bold; color: black; width: 6%; padding: 8px; font-size: 9px;">Increment/Salary Adjustment</th>
+                                    <th style="text-align: right; font-weight: bold; color: black; width: 6%; padding: 8px; font-size: 9px;">Salary W.E.F. 01-07-2024</th>
+                                    <th style="text-align: center; font-weight: bold; color: black; width: 30%; padding: 8px; font-size: 9px;" colspan="8">Pay &amp; Allowances</th>
+                                                                        <th style="text-align: right; font-weight: bold; color: black; width: 6%; padding: 8px; font-size: 9px;">Gross Pay</th>
+                                    <th style="text-align: center; font-weight: bold; color: black; width: 28%; padding: 8px; font-size: 9px;" colspan="7">Deductions</th>
+                                    <th style="text-align: right; font-weight: bold; color: black; width: 6%; padding: 8px; font-size: 9px;">Total Deduction</th>
+                                    <th style="text-align: right; font-weight: bold; color: black; width: 6%; padding: 8px; font-size: 9px;">Net Salary</th>
+                                </tr>
+                                <tr style="background-color: #f2f2f2;">
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 2%; padding: 8px; font-size: 9px;"/>
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 10%; padding: 8px; font-size: 9px;"/>
+                                    <th style="text-align: right; font-weight: bold; color: black; width: 6%; padding: 8px; font-size: 9px;"/>
+                                    <th style="text-align: right; font-weight: bold; color: black; width: 6%; padding: 8px; font-size: 9px;"/>
+                                    <th style="text-align: right; font-weight: bold; color: black; width: 6%; padding: 8px; font-size: 9px;"/>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 4.3%; padding: 8px; font-size: 8px;">Basic Pay</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 4.3%; padding: 8px; font-size: 8px;">House Rent</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 4.3%; padding: 8px; font-size: 8px;">Conveyance</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 4.3%; padding: 8px; font-size: 8px;">Utilities</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 4.3%; padding: 8px; font-size: 8px;">Medical</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 4.3%; padding: 8px; font-size: 8px;">Other Allowances</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 4.3%; padding: 8px; font-size: 8px;">Arrears</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 4.3%; padding: 8px; font-size: 8px;">Overtime</th>
+                                                                                                            <th style="text-align: right; font-weight: bold; color: black; width: 6%; padding: 8px; font-size: 9px;"/>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 4%; padding: 8px; font-size: 8px;">Income Tax</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 4%; padding: 8px; font-size: 8px;">Provident Fund</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 4%; padding: 8px; font-size: 8px;">EOBI</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 4%; padding: 8px; font-size: 8px;">Food Charges</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 4%; padding: 8px; font-size: 8px;">Advance</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 4%; padding: 8px; font-size: 8px;">Professional Tax</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 4%; padding: 8px; font-size: 8px;">Excess Leaves</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 6%; padding: 8px; font-size: 8px;"/>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 6%; padding: 8px; font-size: 8px;"/>
+                                </tr>
+                            </thead>
+                        </t>
+                        <!-- Initialize Grand Total Accumulators -->
+                        <t t-set="grand_total" t-value="{                             'salary_as_on': 0,                             'increment': 0,                             'salary_wef': 0,                             'basic_pay': 0,                             'hr_allow': 0,                             'conv_allow': 0,                             'util_allow': 0,                             'med_allow': 0,         'other_allow':0,                    'arrears': 0,                             'overtime': 0,                             'gross': 0,                             'income_tax': 0,                             'provident_fund': 0,                             'eobi': 0,                             'food_charges': 0,                             'advance': 0,                             'prof_tax': 0,                             'extra_leaves': 0,                             'total_ded': 0,                             'net_salary': 0                         }"/>
+                        <!-- Loop Through Parent Departments -->
+                        <t t-foreach="report_data['parent_departments']" t-as="parent_dept">
+                            <h2 style="margin-top: 12px; text-decoration: underline; font-size: 16px; font-weight: bold; color: #333;">
+                                <t t-esc="parent_dept['name'].upper()"/>
+                            </h2>
+                            <!-- Loop Through Departments -->
+                            <t t-foreach="parent_dept['departments']" t-as="dept">
+                                <h3 style="margin-top: 10px; text-decoration: underline; font-size: 14px; font-weight: bold; color: #333;">
+                                    <t t-esc="dept['name'].upper()"/>
+                                </h3>
+                                <!-- Initialize Department Subtotal -->
+                                <t t-set="dept_subtotal" t-value="{                                     'salary_as_on': 0,                                     'increment': 0,                                     'salary_wef': 0,                                     'basic_pay': 0,                                     'hr_allow': 0,                                     'conv_allow': 0,                                     'util_allow': 0,                                     'med_allow': 0,             'other_allow':0,                        'arrears': 0,                                     'overtime': 0,                                     'gross': 0,                                     'income_tax': 0,                                     'provident_fund': 0,                                     'eobi': 0,                                     'food_charges': 0,                                     'advance': 0,                                     'prof_tax': 0,                                     'extra_leaves': 0,                                     'total_ded': 0,                                     'net_salary': 0                                 }"/>
+                                <table class="table table-bordered" style="border-collapse: collapse; width: 100%; padding: 8px;">
+                                    <t t-raw="shared_headings"/>
+                                    <tbody>
+                                        <!-- Loop Through Categories -->
+                                        <t t-foreach="dept['categories']" t-as="category">
+                                            <tr>
+                                                <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 2%; font-size: 9px;">
+                                                    <t t-esc="category['serial_no']"/>
+                                                </td>
+                                                <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 10%; font-size: 9px;">
+                                                    <t t-esc="category['name']"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                                    <t t-esc="category.get('salary_as_on', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                                    <t t-esc="category.get('increment', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                                    <t t-esc="category.get('salary_wef', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                                    <t t-esc="category.get('basic_pay', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                                    <t t-esc="category.get('hr_allow', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                                    <t t-esc="category.get('conv_allow', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                                    <t t-esc="category.get('util_allow', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                                    <t t-esc="category.get('med_allow', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                                    <t t-esc="category.get('other_allow', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                                    <t t-esc="category.get('arrears', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                                    <t t-esc="category.get('overtime', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                                    <t t-esc="category.get('gross', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                                    <t t-esc="category.get('income_tax', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                                    <t t-esc="category.get('provident_fund', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                                    <t t-esc="category.get('eobi', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                                    <t t-esc="category.get('food_charges', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                                    <t t-esc="category.get('advance', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                                    <t t-esc="category.get('prof_tax', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                                    <t t-esc="category.get('extra_leaves', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                                    <t t-esc="category.get('total_ded', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                                    <t t-esc="category.get('net_salary', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                                </td>
+                                            </tr>
+                                            <!-- Update Department Subtotal -->
+                                            <t t-set="dept_subtotal" t-value="{                                                 'salary_as_on': dept_subtotal['salary_as_on'] + category.get('salary_as_on', 0),                                                 'increment': dept_subtotal['increment'] + category.get('increment', 0),                                                 'salary_wef': dept_subtotal['salary_wef'] + category.get('salary_wef', 0),                                                 'basic_pay': dept_subtotal['basic_pay'] + category.get('basic_pay', 0),                                                 'hr_allow': dept_subtotal['hr_allow'] + category.get('hr_allow', 0),                                                 'conv_allow': dept_subtotal['conv_allow'] + category.get('conv_allow', 0),                                                 'util_allow': dept_subtotal['util_allow'] + category.get('util_allow', 0),                                                 'med_allow': dept_subtotal['med_allow'] + category.get('med_allow', 0),                        'other_allow': dept_subtotal['other_allow'] + category.get('other_allow', 0),                         'arrears': dept_subtotal['arrears'] + category.get('arrears', 0),                                                 'overtime': dept_subtotal['overtime'] + category.get('overtime', 0),                                                 'gross': dept_subtotal['gross'] + category.get('gross', 0),                                                 'income_tax': dept_subtotal['income_tax'] + category.get('income_tax', 0),                                                 'provident_fund': dept_subtotal['provident_fund'] + category.get('provident_fund', 0),                                                 'eobi': dept_subtotal['eobi'] + category.get('eobi', 0),                                                 'food_charges': dept_subtotal['food_charges'] + category.get('food_charges', 0),                                                 'advance': dept_subtotal['advance'] + category.get('advance', 0),                                                 'prof_tax': dept_subtotal['prof_tax'] + category.get('prof_tax', 0),                                                 'extra_leaves': dept_subtotal['extra_leaves'] + category.get('extra_leaves', 0),                                                 'total_ded': dept_subtotal['total_ded'] + category.get('total_ded', 0),                                                 'net_salary': dept_subtotal['net_salary'] + category.get('net_salary', 0)                                             }"/>
+                                            <!-- Update Grand Total -->
+                                            <t t-set="grand_total" t-value="{                                                 'salary_as_on': grand_total['salary_as_on'] + category.get('salary_as_on', 0),                                                 'increment': grand_total['increment'] + category.get('increment', 0),                                                 'salary_wef': grand_total['salary_wef'] + category.get('salary_wef', 0),                                                 'basic_pay': grand_total['basic_pay'] + category.get('basic_pay', 0),                                                 'hr_allow': grand_total['hr_allow'] + category.get('hr_allow', 0),                                                 'conv_allow': grand_total['conv_allow'] + category.get('conv_allow', 0),                                                 'util_allow': grand_total['util_allow'] + category.get('util_allow', 0),                                                 'med_allow': grand_total['med_allow'] + category.get('med_allow', 0),                      'other_allow': grand_total['other_allow'] + category.get('other_allow', 0),                              'arrears': grand_total['arrears'] + category.get('arrears', 0),                                                 'overtime': grand_total['overtime'] + category.get('overtime', 0),                                                 'gross': grand_total['gross'] + category.get('gross', 0),                                                 'income_tax': grand_total['income_tax'] + category.get('income_tax', 0),                                                 'provident_fund': grand_total['provident_fund'] + category.get('provident_fund', 0),                                                 'eobi': grand_total['eobi'] + category.get('eobi', 0),                                                 'food_charges': grand_total['food_charges'] + category.get('food_charges', 0),                                                 'advance': grand_total['advance'] + category.get('advance', 0),                                                 'prof_tax': grand_total['prof_tax'] + category.get('prof_tax', 0),                                                 'extra_leaves': grand_total['extra_leaves'] + category.get('extra_leaves', 0),                                                 'total_ded': grand_total['total_ded'] + category.get('total_ded', 0),                                                 'net_salary': grand_total['net_salary'] + category.get('net_salary', 0)                                             }"/>
+                                        </t>
+                                        <!-- Department Subtotal Row -->
+                                        <tr style="background-color: #e6e6e6; font-weight: bold;">
+                                            <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 2%; font-size: 9px;"/>
+                                            <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 10%; font-size: 9px;">Sub-Total</td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                                <t t-esc="dept.get('subtotals', {}).get('salary_as_on', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                                <t t-esc="dept.get('subtotals', {}).get('increment', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                                <t t-esc="dept.get('subtotals', {}).get('salary_wef', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                                <t t-esc="dept.get('subtotals', {}).get('basic_pay', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                                <t t-esc="dept.get('subtotals', {}).get('hr_allow', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                                <t t-esc="dept.get('subtotals', {}).get('conv_allow', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                                <t t-esc="dept.get('subtotals', {}).get('util_allow', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                                <t t-esc="dept.get('subtotals', {}).get('med_allow', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                                <t t-esc="dept.get('subtotals', {}).get('other_allow', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                                <t t-esc="dept.get('subtotals', {}).get('arrears', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                                <t t-esc="dept.get('subtotals', {}).get('overtime', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                                <t t-esc="dept.get('subtotals', {}).get('gross', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                                <t t-esc="dept.get('subtotals', {}).get('income_tax', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                                <t t-esc="dept.get('subtotals', {}).get('provident_fund', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                                <t t-esc="dept.get('subtotals', {}).get('eobi', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                                <t t-esc="dept.get('subtotals', {}).get('food_charges', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                                <t t-esc="dept.get('subtotals', {}).get('advance', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                                <t t-esc="dept.get('subtotals', {}).get('prof_tax', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                                <t t-esc="dept.get('subtotals', {}).get('extra_leaves', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                                <t t-esc="dept.get('subtotals', {}).get('total_ded', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                                <t t-esc="dept.get('subtotals', {}).get('net_salary', 0)" t-options="{'widget': 'float', 'precision': 0}"/>
+                                            </td>
+                                        </tr>
+                                        <t t-if="dept_last">
+                                                                          <tr style="background-color: #e6e6e6; font-weight: bold;">
+                                    <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 2%; font-size: 9px;"/>
+                                    <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 10%; font-size: 9px;">Grand Total</td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                        <t t-esc="grand_total['salary_as_on']" t-options="{'widget': 'float', 'precision': 0}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                        <t t-esc="grand_total['increment']" t-options="{'widget': 'float', 'precision': 0}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                        <t t-esc="grand_total['salary_wef']" t-options="{'widget': 'float', 'precision': 0}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                        <t t-esc="grand_total['basic_pay']" t-options="{'widget': 'float', 'precision': 0}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                        <t t-esc="grand_total['hr_allow']" t-options="{'widget': 'float', 'precision': 0}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                        <t t-esc="grand_total['conv_allow']" t-options="{'widget': 'float', 'precision': 0}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                        <t t-esc="grand_total['util_allow']" t-options="{'widget': 'float', 'precision': 0}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                        <t t-esc="grand_total['med_allow']" t-options="{'widget': 'float', 'precision': 0}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                        <t t-esc="grand_total['other_allow']" t-options="{'widget': 'float', 'precision': 0}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                        <t t-esc="grand_total['arrears']" t-options="{'widget': 'float', 'precision': 0}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">
+                                        <t t-esc="grand_total['overtime']" t-options="{'widget': 'float', 'precision': 0}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                        <t t-esc="grand_total['gross']" t-options="{'widget': 'float', 'precision': 0}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                        <t t-esc="grand_total['income_tax']" t-options="{'widget': 'float', 'precision': 0}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                        <t t-esc="grand_total['provident_fund']" t-options="{'widget': 'float', 'precision': 0}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                        <t t-esc="grand_total['eobi']" t-options="{'widget': 'float', 'precision': 0}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                        <t t-esc="grand_total['food_charges']" t-options="{'widget': 'float', 'precision': 0}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                        <t t-esc="grand_total['advance']" t-options="{'widget': 'float', 'precision': 0}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                        <t t-esc="grand_total['prof_tax']" t-options="{'widget': 'float', 'precision': 0}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                        <t t-esc="grand_total['extra_leaves']" t-options="{'widget': 'float', 'precision': 0}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                        <t t-esc="grand_total['total_ded']" t-options="{'widget': 'float', 'precision': 0}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                        <t t-esc="grand_total['net_salary']" t-options="{'widget': 'float', 'precision': 0}"/>
+                                    </td>
+                                </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                
+                                <!-- Department Signature Section -->
+                                <!--<t t-if="parent_dept">-->
+                                    <!--<div class="row mt-5" style="font-family: Segoe UI; font-size: 10px; padding: 10px 0; max-width: 100%; box-sizing: border-box;">-->
+                                    <!--    <div style="height: 100px;">-->
+                                    <!--        <span style="padding-left:5%;">Prepared by: _______________</span>-->
+                                    <!--        <span style="padding-left:10%;">Checked by: _______________</span>-->
+                                    <!--        <span style="padding-left:10%;">Verified by: _______________</span>-->
+                                    <!--        <span style="padding-left:10%;">Approved by: _______________</span>-->
+                                    <!--        <span style="padding-left:10%;">Audited by: _______________</span>-->
+                                    <!--    </div>-->
+                                    <!--</div>-->
+                                <!--    <div style="page-break-after: always;"/>-->
+                                <!--</t>-->
+                            </t>
+                            <div style="page-break-after: always;"/>
+                        </t>
+                        <!-- Grand Total Table -->
+                        <!--<table class="table table-bordered" style="border-collapse: collapse; width: 100%; padding: 8px; margin-top: 20px;">-->
+                            <!--<t t-raw="shared_headings"/>-->
+                        <!--    <tbody>-->
+                                <!--<tr style="background-color: #e6e6e6; font-weight: bold;">-->
+                                <!--    <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 2%; font-size: 9px;"/>-->
+                                <!--    <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 10%; font-size: 9px;">Grand Total</td>-->
+                                <!--    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">-->
+                                <!--        <t t-esc="grand_total['salary_as_on']" t-options="{'widget': 'float', 'precision': 0}"/>-->
+                                <!--    </td>-->
+                                <!--    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">-->
+                                <!--        <t t-esc="grand_total['increment']" t-options="{'widget': 'float', 'precision': 0}"/>-->
+                                <!--    </td>-->
+                                <!--    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">-->
+                                <!--        <t t-esc="grand_total['salary_wef']" t-options="{'widget': 'float', 'precision': 0}"/>-->
+                                <!--    </td>-->
+                                <!--    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">-->
+                                <!--        <t t-esc="grand_total['basic_pay']" t-options="{'widget': 'float', 'precision': 0}"/>-->
+                                <!--    </td>-->
+                                <!--    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">-->
+                                <!--        <t t-esc="grand_total['hr_allow']" t-options="{'widget': 'float', 'precision': 0}"/>-->
+                                <!--    </td>-->
+                                <!--    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">-->
+                                <!--        <t t-esc="grand_total['conv_allow']" t-options="{'widget': 'float', 'precision': 0}"/>-->
+                                <!--    </td>-->
+                                <!--    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">-->
+                                <!--        <t t-esc="grand_total['util_allow']" t-options="{'widget': 'float', 'precision': 0}"/>-->
+                                <!--    </td>-->
+                                <!--    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">-->
+                                <!--        <t t-esc="grand_total['med_allow']" t-options="{'widget': 'float', 'precision': 0}"/>-->
+                                <!--    </td>-->
+                                <!--    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">-->
+                                <!--        <t t-esc="grand_total['arrears']" t-options="{'widget': 'float', 'precision': 0}"/>-->
+                                <!--    </td>-->
+                                <!--    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4.3%; font-size: 9px;">-->
+                                <!--        <t t-esc="grand_total['overtime']" t-options="{'widget': 'float', 'precision': 0}"/>-->
+                                <!--    </td>-->
+                                <!--    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">-->
+                                <!--        <t t-esc="grand_total['gross']" t-options="{'widget': 'float', 'precision': 0}"/>-->
+                                <!--    </td>-->
+                                <!--    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">-->
+                                <!--        <t t-esc="grand_total['income_tax']" t-options="{'widget': 'float', 'precision': 0}"/>-->
+                                <!--    </td>-->
+                                <!--    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">-->
+                                <!--        <t t-esc="grand_total['provident_fund']" t-options="{'widget': 'float', 'precision': 0}"/>-->
+                                <!--    </td>-->
+                                <!--    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">-->
+                                <!--        <t t-esc="grand_total['eobi']" t-options="{'widget': 'float', 'precision': 0}"/>-->
+                                <!--    </td>-->
+                                <!--    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">-->
+                                <!--        <t t-esc="grand_total['food_charges']" t-options="{'widget': 'float', 'precision': 0}"/>-->
+                                <!--    </td>-->
+                                <!--    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">-->
+                                <!--        <t t-esc="grand_total['advance']" t-options="{'widget': 'float', 'precision': 0}"/>-->
+                                <!--    </td>-->
+                                <!--    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">-->
+                                <!--        <t t-esc="grand_total['prof_tax']" t-options="{'widget': 'float', 'precision': 0}"/>-->
+                                <!--    </td>-->
+                                <!--    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">-->
+                                <!--        <t t-esc="grand_total['extra_leaves']" t-options="{'widget': 'float', 'precision': 0}"/>-->
+                                <!--    </td>-->
+                                <!--    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">-->
+                                <!--        <t t-esc="grand_total['total_ded']" t-options="{'widget': 'float', 'precision': 0}"/>-->
+                                <!--    </td>-->
+                                <!--    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">-->
+                                <!--        <t t-esc="grand_total['net_salary']" t-options="{'widget': 'float', 'precision': 0}"/>-->
+                                <!--    </td>-->
+                                <!--</tr>-->
+                        <!--    </tbody>-->
+                        <!--</table>-->
+                        <!-- Final Signature Section -->
+                        <!--<div class="row mt-5" style="font-family: Segoe UI; font-size: 10px; padding: 10px 0; max-width: 100%; box-sizing: border-box;">-->
+                        <!--    <div style="height: 100px;">-->
+                        <!--        <span style="padding-left:5%;">Prepared by: _______________</span>-->
+                        <!--        <span style="padding-left:10%;">Checked by: _______________</span>-->
+                        <!--        <span style="padding-left:10%;">Verified by: _______________</span>-->
+                        <!--        <span style="padding-left:10%;">Approved by: _______________</span>-->
+                        <!--        <span style="padding-left:10%;">Audited by: _______________</span>-->
+                        <!--    </div>-->
+                        <!--</div>-->
+                    </div>
+
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

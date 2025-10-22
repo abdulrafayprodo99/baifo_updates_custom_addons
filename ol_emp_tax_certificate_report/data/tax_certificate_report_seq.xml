@@ -1,0 +1,12 @@
+<!-- data/quotation_sequence.xml -->
+<odoo>
+    <data noupdate="1">
+        <record id="tax_certificate_report_sequence" model="ir.sequence">
+            <field name="name">Tax Certificate Sequence </field>
+            <field name="code">tax.certificate.seq</field>
+            <!-- <field name="prefix">QT</field> -->
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/> <!-- Share across companies if needed -->
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="main_header_template_template_edit" inherit_id="account_reports.main_template">
+        <xpath expr="//div[@class='o_account_reports_header print_only']" position="replace">
+            <div class="center-content" style=" display: flex;align-items: center;justify-content: center;flex-direction: column;text-align: center;">
+                <h1 style="font-family: 'Times New Roman', serif;">Biafo Industries Limited</h1>
+                <h4 style="font-family: 'Times New Roman', serif;">Live</h4>
+                <h1 style="font-family: 'Times New Roman', serif;"><t t-out="report_title"/></h1>
+            </div>
+        </xpath>
+    </template>
+</odoo>

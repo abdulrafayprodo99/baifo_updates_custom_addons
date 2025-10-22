@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_merging_tree" model="ir.ui.view">
+        <field name="name">merging.tree</field>
+        <field name="model">merging</field>
+        <field name="arch" type="xml">
+            <tree create="false">
+                <field name="name" />
+                <field name="journal_id" />
+                <field name="date" />
+                <field name="type" />
+                
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_merging_form" model="ir.ui.view">
+        <field name="name">merging.form</field>
+        <field name="model">merging</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            
+                            <field name="name" readonly="True"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                             
+                <field name="journal_id" readonly="True"/>
+                <field name="date" readonly="True"/>
+                <field name="amount" readonly="True"/>
+               
+                            
+                            
+                            
+                        </group>
+                        <group>
+                             
+                <field name="type" readonly="True"/>
+                <field name="payment_id" readonly="True" attrs="{'invisible': [('type', 'in', ('expense',False))]}" />
+                <field name="expense_id" readonly="True" attrs="{'invisible': [('type', 'in', ('payment',False))]}"/>
+                <field name="journal_entry" readonly="True" />
+
+                            
+                            
+                            
+                        </group>
+                        
+                    </group>
+                        
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="merging_action" model="ir.actions.act_window">
+            <field name="name">Merging</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">merging</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+    <!-- <menuitem id="iso_root" name="ISO" parent="" sequence="10" /> -->
+    <menuitem id="merging" name="Merging"  action="merging_action" sequence="2"/>
+</odoo>

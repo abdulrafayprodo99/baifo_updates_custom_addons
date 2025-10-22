@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_travel_desk,access.travel_desk,model_travel_desk,,1,1,1,1
+access_finance_depart,access.finance_depart,model_finance_depart,,1,1,1,1

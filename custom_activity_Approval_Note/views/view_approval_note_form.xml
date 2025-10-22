@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_rfq_comparison_model_form_action_cancel" model="ir.ui.view">
+        <field name="name">view_rfq_comparison_model_form_action_cancel</field>
+        <field name="model">rfq.comparison</field>
+        <field name="inherit_id" ref="prodo_x_biafo_ext.view_rfq_comparison_model_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="replace">
+                <field name="state" widget="statusbar" statusbar_visible="draft,done,cancel"/>
+            </xpath>
+            <xpath expr="//header[1]" position="inside">
+                <button name="action_cancel" string="Cancel" type="object" class="btn-primary" attrs="{'invisible': [('state', 'in', ['cancel','done'])]}" data-hotkey="w"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="view_rfq_comparison_model_tree_action_cancel" model="ir.ui.view">
+        <field name="name">view_rfq_comparison_model_tree_action_cancel</field>
+        <field name="model">rfq.comparison</field>
+        <field name="inherit_id" ref="prodo_x_biafo_ext.view_rfq_comparison_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="replace">
+                <field name="state" />
+            </xpath>
+        </field>
+    </record>
+
+
+
+    <!-- #Aneeq 42,990 -->
+    <record id="view_rfq_comparison_form" model="ir.ui.view">
+        <field name="name">rfq.comparison.form</field>
+        <field name="model">rfq.comparison</field>
+        <field name="inherit_id" ref="prodo_x_biafo_ext.view_rfq_comparison_model_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='purchase_request_id']" position="after">
+                <field name="pr_field" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='purchase_request_id']" position="replace">
+                <field name="purchase_request_id" attrs="{'readonly': [('pr_field', '=', True)]}" />
+            </xpath>
+        </field>
+    </record>  
+
+    <!-- #Aneeq 42,990 -->
+</odoo>

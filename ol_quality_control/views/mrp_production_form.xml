@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mrp_production_view_form_inherit_rqi" model="ir.ui.view">
+        <field name="name">mrp.production.form.inherit.rqi</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="prodo_x_biafo_ext.stock_landed_cost_inherited_form" />
+        <field name="arch" type="xml">
+
+            <div name="button_box" position="inside">
+                <field name="rqi_count" invisible="1" />
+                <button
+                    name="action_view_rqi_records"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-exclamation-triangle"
+                    string="QIR"
+                    attrs="{'invisible': [('rqi_count', '=', 0)]}">
+                    <!-- <field name="rqi_count" widget="statinfo" string="QIR" /> -->
+                </button>
+            </div>
+            <xpath expr="//label[@for='bom_id']" position="before">
+                <field name="pdo_id" options="{'no_create': True}" attrs="{'readonly': [('state', '=', 'done')]}"/>
+            </xpath>
+               <xpath expr="//button[@name='action_checked']" position="after">
+                <field name="prepare_visible" invisible="1" />
+
+               </xpath>
+               <xpath expr="//button[@name='action_checked']" position="attributes">
+                <attribute name="attrs">
+
+                    {'invisible':
+                    ['|',('prepare_visible', '=',False),
+                    ('approval_state', '!=',False),
+                    ]}
+
+
+                </attribute>
+            </xpath>
+
+
+            <xpath expr="//page[@name='components']//button[@name='action_show_details']"
+                position="after">
+                <button name="action_view_product_details"
+                    string="Update Qty"
+                    type="object"
+                    class="oe_highlight"
+                     />
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

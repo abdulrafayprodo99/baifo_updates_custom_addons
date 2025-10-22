@@ -1,0 +1,41 @@
+<odoo>
+    <data>
+        <record id="view_quality_alert_team_kanban_custom" model="ir.ui.view">
+            <field name="name">quality.alert.team.kanban.view.custom</field>
+            <field name="model">quality.alert.team</field>
+            <field name="inherit_id" ref="quality_control.quality_alert_team_dashboard_view_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='col-6 o_kanban_primary_left']" position="after">
+                    
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-6 o_kanban_primary_right">
+                            <button class="btn btn-primary" name="action_quality_alert_button" type="object" style="margin-top:10px;">
+                                <span><field name="qr_count"/> QIR </span>
+                            </button>
+                        </div>
+                    </div>
+    </xpath>
+
+    
+            </field>
+        </record>
+
+
+        <record id="quality_alert_team_dashboard_view_kanban_inherit_rqi" model="ir.ui.view">
+            <field name="name">quality.alert.team.view.kanban.inherit</field>
+            <field name="model">quality.alert.team</field>
+            <field name="inherit_id" ref="quality_control.quality_alert_team_dashboard_view_kanban"/>
+            <field name="arch" type="xml">
+                <!-- Replace the full right-side div -->
+                <xpath expr="//div[@class='container o_kanban_card_content']/div/div[@class='col-6 o_kanban_primary_right']" position="replace">
+                    <div class="col-6 o_kanban_primary_right">
+                        <a class="oe_kanban_stock_picking_type_list" name="action_quality_alert_button_draft" type="object">
+                            <field name="qr_count_draft"/>
+                            QIR's In Process
+                        </a>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

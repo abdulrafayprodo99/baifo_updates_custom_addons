@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_procurement_budget_management_form" model="ir.ui.view">
+            <field name="name">procurement.budget.management.form</field>
+            <field name="model">procurement.budget.management</field>
+            <field name="arch" type="xml">
+                <form string="Procurement Budget Management">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="budget_type"/>
+                            </group>
+                            <group>
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Budget Lines">
+                                <field name="budget_move_lines">
+                                    <tree editable="bottom">
+                                        <field name="budgetary_position_id" string='Budget Position' readonly="1"/>
+                                        <field name="budget_approved" readonly="1"/>
+                                        <field name="reference" readonly="1"/>
+                                        <field name="old_reference" readonly="1"/>
+                                        <field name="budget_consumed_gl" readonly="1"/>
+                                        <field name="pr_budget" readonly="1"/>
+                                        <field name="po_budget" readonly="1"/>
+                                        <field name="invoice_budget" readonly="1"/>
+                                        <field name="cumulative_budget" readonly="1"/>
+                                        <field name="budget_remaining" readonly="1"/>
+                                    </tree>
+                                </field>
+                            </page>
+
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="procurement_budget_management_tree_view" model="ir.ui.view">
+            <field name="name">procurement.budget.management.tree</field>
+            <field name="model">procurement.budget.management</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name" readonly="1" />
+                    <field name="budget_type" readonly="1" />
+                    <field name="date_from" readonly="1" />
+                    <field name="date_to" readonly="1" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Add more views and actions as needed -->
+        <record id="action_procurement_budget_management_app" model="ir.actions.act_window">
+            <field name="name">Procurement Budget Management</field>
+            <field name="res_model">procurement.budget.management</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new procurement budget management record.
+                </p>
+                <p>
+                    This module helps in managing procurement budgets effectively.
+                </p>
+            </field>
+        </record>
+       
+
+        <menuitem id="procurement_budget_management_menu_item" name="Budget Management" action="action_procurement_budget_management_app"/>
+        
+    </data>
+</odoo>

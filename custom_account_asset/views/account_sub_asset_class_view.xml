@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sub_asset_class_form_view" model="ir.ui.view">
+        <field name="name">account.sub.asset.class.form</field>
+        <field name="model">account.sub.asset.class</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name" string="Name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_open_sub_asset_class" model="ir.actions.act_window">
+        <field name="name">Sub Asset Class</field>
+        <field name="res_model">account.sub.asset.class</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

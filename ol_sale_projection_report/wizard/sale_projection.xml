@@ -1,0 +1,39 @@
+<odoo>
+
+    <record model="ir.ui.view" id="view_wizard_report_sale_projection">
+        <field name="name">sale.projection.report.wizard.form</field>
+        <field name="model">sale.projection.report.wizard</field>
+
+        <field name="arch" type="xml">
+
+            <form string="Sale Projection Report">
+                <group>
+                    <field name="fiscal_year"/>
+                        <field name="excel_file" filename="file_name" attrs="{'invisible': [('excel_file', '=', False)]}"/>
+                        <field name="file_name" invisible="1"/>
+                            
+                </group>
+
+                <footer>
+                   <button name="create_sale_projection_pdf" type="object" string="Print PDF" class="btn-primary"/>
+                   <button name="print_excel_report" type="object" string="Print Excel" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sale_projection_report" model="ir.actions.act_window">
+        <field name="name">Sale Projection Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.projection.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_wizard_report_sale_projection"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_action_sale_projection_report" name="Sale Projection Report" sequence="100" parent='account.menu_finance_reports' action="action_sale_projection_report" />
+    <menuitem id="menu_action_sale_projection_report_sales" name="Sale Projection Report" sequence="100" parent='sale.menu_sale_report' action="action_sale_projection_report" />
+
+    
+</odoo> 

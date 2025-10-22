@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding='utf-8'?>
+<odoo>
+
+    <data>
+     
+        <record id="ol_quality_control_matertial_requirement_form_inherit" model="ir.ui.view">
+            <field name="name">ol.quality.control.matertial.requirement.form.inherit</field>
+            <field name="model">affinity.material.requirement</field>
+            <field name="inherit_id" ref="affinity_production_plan.affinity_material_requirement_form"/>
+            <field name="arch" type="xml">
+                
+                <xpath expr="//field[@name='material_demand_line_ids']/tree/field[@name='remaining_qty']" position="after">
+                    <field name="process_qty" />
+                    <field name="pdo_remarks" />
+                </xpath>
+            
+              
+            </field>
+        </record>
+        
+    </data>
+
+</odoo>

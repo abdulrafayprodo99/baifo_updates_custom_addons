@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_stock_sale_position_wizard" model="ir.ui.view">
+            <field name="name">stock.sale.position.wizard.form</field>
+            <field name="model">stock.sale.position.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Stock sale Position Wizard">
+                    <group>
+                        <group colspan="4" >
+                            <group string="Date">
+                                <field name="date_filter" widget="radio"/>
+                                <field name="from_date" attrs="{'invisible':[('date_filter','!=','range')]}"/>
+                                <field name="to_date" attrs="{'invisible':[('date_filter','!=','range')]}"/>
+                            </group>
+                        </group>
+                        <group colspan="4">
+                            <group string="Product">
+                                <field name="product_category"></field>
+                                <field name="product_filter" widget="radio" invisible="1"/>
+                                <field name="product_ids" widget="many2many_tags" attrs="{'invisible':[('product_filter','!=','single')]}"/>
+                                <field name="from_product" attrs="{'invisible':[('product_filter','!=','range')]}"/>
+                                <field name="to_product" attrs="{'invisible':[('product_filter','!=','range')]}"/>
+                            </group>
+                            <br/>
+                            <br/>
+                            <group string="Location" invisible="1">
+                                <field name="location_filter" widget="radio"/>
+                                <field name="location" widget="many2many_tags" attrs="{'invisible':[('location_filter','!=','single')]}"/>
+                            </group>
+                        </group>
+                        <group colspan="4">
+                            <!-- <group string="Category"> -->
+                                <!-- <field name="category_filter" widget="radio" /> -->
+                                <!-- <field name="product_category_ids" widget="many2many_tags" /> -->
+                            <!-- </group> -->
+                            <group string="Configure Report" invisible="1">
+                                <field name="render_type" widget="radio" />
+                            </group>
+                        </group>
+                        <!-- <field name="from_date"/>
+                        <field name="to_date"/>
+                         <field name="product_category" />
+                         <field name="from_product" />
+                        <field name="to_product" />
+                        <field name="location_filter" /> -->
+                    </group>
+                    <footer>
+                        <button string="Generate Report" type="object" name="generate_report" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

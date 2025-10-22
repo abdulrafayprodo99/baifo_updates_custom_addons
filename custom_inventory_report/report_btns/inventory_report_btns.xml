@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="report_inventory_report_closing_balance_btn" model="ir.actions.report">
+        <field name="name">Inventory List Report</field>
+        <field name="model">custom.inventory.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_inventory_report.report_inventory_closing_template</field>
+        <field name="report_file">custom_inventory_report.report_inventory_closing_template</field>
+        <!-- <field name="print_report_name">'Products Labels - %s' % (object.name)</field> -->
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="custom_inventory_report.custom_report_inventory_paperformat" />
+    </record>
+
+    <record id="report_inventory_report_all_btn" model="ir.actions.report">
+        <field name="name">Inventory Report</field>
+        <field name="model">custom.inventory.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_inventory_report.report_inventory_all_template</field>
+        <field name="report_file">custom_inventory_report.report_inventory_all_template</field>
+        <!-- <field name="print_report_name">'Products Labels - %s' % (object.name)</field> -->
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="custom_inventory_report.custom_report_inventory_paperformat" />
+    </record>
+
+
+    <record id="report_stock_status_inventory" model="ir.actions.report">
+        <field name="name">Stock Status Inventory Report</field>
+        <field name="model">stock.status.inventory.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_inventory_report.report_inventory_all_template</field>
+        <field name="report_file">custom_inventory_report.report_inventory_all_template</field>
+        <!-- <field name="print_report_name">'Products Labels - %s' % (object.name)</field> -->
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="custom_inventory_report.custom_report_inventory_paperformat" />
+    </record>
+    
+</odoo>

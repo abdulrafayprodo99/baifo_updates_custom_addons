@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_employee_grade_tree" model="ir.ui.view">
+        <field name="name">employee.grade.tree</field>
+        <field name="model">employee.grade</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="designation" />
+                        <field name="qualification" />
+                        <field name="experience" />
+                        <field name="minimum_salary_range" />
+                        <field name="maximum_salary_range" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_employee_grade_form" model="ir.ui.view">
+        <field name="name">employee.grade.form</field>
+        <field name="model">employee.grade</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>                   
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="designation" />
+                        <field name="qualification" />
+                        <field name="experience" />
+                        <field name="minimum_salary_range" />
+                        <field name="maximum_salary_range" />
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="employee_grade_root_action" model="ir.actions.act_window">
+        <field name="name">Grade</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">employee.grade</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create Your First Record
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="employee_grade_root_item" name="Grade" parent="hr.menu_config_employee" action="employee_grade_root_action" sequence="11" />
+</odoo>

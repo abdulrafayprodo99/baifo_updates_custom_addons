@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_operation_subtype_tree" model="ir.ui.view">
+        <field name="name">operation.subtype.tree</field>
+        <field name="model">operation.subtype</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" string="Name"/>
+                <field name="prefix" string="Prefix"/>
+                
+                
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_operation_subtype_form" model="ir.ui.view">
+        <field name="name">operation.subtype.form</field>
+        <field name="model">operation.subtype</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                     <field name="status" widget="statusbar" statusbar_visible="lot has not been created,lot has been created"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" string="Name"/>
+                            
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="prefix" string="Prefix"/>
+                            
+                        </group>
+                                              
+                    </group>
+                    <button string="update name" class="oe_highlight" type="object" name="update_seq" />
+
+                    
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="operation_subtype_action" model="ir.actions.act_window">
+            <field name="name">Operation Subtype</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">operation.subtype</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <record id="mrp_bom_inherit_form" model="ir.ui.view">
+            <field name="name">mrp.bom.inherit.form</field>
+                <field name="model">mrp.bom</field>
+                <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+                <field name="arch" type="xml">
+                <field name="analytic_account_id" position="after">
+                    <field name="operation_subtype"/>
+
+                </field>
+            </field>
+        </record>
+ 
+
+    <!-- <menuitem id="gate_pass_root" name="Gate Pass" parent="" sequence="10" /> -->
+    <menuitem id="operation_subtype" name="Operation Subtype" parent="mrp.menu_mrp_configuration" action="operation_subtype_action" sequence="11"/>
+</odoo>

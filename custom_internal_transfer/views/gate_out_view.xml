@@ -1,0 +1,20 @@
+<odoo>
+    <data>
+
+        <!-- Inherit the view "view_gate_out_module_form" and apply domain to sale_id field -->
+        <record id="view_gate_out_module_form_inherited" model="ir.ui.view">
+            <field name="name">gate.out.form.inherited</field>
+            <field name="model">gate.out</field>
+            <field name="inherit_id" ref="gate_module.view_gate_out_module_form"/>
+            <field name="arch" type="xml">
+                
+                <!-- Apply the domain to the sale_id field -->
+                <xpath expr="//field[@name='sale_id']" position="attributes">
+                    <attribute name="domain">[('picking_type_id.name', 'in', ['Delivery Challan Local', 'Delivery Challan Export'])]</attribute>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>

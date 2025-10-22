@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_allowance_report_wizard,access.allowance.report.wizard,model_allowance_report_wizard,base.group_user,1,1,1,1
+access_allowance_details_wizard,access.allowance.details.wizard,model_allowance_details_wizard,base.group_user,1,1,1,1

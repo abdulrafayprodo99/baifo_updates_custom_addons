@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- Inherit the stock.picking form view -->
+        <record id="view_picking_form_custom" model="ir.ui.view">
+            <field name="name">stock.picking.form.inherit</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+
+                <!-- Example: Add a new field under the existing picking type field -->
+                <!-- <xpath expr="//form/header[2]/button[@name='action_prepare']" position="replace">
+                    <button name="action_prepare" string="Prepared" class="oe_highlight"/>
+                </xpath> -->
+
+                <xpath expr="//button[@name='action_assign']" position="attributes">
+                    <attribute name="attrs">{'invisible': 1 }</attribute>
+                </xpath>
+
+            </field>
+        </record>
+<!-- 
+        <record id="view_picking_form_check_availabilty" model="ir.ui.view">
+            <field name="name">stock.picking.form.check.availability</field>
+            <field name="model">stock.picking</field>
+            <field eval="12" name="priority"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_assign']" position="attributes">
+                    <attribute name="attrs">{'invisible': 1}</attribute>
+                </xpath>
+            </field>
+        </record> -->
+
+
+    </data>
+</odoo>

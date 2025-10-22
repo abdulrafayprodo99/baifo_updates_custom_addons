@@ -1,0 +1,198 @@
+<odoo>
+    <!-- Wizard Action -->
+    <record id="action_quality_inspection_report_wizard" model="ir.actions.act_window">
+        <field name="name">Quality Inspection Report Wizard</field>
+        <field name="res_model">quality.inspection.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Wizard Form View -->
+    <record id="view_quality_inspection_report_wizard_form" model="ir.ui.view">
+        <field name="name">quality.inspection.report.wizard.form</field>
+        <field name="model">quality.inspection.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Quality Inspection Report Filters">
+                <group>
+                    <group>
+                        <field name="team_all"/>
+                        <field name="team_id" attrs="{'invisible': [('team_all','=',True)]}"/>
+                        <field name="qir_filter_type"/>
+                        <field name="qir_id" attrs="{'invisible': [('qir_filter_type','=','range')]}"/>
+                        <field name="qir_from" attrs="{'invisible': [('qir_filter_type','=','single')]}"/>
+                        <field name="qir_to" attrs="{'invisible': [('qir_filter_type','=','single')]}"/>
+                    </group>
+                    <group>
+                        <field name="product_id"/>
+                        <field name="qir_date_from"/>
+                        <field name="qir_date_to"/>
+                        <field name="approval_status"/>
+                        <field name="lot_id"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_print_pdf_report" type="object" string="Print Report" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+
+
+
+     <!-- Define a menu item to access this tree view -->
+    <menuitem id="menu_rqi_model_report" name="Quality Inspection Report" parent="quality_control.menu_quality_reporting" action="action_quality_inspection_report_wizard"/>
+
+
+
+        <!-- Paperformat for Quality Inspection Report -->
+        <record id="paperformat_quality_inspection" model="report.paperformat">
+            <field name="name">Quality Inspection Report Format</field>
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">15</field>
+            <field name="margin_bottom">15</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+            <field name="header_line">False</field>
+            <field name="disable_shrinking">False</field>
+        </record>
+
+        <!-- Report Action -->
+        <record id="action_quality_inspection_report_pdf" model="ir.actions.report">
+            <field name="name">Quality Inspection Report</field>
+            <field name="model">quality.inspection.report.wizard</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">ol_quality_control.quality_inspection_report_template</field>
+            <field name="report_file">ol_quality_control.quality_inspection_report_template</field>
+            <field name="binding_model_id" eval="False"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="ol_quality_control.paperformat_quality_inspection"/>
+            <field name="print_report_name">'Quality Inspection Report'</field>
+        </record>
+
+
+
+
+
+  <template id="quality_inspection_report_template">
+  <t t-call="web.html_container">
+    <t t-set="counter" t-value="0"/>
+    <t t-foreach="report_data['report']" t-as="doc" t-foreach-index="i">
+      
+      <!-- Start Page -->
+      <div class="page" style="font-family: Arial, sans-serif; font-size:12px; color:#000;">
+
+        <!-- Header -->
+        <div style="text-align:center; margin-bottom:10px; position:relative;">
+          <!--<span t-field="env.company.logo" t-options-widget="'image'" style="display:inline-block;width:40px;width:50px"/>-->
+          <h2 style="margin:0; font-weight:bold;">Biafo Industries Limited</h2>
+          <h3 style="margin:0; text-decoration: underline; font-weight:normal;">Quality Inspection Report</h3>
+        </div>
+
+        <!-- Top details -->
+        <table style="width:100%; margin-bottom:10px; font-size:12px; border:none; line-height:1.6;">
+          <tr>
+            <td colspan="2">Date: <t t-esc="time.strftime('%d-%m-%Y')"/></td>
+          </tr>
+          <tr>
+            <td style="width:50%;"><b>Item Name:</b> <t t-esc="doc['product']"/></td>
+            <td style="width:50%;"><b>QIR Type:</b> <t t-esc="doc['team']"/></td>
+          </tr>
+          <tr>
+            <td><b>Supplier:</b> <t t-esc="doc['supplier']"/></td>
+            <td><b>QIR Date:</b> <t t-esc="doc['qir_date']"/></td>
+          </tr>
+          <tr>
+            <td><b>Ref. Doc. No:</b> <t t-esc="doc['doc_reference']"/></td>
+            <td><b>QIR Number:</b> <t t-esc="doc['name']"/></td>
+          </tr>
+          <tr>
+            <td><b>Ref. Doc. Date:</b> <t t-esc="doc['doc_date']"/></td>
+            <td><b>Status:</b>
+              <t t-if="doc['approved']">Approved</t>
+              <t t-else="">Not Approved</t>
+            </td>
+          </tr>
+          <tr>
+            <td><b>Lot/Batch:</b> <t t-esc="doc['lot']"/></td>
+            <td><b>Alternate Lot/Batch:</b> <t t-esc="doc['alt_lot']"/></td>
+          </tr>
+          <tr>
+            <td colspan="2"><b>Sample:</b> <t t-esc="doc['sample']"/></td>
+          </tr>
+        </table>
+
+        <!-- Lines Table -->
+<table style="width:100%; border-collapse: collapse; font-size:12px; margin-top:10px; border:none;">
+  <thead style="background:#f9f9f9; text-align:center; font-weight:bold;">
+    <tr>
+      <th style="padding:4px; border-top:1px solid #000; border-bottom:1px solid #000;">Code</th>
+      <th style="padding:4px; border-top:1px solid #000; border-bottom:1px solid #000;">Quality Parameter</th>
+      <th style="padding:4px; border-top:1px solid #000; border-bottom:1px solid #000;">Standard</th>
+      <th style="padding:4px; border-top:1px solid #000; border-bottom:1px solid #000;">Norm</th>
+      <th style="padding:4px; border-top:1px solid #000; border-bottom:1px solid #000;">Norm Unit</th>
+      <th style="padding:4px; border-top:1px solid #000; border-bottom:1px solid #000;">Tolerance Limit</th>
+      <th style="padding:4px; border-top:1px solid #000; border-bottom:1px solid #000;">Actual Result</th>
+      <th style="padding:4px; border-top:1px solid #000; border-bottom:1px solid #000;">QIC Status</th>
+      <th style="padding:4px; border-top:1px solid #000; border-bottom:1px solid #000;">Remarks</th>
+      <th style="padding:4px; border-top:1px solid #000; border-bottom:1px solid #000;">Status</th>
+      <th style="padding:4px; border-top:1px solid #000; border-bottom:1px solid #000;">Action Required</th>
+    </tr>
+  </thead>
+  <tbody>
+    <t t-foreach="doc['lines']" t-as="line">
+      <tr>
+        <td style="padding:3px; text-align:center;"><t t-esc="line['code']"/></td>
+        <td style="padding:3px;"><t t-esc="line['quality_parameter']"/></td>
+        <td style="padding:3px; text-align:center;"><t t-esc="line['standard']"/></td>
+        <td style="padding:3px; text-align:center;"><t t-esc="line['norm']"/></td>
+        <td style="padding:3px; text-align:center;"><t t-esc="line['norm_unit']"/></td>
+        <td style="padding:3px; text-align:center;"><t t-esc="line['tolerance_limit']"/></td>
+        <td style="padding:3px; text-align:center;"><t t-esc="line['actual_result']"/></td>
+        <td style="padding:3px; text-align:center;"><t t-esc="line['qic_status']"/></td>
+        <td style="padding:3px; text-align:center;"><t t-esc="line['remarks']"/></td>
+        <td style="padding:3px; text-align:center;"><t t-esc="line['status_qir']"/></td>
+        <td style="padding:3px; text-align:center;"><t t-esc="line['action_required']"/></td>
+      </tr>
+    </t>
+  </tbody>
+</table>
+
+
+        <!-- Footer Notes -->
+        <div style="margin-top:15px; font-size:12px; line-height:1.6;">
+          <p><b>Rejection Note:</b> <t t-esc="doc['reject_note']"/></p>
+          <p><b>Remarks:</b> <t t-esc="doc['remarks']"/></p>
+        </div>
+
+        <!-- Signatures -->
+        <table style="width:100%; margin-top:40px; font-size:12px;">
+          <tr>
+            <td style="text-align:center;">
+              <b><t t-esc="doc['prepared_by']"/></b><br/>
+              Prepared By<br/>
+              <t t-esc="doc['prepared_by_timestamp']"/>
+            </td>
+            <td style="text-align:center;">
+              <b><t t-esc="doc['approved_by']"/></b><br/>
+              Approved By<br/>
+              <t t-esc="doc['approved_by_timestamp']"/>
+            </td>
+          </tr>
+        </table>
+
+      </div>
+      
+
+        <div style="page-break-after:always;"/>
+
+    </t>
+  </t>
+
+  </template>
+
+</odoo>

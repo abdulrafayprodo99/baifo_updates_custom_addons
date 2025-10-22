@@ -1,0 +1,388 @@
+<odoo>
+    <data>
+        <record id="paperformat_report_payroll" model="report.paperformat">
+            <field name="name">Payroll Report Format</field>
+            <field name="format">Legal</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">10</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+            <field name="header_line">False</field>
+            <field name="disable_shrinking">False</field>
+        </record> 
+        
+
+        <record id="action_report_payroll_pdf" model="ir.actions.report">
+            <field name="name">Payroll Report</field>
+            <field name="model">payroll.report</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">payroll_report_xlsx.report_payroll_pdf</field>
+            <field name="report_file">payroll_report_xlsx.report_payroll_pdf</field>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="payroll_report_xlsx.paperformat_report_payroll"/>
+            <field name="print_report_name">'Payroll Report'</field>
+        </record>
+
+        <template id="report_payroll_pdf">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout"> 
+                    <!-- Custom Footer -->
+                    <div class="footer" style="font-family: Segoe UI; font-size: 10px;">    
+                        <div class="row" style="border:1px solid black;"/>
+                        <div class="row mt-1">
+                            <div class="col-1">
+                                <span>Odoo</span>
+                            </div>
+                            <div class="col-6" style="text-align: center;">
+                                <span>Powered By Odolution</span>
+                            </div>
+                            <div class="col-5" style="text-align: right;">
+                                <t t-set="current_time" t-value="time.strftime('%d/%m/%Y %H:%M:%S')"/>
+                                <span t-esc="current_time"/>
+                                <t t-if="report_type == 'pdf'">
+                                    <span style="margin-left: 15px;">Page: <span class="page"/> / <span class="topage"/></span>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="page">
+                        <h2 style="text-align: center; font-size: 16px; font-weight: bold; color: black;">
+                            <t t-esc="report_data['report_title']"/>
+                        </h2>
+                        <p style="text-align: center; font-size: 12px; color: black;">
+                            From: <t t-esc="report_data['date_from']"/> To: <t t-esc="report_data['date_to']"/>
+                        </p>
+                        <!-- Shared Table Headings -->
+                        <t t-set="shared_headings">
+                            <thead>
+                                <tr style="background-color: #f2f2f2;">
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 2%; padding: 8px; font-size: 9px;">S.No.</th>
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 4%; padding: 8px; font-size: 9px;">Employee Code</th>
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 10%; padding: 8px; font-size: 9px;">Employee Name</th>
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 10%; padding: 8px; font-size: 9px;">Designation</th>
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 10%; padding: 8px; font-size: 9px;">Contract Type</th>
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 6%; padding: 8px; font-size: 9px;">Employee Category</th>
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 4%; padding: 8px; font-size: 9px;">No. of Days</th>
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 6%; padding: 8px; font-size: 9px;">Salary W.E.F</th>
+                                    <th style="text-align: center; font-weight: bold; color: black; width: 24%; padding: 8px; font-size: 9px;" colspan="8">Pay &amp; Allowances</th>
+                                    <th style="text-align: center; font-weight: bold; color: black; width: 20.97%; padding: 8px; font-size: 9px;" colspan="9">Deductions</th>
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 6%; padding: 8px; font-size: 9px;">Net Salary</th>
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 6%; padding: 8px; font-size: 9px;">Remarks</th>
+                                </tr>
+                                <tr style="background-color: #f2f2f2;">
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 2%; padding: 8px; font-size: 9px;"/>
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 4%; padding: 8px; font-size: 9px;"/>
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 10%; padding: 8px; font-size: 9px;"/>
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 10%; padding: 8px; font-size: 9px;"/>
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 10%; padding: 8px; font-size: 9px;"/>
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 6%; padding: 8px; font-size: 9px;"/>
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 4%; padding: 8px; font-size: 9px;"/>
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 6%; padding: 8px; font-size: 9px;"/>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 3%; padding: 8px; font-size: 8px;">Basic Pay</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 3%; padding: 8px; font-size: 8px;">House Rent</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 3%; padding: 8px; font-size: 8px;">Utilities</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 3%; padding: 8px; font-size: 8px;">Medical</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 3%; padding: 8px; font-size: 8px;">Other Allow.</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 3%; padding: 8px; font-size: 8px;">Arrears</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 3%; padding: 8px; font-size: 8px;">Overtime</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 3%; padding: 8px; font-size: 8px;">Gross Pay</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 2.33%; padding: 8px; font-size: 8px;">Income Tax</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 2.33%; padding: 8px; font-size: 8px;">PF</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 2.33%; padding: 8px; font-size: 8px;">EOBI</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 2.33%; padding: 8px; font-size: 8px;">Food Charges</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 2.33%; padding: 8px; font-size: 8px;">Advance</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 2.33%; padding: 8px; font-size: 8px;">PF Loan</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 2.33%; padding: 8px; font-size: 8px;">Prof Tax</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 2.33%; padding: 8px; font-size: 8px;">Excess Leaves</th>
+                                    <th style="text-align: right; font-weight: normal; color: black; width: 2.33%; padding: 8px; font-size: 8px;">Total Deduction</th>
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 6%; padding: 8px; font-size: 9px;"/>
+                                    <th style="text-align: left; font-weight: bold; color: black; width: 6%; padding: 8px; font-size: 9px;"/>
+                                </tr>
+                            </thead>
+                        </t>
+                        <!-- Initialize Grand Total Accumulators -->
+                        <t t-set="grand_total" t-value="{                     'employee_count': 0,                     'no_of_days': 0,                     'salary_wef': 0,                     'pay_and_allowances': {                         'basic_pay': 0,                         'house_rent_allowance': 0,                         'utilities_allowance': 0,                         'medical_allowance': 0,                         'other_allowance': 0,                         'arrears': 0,                         'overtime_driver_allowance': 0,                         'gross_pay': 0                     },                     'deductions': {                         'income_tax': 0,                         'provident_fund': 0,                         'eobi': 0,                         'food_charges': 0,                         'advance': 0,                         'provident_fund_loan': 0,                         'professional_tax': 0,                         'excess_leaves': 0,                         'total_deduction': 0                     },                     'net_salary': 0                 }"/>
+                        <!-- Loop Through Departments and Employees -->
+                        <t t-foreach="report_data['departments']" t-as="dept">
+                            <t t-if="dept['employees']">
+                                <!-- Initialize Department Subtotal -->
+                                <t t-set="dept_subtotal" t-value="{                                     'no_of_days': 0,                                     'salary_wef': 0,                                     'pay_and_allowances': {                                         'basic_pay': 0,                                         'house_rent_allowance': 0,                                         'utilities_allowance': 0,                                         'medical_allowance': 0,                                         'other_allowance': 0,                                         'arrears': 0,                                         'overtime_driver_allowance': 0,                                         'gross_pay': 0                                     },                                     'deductions': {                                         'income_tax': 0,                                         'provident_fund': 0,                                         'eobi': 0,                                         'food_charges': 0,                                         'advance': 0,                                         'provident_fund_loan': 0,                                         'professional_tax': 0,                                         'excess_leaves': 0,                                         'total_deduction': 0                                     },                                     'net_salary': 0                                 }"/>
+                                <h5 style="margin-top: 8px; text-decoration: underline; font-size: 14px; font-weight: bold; color: #333;">
+                                    <t t-esc="dept['department_name'].upper()"/>
+                                </h5>
+                                <!-- Reset Serial Number for Each Department -->
+                                <t t-set="dept_s_no" t-value="0"/>
+                                <table class="table table-bordered" style="border-collapse: collapse; width: 100%; padding: 8px;">
+                                    <t t-raw="shared_headings"/>
+                                    <tbody>
+                                        <!-- Sort Employees by Name (as a proxy for seniority) -->
+                                        <t t-foreach="dept['employees']" t-as="emp">
+                                            <tr>
+                                                <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 2%; font-size: 9px;">
+                                                    <t t-set="dept_s_no" t-value="dept_s_no + 1"/>
+                                                    <t t-esc="dept_s_no"/>
+                                                </td>
+                                                <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                                    <t t-esc="emp['employee_code']"/>
+                                                </td>
+                                                <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 10%; font-size: 9px;">
+                                                    <t t-esc="emp['name']"/>
+                                                </td>
+                                                <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 10%; font-size: 9px;">
+                                                    <t t-esc="emp['designation']"/>
+                                                </td>
+                                                <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 10%; font-size: 9px;">
+                                                    <t t-esc="emp['contract_type']"/>
+                                                </td>
+                                                <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                                    <t t-esc="emp['employee_category']"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;">
+                                                    <t t-esc="emp['no_of_days']" t-options="{'widget': 'integer'}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                                    <t t-esc="emp['salary_wef']" t-options="{'widget': 'integer'}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 3%; font-size: 9px;">
+                                                    <t t-esc="emp['pay_and_allowances']['basic_pay']" t-options="{'widget': 'integer'}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 3%; font-size: 9px;">
+                                                    <t t-esc="emp['pay_and_allowances']['house_rent_allowance']" t-options="{'widget': 'integer'}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 3%; font-size: 9px;">
+                                                    <t t-esc="emp['pay_and_allowances']['utilities_allowance']" t-options="{'widget': 'integer'}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 3%; font-size: 9px;">
+                                                    <t t-esc="emp['pay_and_allowances']['medical_allowance']" t-options="{'widget': 'integer'}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 3%; font-size: 9px;">
+                                                    <t t-esc="emp['pay_and_allowances']['other_allow']" t-options="{'widget': 'integer'}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 3%; font-size: 9px;">
+                                                    <t t-esc="emp['pay_and_allowances']['arrears']" t-options="{'widget': 'integer'}"/>
+                                                </td>
+                                                <!-- <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 3%; font-size: 9px;">0</td> -->
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 3%; font-size: 9px;">
+                                                    <t t-esc="emp['pay_and_allowances']['overtime_driver_allowance']" t-options="{'widget': 'integer'}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 3%; font-size: 9px;">
+                                                    <t t-esc="emp['pay_and_allowances']['gross_pay']" t-options="{'widget': 'integer'}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                                    <t t-esc="emp['deductions']['income_tax']" t-options="{'widget': 'integer'}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                                    <t t-esc="emp['deductions']['provident_fund']" t-options="{'widget': 'integer'}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                                    <t t-esc="emp['deductions']['eobi']" t-options="{'widget': 'integer'}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                                    <t t-esc="emp['deductions']['food_charges']" t-options="{'widget': 'integer'}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                                    <t t-esc="emp['deductions']['advance']" t-options="{'widget': 'integer'}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                                    <t t-esc="emp['deductions']['provident_fund_loan']" t-options="{'widget': 'integer'}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                                    <t t-esc="emp['deductions']['professional_tax']" t-options="{'widget': 'integer'}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                                    <t t-esc="emp['deductions']['excess_leaves']" t-options="{'widget': 'integer'}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                                    <t t-esc="emp['deductions']['total_deduction']" t-options="{'widget': 'integer'}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                                    <t t-esc="emp['net_salary']" t-options="{'widget': 'integer'}"/>
+                                                </td>
+                                                <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                                    <t t-esc="emp['remarks']"/>
+                                                </td>
+                                            </tr>
+                                            <!-- Update Department Subtotal -->
+                                            <t t-set="dept_subtotal" t-value="{                                                 'no_of_days': dept_subtotal['no_of_days'] + emp['no_of_days'],                                                 'salary_wef': dept_subtotal['salary_wef'] + (emp['salary_wef'] or 0),                                                 'pay_and_allowances': {                                                     'basic_pay': dept_subtotal['pay_and_allowances']['basic_pay'] + emp['pay_and_allowances']['basic_pay'],                                                     'house_rent_allowance': dept_subtotal['pay_and_allowances']['house_rent_allowance'] + emp['pay_and_allowances']['house_rent_allowance'],                                                     'utilities_allowance': dept_subtotal['pay_and_allowances']['utilities_allowance'] + emp['pay_and_allowances']['utilities_allowance'],                                                     'medical_allowance': dept_subtotal['pay_and_allowances']['medical_allowance'] + emp['pay_and_allowances']['medical_allowance'],                                                     'other_allowance': dept_subtotal['pay_and_allowances']['other_allowance'] + emp['pay_and_allowances']['other_allow'],                                                     'arrears': dept_subtotal['pay_and_allowances']['arrears'] + emp['pay_and_allowances']['arrears'],                                                     'overtime_driver_allowance': dept_subtotal['pay_and_allowances']['overtime_driver_allowance'] + emp['pay_and_allowances']['overtime_driver_allowance'],                                                     'gross_pay': dept_subtotal['pay_and_allowances']['gross_pay'] + emp['pay_and_allowances']['gross_pay']                                                 },                                                 'deductions': {                                                     'income_tax': dept_subtotal['deductions']['income_tax'] + emp['deductions']['income_tax'],                                                     'provident_fund': dept_subtotal['deductions']['provident_fund'] + emp['deductions']['provident_fund'],                                                     'eobi': dept_subtotal['deductions']['eobi'] + emp['deductions']['eobi'],                                                     'food_charges': dept_subtotal['deductions']['food_charges'] + emp['deductions']['food_charges'],                                                     'advance': dept_subtotal['deductions']['advance'] + emp['deductions']['advance'],                                                     'provident_fund_loan': dept_subtotal['deductions']['provident_fund_loan'] + emp['deductions']['provident_fund_loan'],                                                     'professional_tax': dept_subtotal['deductions']['professional_tax'] + emp['deductions']['professional_tax'],                                                     'excess_leaves': dept_subtotal['deductions']['excess_leaves'] + emp['deductions']['excess_leaves'],                                                     'total_deduction': dept_subtotal['deductions']['total_deduction'] + emp['deductions']['total_deduction']                                                 },                                                 'net_salary': dept_subtotal['net_salary'] + emp['net_salary']                                             }"/>
+                                            <!-- Update Grand Total -->
+                                            <t t-set="grand_total" t-value="{                                                 'employee_count': grand_total['employee_count'] + 1,                                                 'no_of_days': grand_total['no_of_days'] + emp['no_of_days'],                                                 'salary_wef': grand_total['salary_wef'] + (emp['salary_wef'] or 0),                                                 'pay_and_allowances': {                                                     'basic_pay': grand_total['pay_and_allowances']['basic_pay'] + emp['pay_and_allowances']['basic_pay'],                                                     'house_rent_allowance': grand_total['pay_and_allowances']['house_rent_allowance'] + emp['pay_and_allowances']['house_rent_allowance'],                                                     'utilities_allowance': grand_total['pay_and_allowances']['utilities_allowance'] + emp['pay_and_allowances']['utilities_allowance'],                                                     'medical_allowance': grand_total['pay_and_allowances']['medical_allowance'] + emp['pay_and_allowances']['medical_allowance'],                                                     'other_allowance': grand_total['pay_and_allowances']['other_allowance'] + emp['pay_and_allowances']['other_allow'],                                                     'arrears': grand_total['pay_and_allowances']['arrears'] +  emp['pay_and_allowances']['arrears'],                                                     'overtime_driver_allowance': grand_total['pay_and_allowances']['overtime_driver_allowance'] + emp['pay_and_allowances']['overtime_driver_allowance'],                                                     'gross_pay': grand_total['pay_and_allowances']['gross_pay'] + emp['pay_and_allowances']['gross_pay']                                                 },                                                 'deductions': {                                                     'income_tax': grand_total['deductions']['income_tax'] + emp['deductions']['income_tax'],                                                     'provident_fund': grand_total['deductions']['provident_fund'] + emp['deductions']['provident_fund'],                                                     'eobi': grand_total['deductions']['eobi'] + emp['deductions']['eobi'],                                                     'food_charges': grand_total['deductions']['food_charges'] + emp['deductions']['food_charges'],                                                     'advance': grand_total['deductions']['advance'] + emp['deductions']['advance'],                                                     'provident_fund_loan': grand_total['deductions']['provident_fund_loan'] + emp['deductions']['provident_fund_loan'],                                                     'professional_tax': grand_total['deductions']['professional_tax'] + emp['deductions']['professional_tax'],                                                     'excess_leaves': grand_total['deductions']['excess_leaves'] + emp['deductions']['excess_leaves'],                                                     'total_deduction': grand_total['deductions']['total_deduction'] + emp['deductions']['total_deduction']                                                 },                                                 'net_salary': grand_total['net_salary'] + emp['net_salary']                                             }"/>
+                                        </t>
+                                        <!-- Department Subtotal Row -->
+                                        <tr style="background-color: #e6e6e6; font-weight: bold;">
+                                            <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 2%; font-size: 9px;"/>
+                                            <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;"/>
+                                            <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 10%; font-size: 9px;">Subtotal</td>
+                                            <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 10%; font-size: 9px;"/>
+                                            <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 10%; font-size: 9px;"/>
+                                            <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;"/>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;"/>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                                <t t-esc="dept_subtotal['salary_wef']" t-options="{'widget': 'integer'}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 3%; font-size: 9px;">
+                                                <t t-esc="dept_subtotal['pay_and_allowances']['basic_pay']" t-options="{'widget': 'integer'}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 3%; font-size: 9px;">
+                                                <t t-esc="dept_subtotal['pay_and_allowances']['house_rent_allowance']" t-options="{'widget': 'integer'}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.9%; font-size: 9px;">
+                                                <t t-esc="dept_subtotal['pay_and_allowances']['utilities_allowance']" t-options="{'widget': 'integer'}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.9%; font-size: 9px;">
+                                                <t t-esc="dept_subtotal['pay_and_allowances']['medical_allowance']" t-options="{'widget': 'integer'}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.9%; font-size: 9px;">
+                                                <t t-esc="dept_subtotal['pay_and_allowances']['other_allowance']" t-options="{'widget': 'integer'}"/>
+                                            </td>
+<td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 3%; font-size: 9px;">
+                                        <t t-esc="dept_subtotal['pay_and_allowances']['arrears']" t-options="{'widget': 'integer'}"/>
+                                    </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.9%; font-size: 9px;">
+                                                <t t-esc="dept_subtotal['pay_and_allowances']['overtime_driver_allowance']" t-options="{'widget': 'integer'}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.9%; font-size: 9px;">
+                                                <t t-esc="dept_subtotal['pay_and_allowances']['gross_pay']" t-options="{'widget': 'integer'}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                                <t t-esc="dept_subtotal['deductions']['income_tax']" t-options="{'widget': 'integer'}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                                <t t-esc="dept_subtotal['deductions']['provident_fund']" t-options="{'widget': 'integer'}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                                <t t-esc="dept_subtotal['deductions']['eobi']" t-options="{'widget': 'integer'}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                                <t t-esc="dept_subtotal['deductions']['food_charges']" t-options="{'widget': 'integer'}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                                <t t-esc="dept_subtotal['deductions']['advance']" t-options="{'widget': 'integer'}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.3%; font-size: 9px;">
+                                                <t t-esc="dept_subtotal['deductions']['provident_fund_loan']" t-options="{'widget': 'integer'}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2%; font-size: 9px;">
+                                                <t t-esc="dept_subtotal['deductions']['professional_tax']" t-options="{'widget': 'integer'}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2%; font-size: 9px;">
+                                                <t t-esc="dept_subtotal['deductions']['excess_leaves']" t-options="{'widget': 'integer'}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2%; font-size: 9px;">
+                                                <t t-esc="dept_subtotal['deductions']['total_deduction']" t-options="{'widget': 'integer'}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                                <t t-esc="dept_subtotal['net_salary']" t-options="{'widget': 'integer'}"/>
+                                            </td>
+                                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;"/>
+                                        </tr>
+                                        <t t-if="dept_last">
+                                          <tr style="background-color: #e6e6e6; font-weight: bold;">
+                                    <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 2%; font-size: 9px;"/>
+                                    <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;"/>
+                                    <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 10%; font-size: 9px;">
+                                        <t t-esc="'Grand Total (%s Employees)' % grand_total['employee_count']"/>
+                                    </td>
+                                    <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 10%; font-size: 9px;"/>
+                                    <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 10%; font-size: 9px;"/>
+                                    <td style="text-align: left; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;"/>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 4%; font-size: 9px;"/>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                        <t t-esc="grand_total['salary_wef']" t-options="{'widget': 'integer'}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 3%; font-size: 9px;">
+                                        <t t-esc="grand_total['pay_and_allowances']['basic_pay']" t-options="{'widget': 'integer'}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 3%; font-size: 9px;">
+                                        <t t-esc="grand_total['pay_and_allowances']['house_rent_allowance']" t-options="{'widget': 'integer'}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 3%; font-size: 9px;">
+                                        <t t-esc="grand_total['pay_and_allowances']['utilities_allowance']" t-options="{'widget': 'integer'}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 3%; font-size: 9px;">
+                                        <t t-esc="grand_total['pay_and_allowances']['medical_allowance']" t-options="{'widget': 'integer'}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 3%; font-size: 9px;">
+                                        <t t-esc="grand_total['pay_and_allowances']['other_allowance']" t-options="{'widget': 'integer'}"/>
+                                    </td>
+<td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 3%; font-size: 9px;">
+                                        <t t-esc="grand_total['pay_and_allowances']['arrears']" t-options="{'widget': 'integer'}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 3%; font-size: 9px;">
+                                        <t t-esc="grand_total['pay_and_allowances']['overtime_driver_allowance']" t-options="{'widget': 'integer'}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 3%; font-size: 9px;">
+                                        <t t-esc="grand_total['pay_and_allowances']['gross_pay']" t-options="{'widget': 'integer'}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                        <t t-esc="grand_total['deductions']['income_tax']" t-options="{'widget': 'integer'}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                        <t t-esc="grand_total['deductions']['provident_fund']" t-options="{'widget': 'integer'}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                        <t t-esc="grand_total['deductions']['eobi']" t-options="{'widget': 'integer'}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                        <t t-esc="grand_total['deductions']['food_charges']" t-options="{'widget': 'integer'}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                        <t t-esc="grand_total['deductions']['advance']" t-options="{'widget': 'integer'}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                        <t t-esc="grand_total['deductions']['provident_fund_loan']" t-options="{'widget': 'integer'}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                        <t t-esc="grand_total['deductions']['professional_tax']" t-options="{'widget': 'integer'}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                        <t t-esc="grand_total['deductions']['excess_leaves']" t-options="{'widget': 'integer'}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 2.33%; font-size: 9px;">
+                                        <t t-esc="grand_total['deductions']['total_deduction']" t-options="{'widget': 'integer'}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;">
+                                        <t t-esc="grand_total['net_salary']" t-options="{'widget': 'integer'}"/>
+                                    </td>
+                                    <td style="text-align: right; border: 1px solid #ddd; padding: 6px; width: 6%; font-size: 9px;"/>
+                                </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                                <!-- Department Signature Section -->
+                                <t t-if="not dept_last">
+                                    <div class="row mt-5" style="font-family: Segoe UI; font-size: 10px; padding: 10px 0; max-width: 100%; box-sizing: border-box;">
+                                        <div style="height: 100px;">
+                                            <span style="padding-left:5%;">Prepared by: _______________</span>
+                                            <span style="padding-left:10%;">Checked by: _______________</span>
+                                            <span style="padding-left:10%;">Verified by: _______________</span>
+                                            <span style="padding-left:10%;">Approved by: _______________</span>
+                                            <span style="padding-left:10%;">Audited by: _______________</span>
+                                        </div>
+                                    </div>
+                                </t>
+                                <!-- Page Break After Each Department Except the Last One -->
+                                <t t-if="not dept_last">
+                                    <div style="page-break-after: always;"/>
+                                </t>
+                            </t>
+                        </t>
+ 
+                        <!-- Department Signature Section -->
+                        <div class="row mt-5" style="font-family: Segoe UI; font-size: 10px; padding: 10px 0; max-width: 100%; box-sizing: border-box;">
+                            <div style="height: 100px;">
+                                <span style="padding-left:5%;">Prepared by: _______________</span>
+                                <span style="padding-left:10%;">Checked by: _______________</span>
+                                <span style="padding-left:10%;">Verified by: _______________</span>
+                                <span style="padding-left:10%;">Approved by: _______________</span>
+                                <span style="padding-left:10%;">Audited by: _______________</span>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

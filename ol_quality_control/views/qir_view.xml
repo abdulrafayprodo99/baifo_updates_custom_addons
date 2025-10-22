@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_rqi_model_form_inherit" model="ir.ui.view">
+        <field name="name">view.rqi.model.form.inherit</field>
+        <field name="model">rqi.model</field>
+        <field name="inherit_id" ref="prodo_x_biafo_ext.view_rqi_model_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='line_id']//tree/field[@name='quality_title']"
+                position="after">
+                <field name="norm" />
+                <field name="norm_unit" />
+            </xpath>
+            <xpath expr="//button[@name='action_measure']" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': [('state_approval', 'in', ['cancel',
+                    'approve','not_approved','prepare'])]}
+                </attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_measure']" position="after">
+                <button string="Cancel" type="object" name="action_cancel" class="btn-primary"/>
+            </xpath>
+            <xpath expr="//button[@name='action_prepared']" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': [('state_approval', 'in', ['cancel',
+                    'approve','not_approved','prepare'])]}
+                </attribute>
+            </xpath>
+
+            <!-- <xpath expr="//button[@name='action_measure']" position="after">
+                <button name="action_not_approved" string="Unapprove" type="object" class="oe_highlight"
+                   attrs="{'invisible': [('state_approval', 'in', ['cancel', 'approve','not_approved','draft'])]}" />
+            </xpath> -->
+
+            <xpath expr="//field[@name='lot_id']" position="attributes">
+                <attribute name="attrs">
+                    {'invisible': 1}
+                </attribute>
+
+
+            </xpath>
+            <xpath expr="//field[@name='doc_date']" position="replace">
+
+
+            </xpath>
+            <xpath expr="//field[@name='date']" position="attributes">
+
+                <attribute name="attrs">
+                    {'required': 1}
+                </attribute>
+
+
+            </xpath>
+
+            <xpath expr="//field[@name='doc_refrence']" position="replace">
+
+                <field name="ref_type" invisible="1" />
+                <field name="mo" attrs="{'invisible':[('ref_type','!=','mo')]}" readonly="1" />
+                <field name="grn" attrs="{'invisible':[('ref_type','!=','grn')]}" readonly="1" />
+                <field name="gate_in_id" readonly="1" />
+                <field name="purchase_order" readonly="1" />
+                <field name="doc_date" string="Reference Document Date" />
+                <field name="lot_id" string="Lot/Batch" />
+                <field name="alt_lot_id" />
+
+
+            </xpath>
+
+
+            <xpath expr="//field[@name='approved_by_timestamp']" position="after">
+
+                <field name="approved"
+                ></field>
+                <field name="unapproved"
+                ></field>
+            </xpath>
+
+            <xpath expr="//page[@name='note']/group" position="replace">
+                <group>
+
+                    <field name="reject_note" />
+                    <field name="note" string="Remarks" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

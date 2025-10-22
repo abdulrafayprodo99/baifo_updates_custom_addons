@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+     
+        <record id="purchase_request_verify" model="res.groups">
+            <field name="name">Purchase Request Verify</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+        <record id="group_approve_prepare" model="res.groups">
+            <field name="name">Purchase Request Approve</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+
+  
+        <record id="purchase_request_inherited_form_header" model="ir.ui.view">
+            <field name="name">purchase.request.inherited.form.header</field>
+            <field name="model">purchase.request</field>
+            <field name="inherit_id" ref="purchase_request.view_purchase_request_form" />
+            <field name="arch" type="xml">
+                <xpath expr="/form/header" position="replace">
+                    <header
+                        attrs="{'invisible': ['|', ('pr_type', '!=', 'opex'),('opex_type', '!=', 'production')]}">
+                        <button name="action_prepared"
+                            attrs="{'invisible': [('approval_state', '!=', 'initiated')]}"
+                            string="Prepared" type="object" class="oe_highlight" />
+                        <!-- <button name="action_verify" groups="__export__.res_groups_95_61485810"
+                        attrs="{'invisible': [('approval_state', '!=', 'store_supervisors')]}"
+                        string="verified" type="object" class="oe_highlight"/> -->
+                        <button name="action_verify" groups="ol_quality_control.purchase_request_verify"
+                            attrs="{'invisible': [('approval_state', '!=', 'store_supervisors')]}"
+                            string="Verify" type="object" class="oe_highlight" />
+
+                        <button name="action_approve" groups="ol_quality_control.group_approve_prepare"
+                            attrs="{'invisible': [('approval_state', '!=', 'verify')]}"
+                            string="Approve" type="object" class="oe_highlight" />
+                        <button name="action_reject" groups="__export__.res_groups_94_a0be2b11"
+                            attrs="{'invisible': [('approval_state', 'not in', ['store_supervisors','verify'])]}"
+                            string="Reject" type="object" class="oe_highlight" />
+
+                        <button name="open_cancel_wizard"
+                            attrs="{'invisible': [('approval_state', 'in', 'cancel')]}"
+                            string="Cancel" type="object" class="oe_highlight" />
+
+                        <button name="704"
+                            attrs="{'invisible': [('approval_state', '!=', 'approve')]}"
+                            string="Create RFQ" type="action" />
+                        <field name="approval_state" widget="statusbar"
+                            statusbar_visible="store_supervisors,verify,approve,cancel" />
+                    </header>
+
+                    <header
+                        attrs="{'invisible': ['|','|',('opex_type', '!=', 'consumable'),('opex_sub_type','!=', 'head_office'),('opex_sub_type','=', False)]}">
+                        <button name="action_prepared"
+                            attrs="{'invisible': [('headoffice_state', '!=', 'initiated')]}"
+                            string="Prepared" type="object" class="oe_highlight" />
+
+
+                        <button name="action_checked"
+                            attrs="{'invisible': [('headoffice_state', '!=', 'store_supervisors')]}"
+                            string="Checked" type="object" class="oe_highlight" />
+
+                        <button name="action_verify"
+                        groups="ol_quality_control.purchase_request_verify"
+                            attrs="{'invisible': [('headoffice_state', '!=', 'checked')]}"
+                            string="Verify" type="object" class="oe_highlight" />
+
+
+                        <button name="action_reviewed"
+                            attrs="{'invisible': [('headoffice_state', '!=', 'verify')]}"
+                            string="Reviewed" type="object" class="oe_highlight" />
+
+
+                        <button name="action_approve"
+                        groups="ol_quality_control.group_approve_prepare"
+                            attrs="{'invisible': [('headoffice_state', '!=', 'reviewed')]}"
+                            string="Approve" type="object" class="oe_highlight" />
+
+                        <button name="action_reject" groups="__export__.res_groups_94_a0be2b11"
+                            attrs="{'invisible': [('headoffice_state', 'not in', ['store_supervisors','checked','verify','reviewed'])]}"
+                            string="Reject" type="object" class="oe_highlight" />
+
+                        <button name="open_cancel_wizard"
+                            attrs="{'invisible': [('headoffice_state', 'in', 'cancel')]}"
+                            string="Cancel" type="object" class="oe_highlight" />
+
+                        <button name="704"
+                            attrs="{'invisible': [('headoffice_state', '!=', 'approve')]}"
+                            string="Create RFQ" type="action" />
+                        <field name="headoffice_state" widget="statusbar"
+                            statusbar_visible="store_supervisors,checked,verify,reviewed,approve,cancel" />
+                    </header>
+                    <!-- <header
+                        attrs="{'invisible': ['|','|',('opex_type', '!=', 'consumable'),('opex_sub_type','!=', 'plant'),('opex_sub_type','=', False)]}">
+                        <button name="action_prepared"
+                            attrs="{'invisible': [('plant_state', '!=', 'initiated')]}"
+                            string="Prepared" type="object" class="oe_highlight" />
+
+                        <button name="action_recommended"
+                            attrs="{'invisible': [('plant_state', '!=', 'store_supervisors')]}"
+                            string="Recommended" type="object" class="oe_highlight" />
+
+
+                        <button name="action_checked"
+                            attrs="{'invisible': [('plant_state', '!=', 'recommended_by')]}"
+                            string="Checked" type="object" class="oe_highlight" />
+
+                        <button name="action_verify"
+                        groups="ol_quality_control.purchase_request_verify"
+
+                            attrs="{'invisible': [('plant_state', '!=', 'checked')]}"
+                            string="Verify" type="object" class="oe_highlight" />
+
+
+                        <button name="action_reviewed"
+                            attrs="{'invisible': [('plant_state', '!=', 'verify')]}"
+                            string="Reviewed" type="object" class="oe_highlight" />
+
+
+                        <button name="action_approve"
+                            attrs="{'invisible': [('plant_state', '!=', 'reviewed')]}"
+                            string="Approve" type="object" class="oe_highlight" />
+
+                        <button name="action_reject" groups="__export__.res_groups_94_a0be2b11"
+                            attrs="{'invisible': [('plant_state', 'not in',['store_supervisors','recommended_by','checked','verify','reviewed'])]}"
+                            string="Reject" type="object" class="oe_highlight" />
+
+                        <button name="open_cancel_wizard"
+                            attrs="{'invisible': [('plant_state', 'in', 'cancel')]}" string="Cancel"
+                            type="object" class="oe_highlight" />
+
+                        <button name="704" attrs="{'invisible': [('plant_state', '!=', 'approve')]}"
+                            string="Create RFQ" type="action" />
+                        <field name="plant_state" widget="statusbar"
+                            statusbar_visible="store_supervisors,recommended_by,checked,verify,reviewed,approve,cancel" />
+                    </header> -->
+
+
+                    <header
+                        attrs="{'invisible': ['|','|',('pr_type', '!=', 'capex'),('capex_type','!=', 'head_office'),('capex_type','=', False)]}">
+                        <button name="action_prepared"
+                            attrs="{'invisible': [('headoffice_state', '!=', 'initiated')]}"
+                            string="Prepared" type="object" class="oe_highlight" />
+
+
+                        <button name="action_checked"
+                            attrs="{'invisible': [('headoffice_state', '!=', 'store_supervisors')]}"
+                            string="Checked" type="object" class="oe_highlight" />
+
+                        <button name="action_verify"
+                        groups="ol_quality_control.purchase_request_verify"
+
+                            attrs="{'invisible': [('headoffice_state', '!=', 'checked')]}"
+                            string="Verify" type="object" class="oe_highlight" />
+
+
+                        <button name="action_reviewed"
+                            attrs="{'invisible': [('headoffice_state', '!=', 'verify')]}"
+                            string="Reviewed" type="object" class="oe_highlight" />
+
+
+                        <button name="action_approve"
+                        groups="ol_quality_control.group_approve_prepare"
+                            attrs="{'invisible': [('headoffice_state', '!=', 'reviewed')]}"
+                            string="Approve" type="object" class="oe_highlight" />
+
+                        <button name="action_reject" groups="__export__.res_groups_94_a0be2b11"
+                            attrs="{'invisible': [('headoffice_state', 'not in', ['store_supervisors','checked','verify','reviewed'])]}"
+                            string="Reject" type="object" class="oe_highlight" />
+
+                        <button name="open_cancel_wizard"
+                            attrs="{'invisible': [('headoffice_state', 'in', 'cancel')]}"
+                            string="Cancel" type="object" class="oe_highlight" />
+
+                        <button name="704"
+                            attrs="{'invisible': [('headoffice_state', '!=', 'approve')]}"
+                            string="Create RFQ" type="action" />
+                        <field name="headoffice_state" widget="statusbar"
+                            statusbar_visible="store_supervisors,checked,verify,reviewed,approve,cancel" />
+                    </header>
+                    <!-- <header
+                        attrs="{'invisible': ['|','|',('pr_type', '!=', 'capex'),('capex_type','!=', 'plant'),('capex_type','=', False)]}">
+                        <button name="action_prepared"
+                            attrs="{'invisible': [('plant_state', '!=', 'initiated')]}"
+                            string="Prepared" type="object" class="oe_highlight" />
+
+                        <button name="action_recommended"
+                            attrs="{'invisible': [('plant_state', '!=', 'store_supervisors')]}"
+                            string="Recommended" type="object" class="oe_highlight" />
+
+
+                        <button name="action_checked"
+                            attrs="{'invisible': [('plant_state', '!=', 'recommended_by')]}"
+                            string="Checked" type="object" class="oe_highlight" />
+
+                        <button name="action_verify"
+                        groups="ol_quality_control.purchase_request_verify"
+
+                            attrs="{'invisible': [('plant_state', '!=', 'checked')]}"
+                            string="Verify" type="object" class="oe_highlight" />
+
+
+                        <button name="action_reviewed"
+                            attrs="{'invisible': [('plant_state', '!=', 'verify')]}"
+                            string="Reviewed" type="object" class="oe_highlight" />
+
+
+                        <button name="action_approve"
+                        groups="ol_quality_control.purchase_request_verify"
+                            attrs="{'invisible': [('plant_state', '!=', 'reviewed')]}"
+                            string="Approve" type="object" class="oe_highlight" />
+
+                        <button name="action_reject" groups="__export__.res_groups_94_a0be2b11"
+                            attrs="{'invisible': [('plant_state', 'not in',['store_supervisors','recommended_by','checked','verify','reviewed'])]}"
+                            string="Reject" type="object" class="oe_highlight" />
+
+                        <button name="open_cancel_wizard"
+                            attrs="{'invisible': [('plant_state', 'in', 'cancel')]}" string="Cancel"
+                            type="object" class="oe_highlight" />
+
+                        <button name="704" attrs="{'invisible': [('plant_state', '!=', 'approve')]}"
+                            string="Create RFQ" type="action" />
+                        <field name="plant_state" widget="statusbar"
+                            statusbar_visible="store_supervisors,recommended_by,checked,verify,reviewed,approve,cancel" />
+                    </header> -->
+
+
+                </xpath>
+
+            </field>
+
+        </record>
+    </data>
+
+</odoo>

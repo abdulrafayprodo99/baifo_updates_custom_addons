@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_tax_report_wizard,access.tax.report.wizard,ol_income_tax_report.model_tax_report_wizard,,1,1,1,1
+access_tax_report_excel,access.tax.report.excel,ol_income_tax_report.model_tax_report_excel,,1,1,1,1

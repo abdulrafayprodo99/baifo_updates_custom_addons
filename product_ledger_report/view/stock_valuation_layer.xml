@@ -1,0 +1,19 @@
+<odoo>
+    <data>
+        <!-- Inherit the original stock.valuation.layer tree view -->
+        <record id="view_stock_valuation_layer_tree_inherit" model="ir.ui.view">
+            <field name="name">stock.valuation.layer.tree.inherit</field>
+            <field name="model">stock.valuation.layer</field>
+            <field name="inherit_id" ref="stock_account.stock_valuation_layer_tree" />
+            <field name="arch" type="xml">
+                <!-- Add the move_date field at the beginning of the tree view -->
+                <xpath expr="//field[@name='create_date']" position="before">
+                    <!-- <field name="move_date" invisible="1" /> -->
+                    <field name="move_date_filter" />
+                    <field name="product_type_detailed" invisible="1" />
+                    <field name="product_type_filter" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

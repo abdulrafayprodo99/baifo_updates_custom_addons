@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+        <!-- Inherit the form view of the relevant model -->
+        <record id="your_form_view_inherit_id" model="ir.ui.view">
+            <field name="name">gate.out.form.inherit.sale_id</field>
+            <field name="model">gate.out</field>
+            <field name="inherit_id" ref="gate_module.view_gate_out_module_form"/>
+            <field name="arch" type="xml">
+                <!-- Use XPath to locate the 'sale_id' field -->
+                <xpath expr="//form/sheet/group/group[2]/field[@name='sale_id']" position="replace">
+                    <field name="sale_id" string="Delivery Order No"
+                        attrs="{'invisible':['|',('customer_type','not in',['customer']),('customer_type','=',False)]}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

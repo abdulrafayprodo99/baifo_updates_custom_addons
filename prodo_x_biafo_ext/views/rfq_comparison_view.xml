@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- For Tree View -->
+    <record id="view_rfq_comparison_tree" model="ir.ui.view">
+        <field name="name">view.rfq.comparison.tree</field>
+        <field name="model">rfq.comparison</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="state"/>
+                <field name="po_approval_state"/>
+            </tree>
+        </field>
+    </record>
+        
+    <!-- For Form View -->
+    <record id="view_rfq_comparison_model_form" model="ir.ui.view">
+        <field name="name">view.rfq.comparison.model.form</field>
+        <field name="model">rfq.comparison</field>
+        <field name="arch" type="xml">
+               <!-- For Form Readonly  -->
+                <!-- <xpath expr="//form" position="attributes">
+                    <attribute name="js_class">view_form_disable</attribute>
+                </xpath>
+            -->
+            <!-- <form js_class="view_form_disable"> -->
+            <form >
+
+                <header>
+                    <button string="Generate POs" name="generate_rfqs" type="object" class="oe_highlight" attrs="{'invisible':[('state','=','done')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done" readonly="1"/>
+                </header>
+                <!-- bilal start -->
+                <header>
+                    <button name="action_prepared" string="Prepared"  attrs="{'invisible': [('po_approval_state', '!=', 'initiated')]}" type="object" class="oe_highlight"/>
+                    <button name="action_verified" string="Checked"  attrs="{'invisible': [('po_approval_state', '!=', 'prepare')]}" type="object" class="oe_highlight"/>
+                    <button name="action_approve_by_cfo" attrs="{'invisible': ['|',('po_approval_state', 'in', ['prepare','approve_coo','approve_cfo','approve_ceo']),('po_approval_state', '=', 'initiated')]}" string="Verified By CFO" type="object" class="oe_highlight"/>
+                    <button name="action_approve_coo"  attrs="{'invisible': ['|',('po_approval_state', 'in', ['prepare','approve_coo','verify','approve_ceo']),('po_approval_state', '=', 'initiated')]}" string="Verified By COO" type="object" class="oe_highlight"/>
+                    <button name="action_approve_by_ceo"  attrs="{'invisible': ['|',('po_approval_state', 'in', ['prepare','approve_ceo','approve_cfo','verify']),('po_approval_state', '=', 'initiated')]}"  string="Verified By CEO" type="object" class="oe_highlight"/>
+                    <button name="action_reject"  attrs="{'invisible': [('po_approval_state', 'not in', ['prepare','verify','approve_cfo','approve_coo'])]}" string="Reject" type="object" class="oe_highlight"/>
+
+                    <field name="po_approval_state" widget="statusbar" statusbar_visible="initiated,prepare,verify,approve_cfo,approve_coo,approve_ceo"/>
+                </header>
+                <!-- bilal END -->
+
+                <sheet>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group name="rfq_comparison_details">
+                        <group name="rfq_comparison_section_1">
+                            <field name="purchase_request_id" />
+                            <field name="remarks" />
+                            <!-- Bilal  Start-->
+                            <field name="auto_fill_supplier" />
+                            <!-- Bilal  End -->
+                            <field name="prepared_by"/>
+                            <field name="verified_by"/>
+                            <field name="approve_by_cfo"/>
+                            <field name="approve_by_coo"/>
+                            <field name="approve_by_ceo"/>
+                        </group>
+
+                        <group name="rfq_comparison_section_2">
+                            <field name="prepared_timestamp" />
+                            <field name="verified_timestamp" />
+                            <field name="approve_by_cfo_timestamp" />
+                            <field name="approve_by_coo_timestamp" />
+                            <field name="approve_by_ceo_timestamp"/>
+    
+                            <field name="product_id_domain" invisible="1"/>
+                            <field name="partner_id_domain" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="PR Details" name="pr_details">
+                            <field name="pr_detail_ids" mode="tree">
+                                <tree string="PR Details" editable="bottom">
+                                    <field name="purchase_request_id"/>
+                                    <field name="product_code"/>
+                                    <field name="product_id"/>
+                                    <!-- <field name="product_specification"/> -->
+                                    <field name="product_qty"/>
+                                    <field name="product_uom_id"/>
+                                    <field name="remarks"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="RFQ Details" name="rfq_details">
+                            <field name="po_detail_ids" mode="tree">
+                                <tree string="RFQ Details" editable="bottom">
+                                    <field name="purchase_order_id"/>
+                                    <field name="product_code"/>
+                                    <field name="product_id"/>
+                                    <field name="specifications"/>
+                                    <field name="product_qty"/>
+                                    <field name="payment_term_id"/>
+                                    <field name="product_uom_id"/>
+                                    <field name="product_unit_price" digits="[16,4]"/>
+                                    <field name="tax_ids" widget="many2many_tags"/>
+                                    <field name="product_subtotal"/>
+                                    <field name="product_subtotal_incl_tax"/>
+                                    <field name="partner_id"/>
+                                    <field name="remarks"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Calculation Details" name="calc_details">
+                            <field name="calculation_ids" mode="tree">
+                                <tree string="Calculation Details" editable="bottom">
+                                    <field name="product_code"/>
+                                    <field name="product_id"/>
+                                    <field name="min_check"/>
+                                    <field name="max_check"/>
+                                    <field name="difference_amount"/>
+                                    <field name="difference_perc"/>
+                                    <field name="remarks"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Vendor Selection" name="vendor_selection">
+                            <field name="vendor_selection_ids" mode="tree">
+                                <tree string="Vendor Selection" editable="bottom">
+                                    <field name="product_code"/>
+                                    <field name="product_id" domain="product_id_domain"/>
+                                    <field name="account_id"/>
+                                    <field name="specifications"/>
+                                    <field name="product_id_domain" invisible="1"/>
+                                    <field name="product_qty"/>
+                                    <field name="payment_term_id" />
+                                    <field name="product_unit_price" digits="[16,4]"/>
+                                    <field name="product_uom_id"/>
+                                    <field name="tax_ids" widget="many2many_tags"/>
+                                    <field name="product_subtotal"/>
+                                    <field name="product_subtotal_incl_tax"/>
+                                    <field name="partner_id" attrs="{'required':[('product_id','!=',False)]}" domain="partner_id_domain"/>
+                                    <field name="partner_id_domain" invisible="1"/>
+                                    <field name="remarks"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Attachments Section" name="attachment_section">
+                            <field name="attachment_ids" mode="tree">
+                                <tree string="Attachments" editable="bottom">
+                                    <field name="attachment_comments" />
+                                    <field filename="attachment_filename" name="attachment" string="Attachment File"/>
+                                    <field invisible="1" name="attachment_filename"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <group name="totals_section">
+                        <group name="totals_section_left">
+                            <field name="reject_note"/>
+                        </group>
+                        <group name="totals_section_right" string="Totals">
+                            <field name="total_excl_tax" />
+                            <field name="total_incl_tax" />
+                            <field name="total_tax" />
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- For Menu Items -->
+    <record id="rfq_comparison_action" model="ir.actions.act_window">
+        <field name="name">Approval Note / Comparative Statement</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">rfq.comparison</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                 Create Your First Record
+            </p>
+        </field>
+    </record>
+
+    <!-- <menuitem id="rfq_comparison_root" name="Approval Note / Comparative Statement" parent="" sequence="10" /> -->
+    <menuitem id="approval_note" name="Approval Note" parent="purchase.menu_procurement_management" action="rfq_comparison_action" sequence="8" />
+</odoo>

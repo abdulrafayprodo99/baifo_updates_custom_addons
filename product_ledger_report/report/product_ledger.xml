@@ -1,0 +1,359 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <template id="product_report" name="Product Ledger Report">
+        <template id="product_report" name="Product Ledger Report">
+            <t t-call="web.html_container">
+                <t t-call="web.basic_layout">
+                    <style>
+                        * {
+                              font-family: 'Times New Roman', Times, serif;
+                        }
+
+                        h1, h2, h5 {
+                          font-family: 'Times New Roman', Times, serif;
+                        }
+
+                      </style>
+
+                    <div class="header">
+                        <h5 class="text-center" style="font-family: 'Times New Roman', Times, serif; font-size: 18px; font-weight: bold; margin: 0px">Biafo Industry Limited</h5>
+                        <h5 class="text-center" style="font-family: 'Times New Roman', Times, serif; font-size: 18px; font-weight: bold;">Product Ledger</h5>
+                        <h5 class="text-center" style="font-family: 'Times New Roman', Times, serif; font-size: 16px;">(From date: <t t-esc="from_date"/>,To date: <t t-esc="to_date"/>, From
+                            Product: <t t-esc="start_ref"/>, To Product :<t t-esc="end_ref"/>)
+                        </h5>
+                    </div>
+                    <div class="page">
+                        <table class="table table-condensed">
+                            <thead style="font-family:sans-serif;border-top: 2px solid black; border-top-color: black; padding: 5 15px; border-right-color: white; border-left-color: white; margin-top: 30px;">
+                                <tr>
+                                    <th rowspan="2" class="fw-bold text-start"
+                                        style="border-bottom: 2px solid black; color: black;">
+                                        Date
+                                    </th>
+                                    <th rowspan="2" class="fw-bold text-start"
+                                        style="border-bottom: 2px solid black; color: black;">
+                                        Doc No.
+                                    </th>
+                                    <th rowspan="2" class="fw-bold text-start"
+                                        style="border-bottom: 2px solid black; color: black;">
+                                        From
+                                    </th>
+                                    <th rowspan="2" class="fw-bold text-start"
+                                        style="border-bottom: 2px solid black; color: black;">
+                                        To
+                                    </th>
+                                    <th colspan="3" class="fw-bold"
+                                        style="border-bottom: 2px solid black; color: black;">
+                                        In
+                                    </th>
+                                    <th colspan="3" class="fw-bold"
+                                        style="border-bottom: 2px solid black; color: black;">
+                                        Out
+                                    </th>
+                                    <th colspan="3" class="fw-bold"
+                                        style="border-bottom: 2px solid black; color: black;">
+                                        Closing
+                                    </th>
+                                </tr>
+
+                                <tr class="text-end">
+                                    <th class="fw-bold" style="border-bottom: 2px solid black; color: black;">Rate
+                                    </th>
+                                    <th class="fw-bold" style="border-bottom: 2px solid black; color: black;">
+                                        Quantity
+                                    </th>
+                                    <th class="fw-bold" style="border-bottom: 2px solid black; color: black;">
+                                        Amount
+                                    </th>
+                                    <th class="fw-bold" style="border-bottom: 2px solid black; color: black;">Rate
+                                    </th>
+                                    <th class="fw-bold" style="border-bottom: 2px solid black; color: black;">
+                                        Quantity
+                                    </th>
+                                    <th class="fw-bold" style="border-bottom: 2px solid black; color: black;">
+                                        Amount
+                                    </th>
+                                    <th class="fw-bold" style="border-bottom: 2px solid black; color: black;">Rate
+                                    </th>
+                                    <th class="fw-bold" style="border-bottom: 2px solid black; color: black;">
+                                        Quantity
+                                    </th>
+                                    <th class="fw-bold" style="border-bottom: 2px solid black; color: black;">
+                                        Amount
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody style="border-color: white;">
+                                <t t-foreach="grouped_data.items()" t-as="product">
+                                    <!-- Opening balance row -->
+                                    <tr>
+                                        <td class="fw-bold" style="font-weight:bold">
+                                            <t t-esc="product[1]['opening'][0]"/>
+                                        </td>
+                                        <td class="text-center fw-bold" style="font-weight:bold">
+                                            <t t-esc="product[1]['opening'][1]"/>
+                                        </td>
+                                        <td class="fw-bold" style="font-weight:bold">
+                                            <t t-esc="product[1]['uom']"/>
+                                        </td>
+                                        <td/>
+                                        <td/>
+                                        <td/>
+                                        <td/>
+                                        <td/>
+                                        <td/>
+                                        <th class="text-end fw-bold" style="font-weight:bold">
+                                            Opening:
+                                        </th>
+                                        <th class="text-end">
+                                            <t t-esc="'{:,.2f}'.format(product[1]['opening'][2])"/>
+                                        </th>
+                                        <th class="text-end">
+                                            <t t-esc="'{:,.2f}'.format(product[1]['opening'][3])"/>
+                                        </th>
+                                        <th class="text-end">
+                                            <t t-esc="'{:,.2f}'.format(product[1]['opening'][4])"/>
+                                        </th>
+                                    </tr>
+
+                                    <!-- Product Ledger data -->
+                                    <tr t-foreach="product[1]['moves']" t-as="data">
+                                        <td>
+                                            <t t-esc="data['date']"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="data['reference']"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="data['location_from']"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="data['location_to']"/>
+                                        </td>
+                                        <td class="text-end">
+                                            <t t-if="data['product_type'] == 'product'">
+                                                <t t-if="data['in_quantity'] &gt; 0">
+                                                    <t t-esc="'{:,.2f}'.format(data['rate'])"/>
+                                                </t>
+                                                <t t-else="">
+                                                    0.00
+                                                </t>
+                                            </t>
+                                        </td>
+                                        <td class="text-end">
+                                            <t t-if="data['in_quantity'] &gt; 0">
+                                                <t t-esc="'{:,.2f}'.format(data['in_quantity'])"/>
+                                            </t>
+                                            <t t-else="">
+                                                0.00
+                                            </t>
+                                        </td>
+                                        <td class="text-end">
+                                            <t t-if="data['product_type'] == 'product'">
+                                                <t t-if="data['in_quantity'] &gt; 0">
+                                                    <t t-esc="'{:,.2f}'.format(data['amount_in'])"/>
+                                                </t>
+                                                <t t-else="">
+                                                    0.00
+                                                </t>
+                                            </t>
+                                        </td>
+                                        <td class="text-end">
+                                            <t t-if="data['product_type'] == 'product'">
+                                                <t t-if="data['out_quantity'] &gt; 0">
+                                                    <t t-esc="'{:,.2f}'.format(data['rate'])"/>
+                                                </t>
+                                                <t t-else="">
+                                                    0.00
+                                                </t>
+                                            </t>
+                                        </td>
+                                        <td class="text-end">
+                                            <t t-if="data['out_quantity'] &gt; 0">
+                                                <t t-esc="'{:,.2f}'.format(data['out_quantity'])"/>
+                                            </t>
+                                            <t t-else="">
+                                                0.00
+                                            </t>
+                                        </td>
+                                        <td class="text-end">
+                                            <t t-if="data['product_type'] == 'product'">
+                                                <t t-if="data['out_quantity'] &gt; 0">
+                                                    <t t-esc="'{:,.2f}'.format(data['out_amount'])"/>
+                                                </t>
+                                                <t t-else="">
+                                                    0.00
+                                                </t>
+                                            </t>
+                                        </td>
+                                        <td class="text-end">
+                                            <t t-if="data['product_type'] == 'product'">
+                                                <t t-esc="'{:,.2f}'.format(data['closing_rate'])"/>
+                                            </t>
+                                        </td>
+                                        <td class="text-end">
+                                            <t t-esc="'{:,.2f}'.format(data['closing_qty'])"/>
+                                        </td>
+                                        <td class="text-end">
+                                            <t t-if="data['product_type'] == 'product'">
+                                                <t t-esc="'{:,.2f}'.format(data['closing_amount'])"/>
+                                            </t>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Product Total-->
+                                    <tr>
+                                        <td/>
+                                        <td/>
+                                        <td/>
+
+                                        <td class="fw-bold" style="font-weight:bold">
+                                            Total:
+                                        </td>
+
+                                        <td class="text-end fw-bold" style="font-weight:bold">
+                                            <!-- <t t-esc="'{:,.2f}'.format(product[1]['total']['total_in_rate'])"/> -->
+                                            <!--M Azeem added below span and t-esc lines Task: 43338-->
+                                            <span style="border-bottom: 2px solid black; border-top: 2px solid black;">
+                                                <t t-esc="'{:,.2f}'.format(product[1]['total']['total_in_amount'] / product[1]['total']['total_in_qty']) if product[1]['total']['total_in_qty'] else '0.00'"/>
+                                            </span>
+                                        </td>
+                                        <td class="text-end fw-bold"
+                                            style="font-weight:bold">
+                                            <span style="border-bottom: 2px solid black; border-top: 2px solid black;">
+                                                <t t-esc="'{:,.2f}'.format(product[1]['total']['total_in_qty'])"/>
+                                            </span>
+                                        </td>
+                                        <td class="text-end fw-bold"
+                                            style="font-weight:bold">
+                                            <span style="border-bottom: 2px solid black; border-top: 2px solid black;">
+                                                <t t-esc="'{:,.2f}'.format(product[1]['total']['total_in_amount'])"/>
+                                            </span>
+                                        </td>
+
+
+                                        <td class="text-end fw-bold" style="font-weight:bold">
+                                            <!-- <t t-esc="'{:,.2f}'.format(product[1]['total']['total_out_rate'])"/> -->
+                                            <!--M Azeem added below span and t-esc lines Task: 43338-->
+                                            <span style="border-bottom: 2px solid black; border-top: 2px solid black;">
+                                                <t t-esc="'{:,.2f}'.format(product[1]['total']['total_out_amount'] / product[1]['total']['total_out_qty']) if product[1]['total']['total_out_qty'] else '0.00'"/>
+                                            </span>
+                                        </td>
+                                        <td class="text-end fw-bold"
+                                            style="font-weight:bold">
+                                            <span style="border-bottom: 2px solid black; border-top: 2px solid black;">
+                                                <t t-esc="'{:,.2f}'.format(product[1]['total']['total_out_qty'])"/>
+                                            </span>
+                                        </td>
+                                        <td class="text-end fw-bold"
+                                            style="font-weight:bold">
+                                            <span style="border-bottom: 2px solid black; border-top: 2px solid black;">
+                                                <t t-esc="'{:,.2f}'.format(product[1]['total']['total_out_amount'])"/>
+                                            </span>
+                                        </td>
+
+                                        <td class="text-end fw-bold" style="font-weight:bold">
+                                            <t t-esc="'{:,.2f}'.format(product[1]['total']['total_closing_rate'])"/>
+                                        </td>
+                                        <td class="text-end fw-bold"
+                                            style="font-weight:bold">
+                                            <span style="border-bottom: 2px solid black; border-top: 2px solid black;">
+                                                <t t-esc="'{:,.2f}'.format(product[1]['total']['total_closing_qty'])"/>
+                                            </span>
+
+                                        </td>
+                                        <td class="text-end fw-bold" style="font-weight:bold">
+                                            <span style="border-bottom: 2px solid black; border-top: 2px solid black;">
+                                                <t t-esc="'{:,.2f}'.format(product[1]['total']['total_closing_amount'])"/>
+                                            </span>
+                                        </td>
+
+                                    </tr>
+                                </t>
+                                <!-- Grand Total-->
+                                <tr t-if="len(grouped_data.items()) > 0">
+                                    <td/>
+                                    <td/>
+                                    <td/>
+
+                                    <td class="fw-bold" style="font-weight:bold">
+                                        Grand Total:
+                                    </td>
+
+                                    <td class="fw-bold" style="font-weight:bold">
+                                    </td>
+                                    <td class="fw-bold" style="font-weight:bold">
+                                    </td>
+                                    <td class="text-end fw-bold" style="font-weight:bold">
+                                        <span style="border-bottom: 2px solid black; border-top: 2px solid black;">
+                                            <t t-esc="'{:,.2f}'.format(grand_total['total_in_amount'])"/>
+                                        </span>
+                                    </td>
+
+
+                                    <td class="fw-bold" style="font-weight:bold">
+                                    </td>
+                                    <td class="fw-bold" style="font-weight:bold">
+                                    </td>
+                                    <td class="text-end fw-bold" style="font-weight:bold">
+                                        <span style="border-bottom: 2px solid black; border-top: 2px solid black;">
+                                            <t t-esc="'{:,.2f}'.format(grand_total['total_out_amount'])"/>
+                                        </span>
+                                    </td>
+
+                                    <td class="fw-bold" style="font-weight:bold">
+                                    </td>
+                                    <td class="fw-bold" style="font-weight:bold">
+                                    </td>
+                                    <td class="text-end fw-bold" style="font-weight:bold">
+                                        <span style="border-bottom: 2px solid black; border-top: 2px solid black;">
+                                            <t t-esc="'{:,.2f}'.format(grand_total['total_closing_amount'])"/>
+                                        </span>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="footer">
+                        <div class="text-center" style="border-top: 1px solid black;">
+                            <!-- Page Number -->
+                            <div class="text-muted mt-2">Page:
+                                <span class="page"/>
+                                /
+                                <span class="topage"/>
+                            </div>
+                            
+                        </div>
+                    </div>
+            </t>
+        </t>
+    </template>
+
+    </template>
+
+    <record id="paperformatproduct" model="report.paperformat">
+        <field name="name">Product Ledger Report Format</field>
+        <field name="default" eval="True"/>
+        <field name="format">A3</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">30</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">8</field>
+        <field name="margin_right">8</field>
+        <field name="header_spacing">20</field>
+        <field name="disable_shrinking" eval="False"/>
+        <field name="header_line" eval="False"/>
+        <field name="dpi">110</field>
+    </record>
+    <record id="product_ledger_action" model="ir.actions.report">
+        <field name="name">Product Ledger Report</field>
+        <field name="model">product.ledger.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">product_ledger_report.product_report</field>
+        <field name="report_file">product_ledger_report.product_report</field>
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformatproduct"/>
+    </record>
+</odoo>

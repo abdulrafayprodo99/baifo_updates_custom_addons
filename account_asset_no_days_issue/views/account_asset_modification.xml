@@ -1,0 +1,16 @@
+<odoo>
+<record id="view_account_asset_form_inherited" model="ir.ui.view">
+        <field name="name">account.asset.form</field>
+        <field name="model">account.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='original_value']" position="before">
+                <field name="old_asset_original_value" />
+                <field name="sr_no" />
+                <field name="asset_class" />
+                <field name="sub_asset_class" />
+            </xpath>
+
+        </field>
+</record>
+</odoo>

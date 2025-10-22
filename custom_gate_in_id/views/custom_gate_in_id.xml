@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_gate_in_id" model="ir.ui.view">
+        <field name="name">gate.in.id.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="prodo_x_biafo_ext.stock_picking_inherited_form_"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='gate_in_id']" position="replace">
+                <field name="gate_in_id" widget="many2many_tags" 
+                    attrs="{'invisible': [('picking_type_id', 'not in', [1,10,11,23,24,22,6,37,14])]}"/>
+                <field name="gate_out_id" widget="many2many_tags" 
+                    attrs="{'invisible': [('picking_type_id', 'not in', [6, 17, 20, 21])]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

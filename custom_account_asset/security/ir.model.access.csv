@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_asset_class,access.account.asset.class,model_account_asset_class,base.group_user,1,1,1,1
+access_account_sub_asset_class,access.account.sub.asset.class,model_account_sub_asset_class,base.group_user,1,1,1,1
+access_asset_history_lines,access.asset.history.lines,model_asset_history_lines,base.group_user,1,1,1,1

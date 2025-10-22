@@ -1,0 +1,280 @@
+<odoo>
+
+  <!-- Paperformat Definition -->
+  <record id="paperformat_budget_report" model="report.paperformat">
+    <field name="name">Budget Report Format</field>
+    <field name="format">A4</field>
+    <field name="orientation">Landscape</field>
+    <field name="margin_top">10</field>
+    <field name="margin_bottom">10</field>
+    <field name="margin_left">10</field>
+    <field name="margin_right">10</field>
+    <field name="header_spacing">35</field>
+    <field name="dpi">90</field>
+    <field name="header_line">False</field>
+    <field name="disable_shrinking">False</field>
+  </record>
+
+  <record id="action_report_budget" model="ir.actions.report">
+    <field name="name">Budget Opex Report</field>
+    <field name="model">procurement.budget.management</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">procurement_budget_management_custom.report_budget_template</field>
+    <field name="report_file">procurement_budget_management_custom.report_budget_template</field>
+    <field name="binding_model_id" eval="False"/>
+    <field name="binding_type">report</field>
+    <field name="paperformat_id" ref="paperformat_budget_report"/>
+    <field name="print_report_name">'Budget Opex Report'</field>
+  </record> 
+
+  <!-- Template Definition -->
+  <template id="report_budget_template">
+    <t t-name="procurement_budget_management_custom.report_budget_template">
+      <t t-call="web.html_container">
+        <t t-call="web.external_layout">
+          <!-- Footer Section -->
+          <div class="footer o_standard_footer">
+            <div class="text-center">
+              <ul class="list-inline mb4">
+                <!-- You can add footer content here -->
+              </ul>
+            </div>
+          </div>
+          <div class="page">
+            <h2>Revenue Budget Analysis</h2>
+            <!-- Procurement Details Table -->
+            <!-- Procurement Table -->
+            <table class="table table-bordered" style="margin-bottom: 0; padding-bottom: 0;">
+              <tr>
+                <td style="width: 25%;"><strong>Procurement:</strong> <span t-esc="result['procurement_id']"/></td>
+                <td style="width: 25%;"><strong>Type:</strong> <span t-esc="result['Type']"/></td>
+                <td style="width: 25%;"><strong>Start Date:</strong> <span t-esc="result['Start']"/></td>
+                <td style="width: 25%;"><strong>End Date:</strong> <span t-esc="result['End']"/></td>
+              </tr>
+            </table>
+
+            <!-- Budget Summary Table -->
+            <table class="table table-bordered" style="margin-top: 0; padding-top: 0;">
+              <tr>
+                <td style="width: 25%;"><strong>Total Budget Approved:</strong> 
+                  <span t-esc="'{:,.2f}'.format(result['budget_approved'])"/>
+                </td>
+                <td style="width: 25%;"><strong>Theoretical Amount:</strong> 
+                  <span t-esc="'{:,.2f}'.format(result['theoretical_amount'])"/>
+                </td>
+                <td style="width: 25%;"><strong>Total Cumulative Budget:</strong> 
+                  <span t-esc="'{:,.2f}'.format(result['budget_cumulative'])"/>
+                </td>
+                <td style="width: 25%;"><strong>Variance:</strong> 
+                  <span t-esc="'{:,.2f}'.format(result['remaining_budget'])"/>
+                </td>
+              </tr>
+            </table>
+
+            <!-- Plants Table -->
+            <t t-if="result['procurement_line']['Plants']">
+              <h3 style="text-align: left;">Plant</h3>
+              <table class="table table-bordered" style="border-style: hidden;">
+                <thead>
+                  <tr>
+                    <th style="text-align: left; width: 20%;">Budget Position</th>
+                    <th style="text-align: right; width: 20%;">Budget Approved</th>
+                    <th style="text-align: right; width: 20%;">Theoretical Amount</th>
+                    <th style="text-align: right; width: 20%;">Cumulative Budget</th>
+                    <th style="text-align: right; width: 20%;">Variance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <t t-set="plants_total_theoretical" t-value="0.0"/>
+                  <t t-set="plants_total_budget_approved" t-value="0.0"/>
+                  <t t-set="plants_total_cumulative_budget" t-value="0.0"/>
+                  <t t-set="plants_total_remaining_budget" t-value="0.0"/>
+                  <t t-foreach="result['procurement_line']['Plants']" t-as="budget_line">
+                    <tr>
+                      <td style="text-align: left;" t-esc="budget_line['budgetary_position']"/>
+                      <td style="text-align: right;" t-esc="'{:,.2f}'.format(budget_line['budget_approved'] or 0)"/>
+                      <td style="text-align: right;" t-esc="'{:,.2f}'.format(budget_line['theoretical_amount'] or 0)"/>
+                      <td style="text-align: right;" t-esc="'{:,.2f}'.format(budget_line['cumulative_budget'] or 0)"/>
+                      <td style="text-align: right;" t-esc="'{:,.2f}'.format(budget_line['remaining_budget'] or 0)"/>
+                    </tr>
+                    <t t-set="plants_total_theoretical" t-value="plants_total_theoretical + (budget_line['theoretical_amount'] or 0)"/>
+                    <t t-set="plants_total_budget_approved" t-value="plants_total_budget_approved + (budget_line['budget_approved'] or 0)"/>
+                    <t t-set="plants_total_cumulative_budget" t-value="plants_total_cumulative_budget + (budget_line['cumulative_budget'] or 0)"/>
+                    <t t-set="plants_total_remaining_budget" t-value="plants_total_remaining_budget + (budget_line['remaining_budget'] or 0)"/>
+                  </t>
+                  <!-- Plants Total Row -->
+                  <tr style="border-top: 2px solid black;">
+                    <td style="text-align: left; font-weight: bold;" colspan="1">Total for Plants</td>
+                    <td style="text-align: right; font-weight: bold;" t-esc="'{:,.2f}'.format(plants_total_budget_approved)"/>
+                    <td style="text-align: right; font-weight: bold;" t-esc="'{:,.2f}'.format(plants_total_theoretical)"/>
+                    <td style="text-align: right; font-weight: bold;" t-esc="'{:,.2f}'.format(plants_total_cumulative_budget)"/>
+                    <td style="text-align: right; font-weight: bold;" t-esc="'{:,.2f}'.format(plants_total_remaining_budget)"/>
+                  </tr>
+                </tbody>
+              </table>
+            </t>
+
+            <!-- Head Office Table -->
+            <t t-if="result['procurement_line']['HO_Admin']">
+              <h3 style="text-align: left;">Head Office</h3>
+              <h4 style="text-align: left;">Administration</h4>
+              <table class="table table-bordered" style="border-style: hidden;">
+                <thead>
+                  <tr>
+                    <th style="text-align: left; width: 20%;">Budget Position</th>
+                    <th style="text-align: right; width: 20%;">Budget Approved</th>
+                    <th style="text-align: right; width: 20%;">Theoretical Amount</th>
+                    <th style="text-align: right; width: 20%;">Cumulative Budget</th>
+                    <th style="text-align: right; width: 20%;">Variance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <t t-set="ho_admin_total_theoretical" t-value="0.0"/>
+                  <t t-set="ho_admin_total_budget_approved" t-value="0.0"/>
+                  <t t-set="ho_admin_total_cumulative_budget" t-value="0.0"/>
+                  <t t-set="ho_admin_total_remaining_budget" t-value="0.0"/>
+                  <t t-foreach="result['procurement_line']['HO_Admin']" t-as="budget_line">
+                    <tr>
+                      <td style="text-align: left;" t-esc="budget_line['budgetary_position']"/>
+                      <td style="text-align: right;" t-esc="'{:,.2f}'.format(budget_line['budget_approved'] or 0)"/>
+                      <td style="text-align: right;" t-esc="'{:,.2f}'.format(budget_line['theoretical_amount'] or 0)"/>
+                      <td style="text-align: right;" t-esc="'{:,.2f}'.format(budget_line['cumulative_budget'] or 0)"/>
+                      <td style="text-align: right;" t-esc="'{:,.2f}'.format(budget_line['remaining_budget'] or 0)"/>
+                    </tr>
+                    <t t-set="ho_admin_total_theoretical" t-value="ho_admin_total_theoretical + (budget_line['theoretical_amount'] or 0)"/>
+                    <t t-set="ho_admin_total_budget_approved" t-value="ho_admin_total_budget_approved + (budget_line['budget_approved'] or 0)"/>
+                    <t t-set="ho_admin_total_cumulative_budget" t-value="ho_admin_total_cumulative_budget + (budget_line['cumulative_budget'] or 0)"/>
+                    <t t-set="ho_admin_total_remaining_budget" t-value="ho_admin_total_remaining_budget + (budget_line['remaining_budget'] or 0)"/>
+                  </t>
+                  <!-- Head Office Admin Total Row -->
+                  <tr style="border-top: 2px solid black;">
+                    <td style="text-align: left; font-weight: bold;" colspan="1">Total for Head Office Administration</td>
+                    <td style="text-align: right; font-weight: bold;" t-esc="'{:,.2f}'.format(ho_admin_total_budget_approved)"/>
+                    <td style="text-align: right; font-weight: bold;" t-esc="'{:,.2f}'.format(ho_admin_total_theoretical)"/>
+                    <td style="text-align: right; font-weight: bold;" t-esc="'{:,.2f}'.format(ho_admin_total_cumulative_budget)"/>
+                    <td style="text-align: right; font-weight: bold;" t-esc="'{:,.2f}'.format(ho_admin_total_remaining_budget)"/>
+                  </tr>
+                </tbody>
+              </table>
+            </t>
+
+            <t t-if="result['procurement_line']['HO_Distribution']">
+              <h3 style="text-align: left;">Head Office</h3>
+              <h4 style="text-align: left;">Distribution</h4>
+              <table class="table table-bordered" style="border-style: hidden;">
+                <thead>
+                  <tr>
+                    <th style="text-align: left; width: 20%;">Budget Position</th>
+                    <th style="text-align: right; width: 20%;">Budget Approved</th>
+                    <th style="text-align: right; width: 20%;">Theoretical Amount</th>
+                    <th style="text-align: right; width: 20%;">Cumulative Budget</th>
+                    <th style="text-align: right; width: 20%;">Variance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <t t-set="ho_dist_total_theoretical" t-value="0.0"/>
+                  <t t-set="ho_dist_total_budget_approved" t-value="0.0"/>
+                  <t t-set="ho_dist_total_cumulative_budget" t-value="0.0"/>
+                  <t t-set="ho_dist_total_remaining_budget" t-value="0.0"/>
+                  <t t-foreach="result['procurement_line']['HO_Distribution']" t-as="budget_line">
+                    <tr>
+                      <td style="text-align: left;" t-esc="budget_line['budgetary_position']"/>
+                      <td style="text-align: right;" t-esc="'{:,.2f}'.format(budget_line['budget_approved'] or 0)"/>
+                      <td style="text-align: right;" t-esc="'{:,.2f}'.format(budget_line['theoretical_amount'] or 0)"/>
+                      <td style="text-align: right;" t-esc="'{:,.2f}'.format(budget_line['cumulative_budget'] or 0)"/>
+                      <td style="text-align: right;" t-esc="'{:,.2f}'.format(budget_line['remaining_budget'] or 0)"/>
+                    </tr>
+                    <t t-set="ho_dist_total_theoretical" t-value="ho_dist_total_theoretical + (budget_line['theoretical_amount'] or 0)"/>
+                    <t t-set="ho_dist_total_budget_approved" t-value="ho_dist_total_budget_approved + (budget_line['budget_approved'] or 0)"/>
+                    <t t-set="ho_dist_total_cumulative_budget" t-value="ho_dist_total_cumulative_budget + (budget_line['cumulative_budget'] or 0)"/>
+                    <t t-set="ho_dist_total_remaining_budget" t-value="ho_dist_total_remaining_budget + (budget_line['remaining_budget'] or 0)"/>
+                  </t>
+                  <!-- Head Office Distribution Total Row -->
+                  <tr style="border-top: 2px solid black;">
+                    <td style="text-align: left; font-weight: bold;" colspan="1">Total for Head Office Distribution</td>
+                    <td style="text-align: right; font-weight: bold;" t-esc="'{:,.2f}'.format(ho_dist_total_budget_approved)"/>
+                    <td style="text-align: right; font-weight: bold;" t-esc="'{:,.2f}'.format(ho_dist_total_theoretical)"/>
+                    <td style="text-align: right; font-weight: bold;" t-esc="'{:,.2f}'.format(ho_dist_total_cumulative_budget)"/>
+                    <td style="text-align: right; font-weight: bold;" t-esc="'{:,.2f}'.format(ho_dist_total_remaining_budget)"/>
+                  </tr>
+                </tbody>
+              </table>
+            </t>
+
+            <!-- Others Table -->
+            <t t-if="result['procurement_line']['Others']">
+              <h3 style="text-align: left;">Others</h3>
+              <table class="table table-bordered" style="border-style: hidden;">
+                <thead>
+                  <tr>
+                    <th style="text-align: left; width: 20%;">Budget Position</th>
+                    <th style="text-align: right; width: 20%;">Budget Approved</th>
+                    <th style="text-align: right; width: 20%;">Theoretical Amount</th>
+                    <th style="text-align: right; width: 20%;">Cumulative Budget</th>
+                    <th style="text-align: right; width: 20%;">Variance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <t t-set="others_total_theoretical" t-value="0.0"/>
+                  <t t-set="others_total_budget_approved" t-value="0.0"/>
+                  <t t-set="others_total_cumulative_budget" t-value="0.0"/>
+                  <t t-set="others_total_remaining_budget" t-value="0.0"/>
+                  <t t-foreach="result['procurement_line']['Others']" t-as="budget_line">
+                    <tr>
+                      <td style="text-align: left;" t-esc="budget_line['budgetary_position']"/>
+                      <td style="text-align: right;" t-esc="'{:,.2f}'.format(budget_line['budget_approved'] or 0)"/>
+                      <td style="text-align: right;" t-esc="'{:,.2f}'.format(budget_line['theoretical_amount'] or 0)"/>
+                      <td style="text-align: right;" t-esc="'{:,.2f}'.format(budget_line['cumulative_budget'] or 0)"/>
+                      <td style="text-align: right;" t-esc="'{:,.2f}'.format(budget_line['remaining_budget'] or 0)"/>
+                    </tr>
+                    <t t-set="others_total_theoretical" t-value="others_total_theoretical + (budget_line['theoretical_amount'] or 0)"/>
+                    <t t-set="others_total_budget_approved" t-value="others_total_budget_approved + (budget_line['budget_approved'] or 0)"/>
+                    <t t-set="others_total_cumulative_budget" t-value="others_total_cumulative_budget + (budget_line['cumulative_budget'] or 0)"/>
+                    <t t-set="others_total_remaining_budget" t-value="others_total_remaining_budget + (budget_line['remaining_budget'] or 0)"/>
+                  </t>
+                  <!-- Others Total Row -->
+                  <tr style="border-top: 2px solid black;">
+                    <td style="text-align: left; font-weight: bold;" colspan="1">Total for Others</td>
+                    <td style="text-align: right; font-weight: bold;" t-esc="'{:,.2f}'.format(others_total_budget_approved)"/>
+                    <td style="text-align: right; font-weight: bold;" t-esc="'{:,.2f}'.format(others_total_theoretical)"/>
+                    <td style="text-align: right; font-weight: bold;" t-esc="'{:,.2f}'.format(others_total_cumulative_budget)"/>
+                    <td style="text-align: right; font-weight: bold;" t-esc="'{:,.2f}'.format(others_total_remaining_budget)"/>
+                  </tr>
+                </tbody>
+              </table>
+            </t>
+
+            <!-- Grand Total Row -->
+            <t t-set="grand_total_theoretical" t-value="(plants_total_theoretical or 0) + (ho_admin_total_theoretical or 0) + (ho_dist_total_theoretical or 0) + (others_total_theoretical or 0)"/>
+            <t t-set="grand_total_budget_approved" t-value="(plants_total_budget_approved or 0) + (ho_admin_total_budget_approved or 0) + (ho_dist_total_budget_approved or 0) + (others_total_budget_approved or 0)"/>
+            <t t-set="grand_total_cumulative_budget" t-value="(plants_total_cumulative_budget or 0) + (ho_admin_total_cumulative_budget or 0) + (ho_dist_total_cumulative_budget or 0) + (others_total_cumulative_budget or 0)"/>
+            <t t-set="grand_total_remaining_budget" t-value="(plants_total_remaining_budget or 0) + (ho_admin_total_remaining_budget or 0) + (ho_dist_total_remaining_budget or 0) + (others_total_remaining_budget or 0)"/>
+
+            <h3 style="text-align: left; font-weight: bold;">Grand Total</h3>
+            <table class="table table-bordered" style="border-style: hidden;">
+              <thead>
+                <tr>
+                  <th style="text-align: left; width: 20%;">Category</th>
+                  <th style="text-align: right; width: 20%;">Budget Approved</th>
+                  <th style="text-align: right; width: 20%;">Theoretical Amount</th>
+                  <th style="text-align: right; width: 20%;">Cumulative Budget</th>
+                  <th style="text-align: right; width: 20%;">Variance</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-top: 2px solid black;">
+                  <td style="text-align: left; font-weight: bold;">Grand Total</td>
+                  <td style="text-align: right; font-weight: bold;" t-esc="'{:,.2f}'.format(grand_total_budget_approved)"/>
+                  <td style="text-align: right; font-weight: bold;" t-esc="'{:,.2f}'.format(grand_total_theoretical)"/>
+                  <td style="text-align: right; font-weight: bold;" t-esc="'{:,.2f}'.format(grand_total_cumulative_budget)"/>
+                  <td style="text-align: right; font-weight: bold;" t-esc="'{:,.2f}'.format(grand_total_remaining_budget)"/>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </t>
+      </t>
+    </t>
+  </template>
+
+</odoo>

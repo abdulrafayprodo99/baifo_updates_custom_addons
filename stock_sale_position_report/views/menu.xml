@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_stock_sale_position_wizard_custom" model="ir.actions.act_window">
+            <field name="name">Stock Sale Position Custom</field>
+            <field name="res_model">stock.sale.position.wizard.custom</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+
+        <menuitem id="menu_stock_sale_position_custom" name="Stock Sale Position Custom"
+            parent="mrp.menu_mrp_reporting" action="action_stock_sale_position_wizard_custom" />
+
+    </data>
+</odoo>

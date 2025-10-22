@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding='utf-8'?>
+<odoo>
+
+    <record id="view_account_payment_readonly_form" model='ir.ui.view'>
+        <field name='name'>account.payment.readonly.form</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='is_move_sent']" position='after'>
+                <field name="vendor_payment_readonly_check" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//form" position="attributes">
+                <attribute name="js_class">vendor_payment_form_disable_readonly</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

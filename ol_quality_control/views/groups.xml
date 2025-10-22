@@ -1,0 +1,20 @@
+<odoo>
+    <data>
+
+        <!-- Create a new group -->
+        <record id="group_approve_prepare" model="res.groups">
+            <field name="name">Approve Prepare State</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+        <record id="groups_verify_approval" model="res.groups">
+            <field name="name">Approval Verify</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+        <record id="groups_approve_approval" model="res.groups">
+            <field name="name">Approval Approve</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+
+        
+    </data>
+</odoo>

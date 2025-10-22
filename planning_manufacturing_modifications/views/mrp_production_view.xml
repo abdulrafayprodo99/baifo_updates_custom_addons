@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding='utf-8'?>
+<odoo>
+
+    <data>
+        <record id="mrp_production_form_view_inherit" model='ir.ui.view'>
+            <field name='name'>mrp.production.form.view.inherited</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="prodo_x_biafo_ext.stock_landed_cost_inherited_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='pdo_id']" position="after">
+                    <field name="product_category" invisible="1" />
+                </xpath>
+                <xpath expr="//field[@name='pdo_id']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('product_category', '!=', 'Finished Goods')]}</attribute>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

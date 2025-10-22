@@ -1,0 +1,61 @@
+<odoo>
+
+    <record model="ir.ui.view" id="view_tax_report_wizard">
+        <field name="name">tax.report.wizard.form</field>
+        <field name="model">tax.report.wizard</field>
+
+        <field name="arch" type="xml">
+
+            <form string="Income tax Report">
+                <group>
+                    <group string="Date">
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group string="Employee">
+                        <field name="employee_ids" widget="many2many_tags"/>
+                    </group>
+                   
+                </group>
+
+                <footer>
+                    <button name="action_print_excel_report" type="object" string="Print(Excel)" class="btn-primary" />                   
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_income_tax_report" model="ir.actions.act_window">
+        <field name="name">Income Tax Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">tax.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_tax_report_wizard"/>
+        <field name="target">new</field>
+    </record>
+
+
+    <record id="view_tax_report_excel" model="ir.ui.view">
+        <field name="name">view.tax.report.excel</field>
+        <field name="model">tax.report.excel</field>
+        <field name="arch" type="xml">
+        <form string="Generate Excel File">
+            <group>
+                <field name="file_name" invisible="1" />
+                <field name="excel_file" readonly="1" filename="file_name" />
+            </group>
+            <footer>
+                <button string="Cancel" class="oe_link" special="cancel" />
+            </footer>
+        </form>
+        </field>
+    </record>
+
+
+    <menuitem id="menu_income_tax_Report" name="Income Tax Report" parent="hr_payroll.menu_hr_payroll_report" action="action_income_tax_report" sequence="0"/>
+
+
+
+
+</odoo> 

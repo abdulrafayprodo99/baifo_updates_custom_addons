@@ -1,0 +1,147 @@
+<odoo>
+    <data>
+        <!-- Paper Format for Daily Production Report -->
+        <record id="paperformat_daily_production" model="report.paperformat">
+            <field name="name">Daily Production Report Format</field>
+            <field name="format">A4</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">10</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+            <field name="header_line">False</field>
+            <field name="disable_shrinking">False</field>
+        </record>
+
+        <record id="action_daily_production_pdf" model="ir.actions.report">
+            <field name="name">Daily Production Report</field>
+            <field name="model">daily.production.wizard</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">manufacturing_reports.report_daily_production_pdf</field>
+            <field name="report_file">manufacturing_reports.report_daily_production_pdf</field>
+            <field name="binding_model_id" eval="False"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="manufacturing_reports.paperformat_daily_production"/>
+            <field name="print_report_name">'Daily Production Report'</field>
+        </record>
+
+
+        <template id="report_daily_production_pdf">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+
+        <t t-set="company_name" t-value="'Biafo Industries Limited'"/>
+
+        <div style="font-family: Arial, sans-serif; font-size: 12px;">
+            <div style="text-align: center; margin-bottom: 10px;">
+<h2 style="margin: 3px; text-transform: uppercase; font-size: 18px; font-weight: bold; color: black;">
+                    <t t-esc="company_name"/>
+                </h2>
+                <h3 style="margin: 3px; font-size: 18px; font-weight:bold;">Daily Production Report</h3>
+        </div>
+        
+
+        </div>
+                 <!-- Custom Footer (placed correctly outside .page) -->
+                <div class="footer" style="font-family:Segoe UI; font-size: 9px; font-weight:normal;">  
+                                  <div class="row" style="border:1px solid black"/>
+                    <div class="row mt-1">
+                        <div class="col-1">
+                            <!-- <img class="img-fluid" src="/web/image/373-9fced58c/unnamed.jpg"/> -->
+                            <span>Odoo</span>
+                        </div>
+                        <div class="col-6" style="text-align:center">
+          
+                            <span>Powered By Odolution </span>
+                            <!--<span t-esc="env.user.name or 'Unknown User'"/>-->
+          
+                     
+                        </div>
+                        
+                        <div class="col-5" style="text-align:right">
+                            <t t-set="current_time" t-value="time.strftime('%d/%m/%Y %H:%M:%S')"/>
+                            <span t-esc="current_time"/>
+                            <t t-if="report_type == 'pdf'">
+                                <span style="margin-left: 15px;">Page: <span class="page"/> / <span class="topage"/></span>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="page">
+    <!-- Shared Table Headings (Defined Once) -->
+    <t t-set="shared_headings">
+        <thead>
+            <tr>
+                <th style="text-align: left; font-weight: bold; color: black; width: 4%; white-space: nowrap;font-size:11px; font-weight:bold;">S.No.</th>
+                <th style="text-align: left; font-weight: bold; color: black; width: 10%; white-space: nowrap;font-size:11px; font-weight:bold;">Product Category</th>
+                <th style="text-align: left; font-weight: bold; color: black; width: 8%; white-space: nowrap;font-size:11px; font-weight:bold;">Product Code</th>
+                <th style="text-align: left; font-weight: bold; color: black; width: 20%; white-space: normal;font-size:11px; font-weight:bold;">Product</th>
+                <th style="text-align: right; font-weight: bold; color: black; width: 5%; white-space: nowrap;font-size:11px; font-weight:bold;">Unit</th>
+                <th style="text-align: right; font-weight: bold; color: black; width: 7%; white-space: nowrap;font-size:11px; font-weight:bold;">Quantity</th>
+                <t t-if="report_data.get('is_batch_no')">
+                    <th style="text-align: left; font-weight: bold; color: black; width: 8%; white-space: nowrap;font-size:11px; font-weight:bold;">Batch No.</th>
+                </t>
+                <th style="text-align: right; font-weight: bold; color: black; width: 8%; white-space: nowrap;font-size:11px; font-weight:bold;">PDO No</th>
+                <th style="text-align: right; font-weight: bold; color: black; width: 5%; white-space: nowrap;font-size:11px; font-weight:bold;">PDO Type</th>
+                <th style="text-align: right; font-weight: bold; color: black; width: 15%; white-space: normal;font-size:11px; font-weight:bold;">Production Date</th>
+            </tr>
+        </thead>
+    </t>
+
+    <!-- Loop Through Categories -->
+    <t t-set="global_s_no" t-value="0"/>
+    <t t-foreach="report_data['products'].items()" t-as="category">
+        <t t-if="category[1]">
+            <h5 style="margin-top: 10px; text-decoration: underline;font-size:12px; font-weight:medium;">
+                <t t-esc="category[0].upper()"/>
+            </h5>
+            <table class="table table-bordered" style="border-style: hidden;">
+                <t t-raw="shared_headings"/>
+                <tbody>
+                    <t t-foreach="category[1]" t-as="product">
+                        <tr>
+                            <!-- S.No. -->
+                            <td style="text-align: left; border: none; width: 4%; white-space: nowrap; font-size:10.5px; font-weight:normal;">
+                                <t t-set="global_s_no" t-value="global_s_no + 1"/>
+                                <t t-esc="global_s_no"/>
+                            </td>
+                            <!-- Product Category -->
+                            <td style="text-align: left; border: none; width: 10%; white-space: nowrap;font-size:10.5px; font-weight:normal;"><t t-esc="product['category_name']"/></td>
+                            <!-- Product Code -->
+                            <td style="text-align: left; border: none; width: 8%; white-space: nowrap;font-size:10.5px; font-weight:normal;"><t t-esc="product['product_code']"/></td>
+                            <!-- Product -->
+                            <td style="text-align: left; border: none; width: 20%; white-space: normal;font-size:10.5px; font-weight:normal;"><t t-esc="product['product_name']"/></td>
+                            <!-- Unit -->
+                            <td style="text-align: right; border: none; width: 5%; white-space: nowrap;font-size:10.5px; font-weight:normal;"><t t-esc="product['unit']"/></td>
+                            <!-- Quantity -->
+                            <td style="text-align: right; border: none; width: 7%; white-space: nowrap;font-size:10.5px; font-weight:normal;"><t t-esc="'{:,.0f}'.format(product['product_qty'])"/></td>
+                            <!-- Batch No. (conditionally) -->
+                            <t t-if="report_data.get('is_batch_no')">
+                                <td style="text-align: right; border: none; width: 8%; white-space: nowrap;font-size:10.5px; font-weight:normal;"><t t-esc="product['lot_no']"/></td>
+                            </t>
+                            <!-- PDO No -->
+                            <td style="text-align: right; border: none; width: 8%; white-space: nowrap;font-size:10.5px; font-weight:normal;"><t t-esc="product['pdo_id']"/></td>
+                            <!-- PDO Type -->
+                            <td style="text-align: right; border: none; width: 5%; white-space: nowrap;font-size:10.5px; font-weight:normal;"><t t-esc="product['doc_type']"/></td>
+                            <!-- Production Date -->
+                            <td style="text-align: right; border: none; width: 15%; white-space: normal;font-size:10.5px; font-weight:normal;"><t t-esc="product['date']"/></td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </t>
+    </t>
+</div>
+
+                </t>
+            </t>
+        </template>
+
+    </data>
+
+
+</odoo>

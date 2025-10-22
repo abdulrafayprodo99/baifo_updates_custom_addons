@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_affinity_material_requirement,affinity_material_requirement,model_affinity_material_requirement,base.group_user,1,1,1,1
+access_affinity_material_requirement_lines,affinity_material_requirement_lines,model_affinity_material_requirement_lines,base.group_user,1,1,1,1
+access_affinity_material_demand_lines,affinity_material_demand_lines,model_affinity_material_demand_lines,base.group_user,1,1,1,1

@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="debit_note_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family:Segoe UI">
+                        <div class="header">
+                            <div class="header_working">
+                                <div class="row">
+                                    <div class="col-1">
+                                        <span t-field="doc.company_id.logo"
+                                            t-options-widget="&quot;image&quot;"
+                                            style="width:10px;display:inline-block;width:30px;display:inline-block" />
+                                    </div>
+                                    <div class="col-10">
+                                        <div class="row">
+                                            <center>
+                                                <b>
+                                                    <span style="font-size:20px">Biafo Industries Limited</span>
+                                                </b>
+                                            </center>
+                                        </div>
+                                        <div class="row">
+                                            <b>
+                                                <center>
+                                                    <!--<span
+                                                    t-field='doc.name'/>-->
+                                                    <span style="font-size:18px">Debit Note</span>
+                                                </center>
+                                            </b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="sencond_line" style="font-size:13px;padding-bottom:10px">
+                                <div class="row">
+                                    <div class="col-6" style="text-align:left">
+                                        <span>Date: </span>
+                                        <t t-set="a"
+                                            t-value="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y %I:%M:%S %p')" />
+                                        <t t-esc="a" />
+                                    </div>
+                                    <!--<div
+                                    class="col-6" style="text-align:right">-->
+                                    <!--    <span>Doc No: </span>-->
+                                    <!--    <t t-set="ISO_NUMBER"
+                                    t-value="env['iso'].search([('id','=',3)])"/>-->
+                                    <!--<t
+                                    t-esc="ISO_NUMBER.iso_number"/>-->
+                                    <!--</div>-->
+                                </div>
+                            </div>
+                            <div class="row" style="border:1px solid black" />
+                        </div>
+
+                        <div class="col-12">
+                            <div class="row">
+                                <center>
+                                    <b>
+                                        <span style="font-size:20px">Biafo Industries Limited</span>
+                                    </b>
+                                </center>
+                            </div>
+                            <div class="row">
+                                <b>
+                                    <center>
+                                        <!--<span
+                                        t-field='doc.name'/>-->
+                                        <span style="font-size:18px">Debit Note</span>
+                                    </center>
+                                </b>
+                            </div>
+                        </div>
+                        <div class="po_details" style="font-size:13px;padding-top:20px">
+                            <div class="row">
+                                <div class="col-5">
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <b>
+                                                <span>Vendor:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-7">
+                                            <b>
+                                                <span t-field="doc.partner_id.name" />
+                                            </b>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <b>
+                                                <span>Vendor Code:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-7">
+                                            <span t-field="doc.partner_id.x_studio_new_code" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <b>
+                                                <span>Vendor Invoice No:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-7">
+                                            <span t-field="doc.ref" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <b>
+                                                <span>Vendor Invoice Date:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-7">
+                                            <span t-field="doc.invoice_date" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <b>
+                                                <span>NTN:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-7">
+                                            <span t-field="doc.partner_id.vat" />
+                                            <!--<span
+                                            t-field="doc.partner_id."/>-->
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <b>
+                                                <span>S. Tax Reg No:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-7">
+                                            <!--<span
+                                            t-field="doc.partner_id.vat"/>-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-2" />
+                                <div class="col-5">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <b>
+                                                <span>Doc No:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-8">
+                                            <span t-field="doc.name" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <b>
+                                                <span>Doc Date:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-8">
+                                            <span t-field="doc.date" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <b>
+                                                <span>Ref Doc No:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-8">
+                                            <span t-field="doc.x_studio_grn_no.name" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <b>
+                                                <span>Ref Doc Date:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-8">
+                                            <span t-field="doc.x_studio_grn_no.scheduled_date" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <b>
+                                                <span>Payment Terms:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-8">
+                                            <span t-field="doc.invoice_payment_term_id.name" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <b>
+                                                <span>Payment Due Date:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-8">
+                                            <span t-field="doc.invoice_date_due" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-5">
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <b>
+                                                <span>Phone:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-7">
+                                            <span t-field="doc.partner_id.phone" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <b>
+                                                <span>Fax:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-7">
+                                            <!--<span
+                                            t-field='doc.partner_id.phone'/>-->
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <b>
+                                                <span>Email:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-7">
+                                            <span t-field="doc.partner_id.email" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-2" />
+                                <div class="col-5" />
+                            </div>
+                        </div>
+                        <br />
+                        <div class="invocie_line" style="font-size:13px;">
+                            <table style="border-collapse:collapse" class="table-borderless">
+                                <t t-set="s_no" t-value="0" />
+                                <t t-set="Gross_Total" t-value="0" />
+                                <t t-set="excl_Total" t-value="0" />
+                                <thead>
+                                    <th
+                                        style="text-align:center;border-top:1px solid black;border-bottom:1px solid black;padding:2px;width:50px">
+                                        <b>S No.</b>
+                                    </th>
+                                    <th
+                                        style="text-align:left;border-top:1px solid black;border-bottom:1px solid black;padding:2px;width:100px">
+                                        <b>Product</b>
+                                    </th>
+                                    <th
+                                        style="text-align:left;border-top:1px solid black;border-bottom:1px solid black;padding:2px;width:360px">
+                                        <b>Description</b>
+                                    </th>
+                                    <!--<th
+                                    style="text-align:left;border-top:1px solid
+                                    black;border-bottom:1px solid black;padding:2px;width:200px">-->
+                                    <!--    <b>Specification</b>-->
+                                    <!--</th>-->
+                                    <th
+                                        style="text-align:center;border-top:1px solid black;border-bottom:1px solid black;padding:2px;width:100px">
+                                        <b>UOM</b>
+                                    </th>
+                                    <th
+                                        style="text-align:right;border-top:1px solid black;border-bottom:1px solid black;padding:2px;width:100px">
+                                        <b>Qty</b>
+                                    </th>
+                                    <th
+                                        style="text-align:right;border-top:1px solid black;border-bottom:1px solid black;padding:2px;width:100px">
+                                        <b>Rate</b>
+                                    </th>
+                                    <th
+                                        style="text-align:right;border-top:1px solid black;border-bottom:1px solid black;padding:2px;width:150px">
+                                        <b>Gross Amount ( <span t-field="doc.currency_id.name" />) </b>
+                                    </th>
+                                </thead>
+                                <tr t-foreach="doc.invoice_line_ids" t-as="line">
+                                    <td style="text-align:center">
+                                        <t t-set="s_no" t-value="s_no + 1" />
+                                        <t t-esc="s_no" />
+                                    </td>
+                                    <td style="text-align:left; padding:2px;">
+                                        <span t-field="line.product_id.default_code" />
+                                    </td>
+                                    <td style="text-align:left; padding:2px;">
+                                        <span t-field="line.product_id.name" />
+                                    </td>
+                                    <!--<td
+                                    style="text-align:left; padding:2px;">-->
+                                    <!--    <span t-field="line.analytic_distribution"/>-->
+                                    <!--</td>-->
+                                    <td style="text-align:center; padding:2px;">
+                                        <span t-field="line.product_uom_id" />
+                                    </td>
+                                    <td style="text-align:right; padding:2px;">
+                                        <span t-field="line.quantity" />
+                                        <t t-set="excl_Total"
+                                            t-value="(excl_Total + (line.quantity))" />
+                                    </td>
+                                    <td style="text-align:right; padding:2px;">
+                                        <span t-esc="float(line.price_unit)"
+                                            t-options="{'widget': 'float', 'precision': 2}" />
+                                    </td>
+                                    <td style="text-align:right; padding:2px;">
+                                        <span t-esc="float(line.price_unit * line.quantity)"
+                                            t-options="{'widget': 'float', 'precision': 2}" />
+                                        <t t-set="Gross_Total"
+                                            t-value="(Gross_Total + (line.price_unit * line.quantity))" />
+                                        <!--<t
+                                        t-set="excl_Total" t-value="(excl_Total +
+                                        (line.price_subtotal))"/>-->
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="text-align:center;border-bottom:1px solid black">
+                                        <!--<t
+                                        t-set="s_no" t-value="s_no + 1"/>-->
+                                        <!--<t
+                                        t-esc="s_no"/>-->
+                                    </td>
+                                    <td
+                                        style="text-align:left;border-bottom:1px solid black; padding:2px;">
+                                        <!--<span
+                                        t-field="line.product_id.default_code"/>-->
+                                    </td>
+                                    <td
+                                        style="text-align:left;border-bottom:1px solid black; padding:2px;">
+                                        <!--<span
+                                        t-field="line.name"/>-->
+                                    </td>
+                                    <td style="text-align:left; border-bottom:1px solid black">
+                                        <!--<span
+                                        t-field="line.product_id.product_tmpl_id.product_specification"/>-->
+                                    </td>
+                                    <td style="text-align:left; border-bottom:1px solid black">
+                                        <!--<span
+                                        t-field="line.product_id.product_tmpl_id.product_specification"/>-->
+                                    </td>
+                                    <td
+                                        style="text-align:right;border-bottom:1px solid black;padding:2px;">
+                                        <!--<b>-->
+                                        <!--    <span>Total:</span>-->
+                                        <!--</b>-->
+                                    </td>
+                                    <td style="text-align:right;border-bottom:1px solid black;">
+                                        <!--<span
+                                        t-esc="float(excl_Total)" t-options="{'widget': 'float',
+                                        'precision': 2}"/>-->
+                                    </td>
+                                    <td style="text-align:right;border-bottom:1px solid black">
+                                        <!--<span
+                                        t-esc="float(Total)" t-options="{'widget': 'float',
+                                        'precision': 2}"/>-->
+                                    </td>
+                                    <td
+                                        style="text-align:right;border-bottom:1px solid black; padding:2px;">
+                                        <!--<span
+                                        t-esc="float(Gross_Total)" t-options="{'widget': 'float',
+                                        'precision': 2}"/>-->
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="calculation" style="font-size:13px">
+                            <div class="row mt-2">
+                                <div class="col-8" />
+                                <div class="col-4">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="row mt-1">
+                                                <div class="col-7" style="padding:4px;">
+                                                    <b>Value (Excl Sale Tax):</b>
+                                                </div>
+                                                <div class="col-5"
+                                                    style="padding:4px;text-align:right">
+                                                    <b t-esc="float(Gross_Total)"
+                                                        t-options="{'widget': 'float', 'precision': 2}" />
+                                                    <!--<span
+                                                    t-field="doc.x_studio_gross_amount"/>-->
+                                                </div>
+                                            </div>
+
+                                            <div class="row mt-1">
+                                                <div class="col-7" style="padding:4px;">
+                                                    <b>Sales Tax:</b>
+                                                </div>
+                                                <div class="col-5"
+                                                    style="padding:4px;text-align:right">
+                                                    <!--<span
+                                                    t-esc="float(doc.amount_total +
+                                                    (doc.amount_total - Gross_Total))"
+                                                    t-options="{'widget': 'float', 'precision':
+                                                    2}"/>-->
+                                                    <b t-esc="float(doc.amount_total - Gross_Total)"
+                                                        t-options="{'widget': 'float', 'precision': 2}" />
+                                                </div>
+                                            </div>
+                                            <div class="row mt-1">
+                                                <div class="col-7" style="padding:4px;">
+                                                    <b>Value (Incl Sale Tax):</b>
+                                                </div>
+                                                <div class="col-5"
+                                                    style="padding:4px;text-align:right;border-top:1px solid black; border-bottom:1px solid black">
+                                                    <b t-esc="float(doc.amount_total)"
+                                                        t-options="{'widget': 'float', 'precision': 2}" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="amount_in_words" style="font-size:13px">
+                            <div class="row">
+                                <!--<div
+                                class="col-2">-->
+                                <!--    <b>-->
+                                <!--        <span>Amount In Words:</span>-->
+                                <!--    </b>-->
+                                <!--</div>-->
+                                <div class="col-12">
+                                    <b>
+                                        <span t-field="doc.number_to_words" />
+                                    </b>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <div class="approved_prepared_request" style="font-size:13px;">
+                            <div class="row">
+                                <div class="col-1" />
+                                <div class="col-2" style="text-align:center">
+                                    <span t-field="doc.prepared_by" />
+                                </div>
+                                <div class="col-2" />
+                                <div class="col-2" style="text-align:center">
+                                    <span t-field="doc.verified_by" />
+                                </div>
+                                <div class="col-2" />
+                                <div class="col-2" style="text-align:center">
+                                    <span t-field="doc.approve_by" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-1" />
+                                <div class="col-2"
+                                    style="text-align:center;border-top:1px solid black">
+                                    <b>
+                                        <span>Prepared By</span>
+                                    </b>
+                                </div>
+                                <div class="col-2" />
+                                <div class="col-2"
+                                    style="text-align:center;border-top:1px solid black">
+                                    <b>
+                                        <span>Verified By</span>
+                                    </b>
+                                </div>
+                                <div class="col-2" />
+                                <div class="col-2"
+                                    style="text-align:center;border-top:1px solid black">
+                                    <b>
+                                        <span>Approved By</span>
+                                    </b>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-1" />
+                                <div class="col-2" style="text-align:center">
+                                    <!--<span
+                                    t-field="doc.prepared_timestamp"/>-->
+                                </div>
+                                <div class="col-2" />
+                                <div class="col-2" style="text-align:center">
+                                    <!--<span
+                                    t-field="doc.verify_timestamp"/>-->
+                                </div>
+                                <div class="col-2" />
+                                <div class="col-2" style="text-align:center">
+                                    <!--<span
+                                    t-field="doc.approve_timestamp"/>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="footer" style="font-family:Segoe UI">
+                            <div class="row" style="border:1px solid black" />
+                            <div class="row mt-1">
+                                <div class="col-1">
+                                    <img class="img-fluid" src="/web/image/373-9fced58c/unnamed.jpg" />
+                                </div>
+                                <div class="col-1" />
+                                <div class="col-4" style="text-align:left">
+                                    <span />
+                                </div>
+                                <div class="col-6" style="text-align:right">
+                                    <div t-if="report_type == 'pdf'" class="text-muted"> Page: <span
+                                            class="page" /> / <span class="topage" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_studio_report" model="ir.actions.report">
+        <field name="name">Debit Note</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">po_return_sequence.debit_note_document</field>
+        <field name="report_file">po_return_sequence.debit_note_document</field>
+        <field name="print_report_name">'Debit Note - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="account.model_account_move" />
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

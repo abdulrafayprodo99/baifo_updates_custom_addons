@@ -1,0 +1,264 @@
+<odoo>
+  <data>
+      <!-- Defining the paper format for the payslip report -->
+      <record id="paperformat_payslip_report" model="report.paperformat">
+          <field name="name">Salary Payslip Report Format</field>
+          <field name="format">A4</field>
+          <field name="orientation">Landscape</field>
+          <field name="margin_top">10</field>
+          <field name="margin_bottom">10</field>
+          <field name="margin_left">10</field>
+          <field name="margin_right">10</field>
+          <field name="header_spacing">35</field>
+          <field name="dpi">90</field>
+          <field name="header_line">False</field>
+          <field name="disable_shrinking">False</field>
+      </record>
+
+      <!-- Defining the report action for generating the PDF -->
+      <record id="action_payslip_report_pdf" model="ir.actions.report">
+          <field name="name">Salary Payslip Report</field>
+          <field name="model">salary.payslip.report</field>
+          <field name="report_type">qweb-pdf</field>
+          <field name="report_name">payroll_salary_summary_report.payslip_pdf</field>
+          <field name="report_file">payroll_salary_summary_report.payslip_pdf</field>
+          <field name="binding_type">report</field>
+          <field name="paperformat_id" ref="payroll_salary_summary_report.paperformat_payslip_report"/>
+          <field name="print_report_name">'Salary Slip - %s' % (object.date_from.strftime('%b %Y'))</field>
+      </record>
+
+      <!-- Template for the payslip report PDF -->
+      <template id="payslip_pdf">
+        <t t-call="web.html_container">
+          <t t-call="web.external_layout">
+              <div class="footer" style="font-family: Segoe UI; font-size: 10px;">
+                  <div class="row" style="border:1px solid black;"/>
+                  <div class="row mt-1">
+                      <div class="col-1">
+                          <span>Odoo</span>
+                      </div>
+                      <div class="col-6" style="text-align: center;">
+                          <span>Powered By Odolution</span>
+                      </div>
+                      <div class="col-5" style="text-align: right;">
+                          <t t-set="current_time" t-value="time.strftime('%d/%m/%Y %H:%M:%S')"/>
+                          <span t-esc="current_time"/>
+                          <t t-if="report_type == 'pdf'">
+                              <span style="margin-left: 15px;">Page: <span class="page"/> / <span class="topage"/></span>
+                          </t>
+                      </div>
+                  </div>
+              </div>
+
+
+              <!-- Loop through each employee's payslip -->
+              <t t-foreach="report_data['slips']" t-as="slip">
+                <div style="width: 100%; display: flex; justify-content: space-between; margin-bottom: 0px; page-break-inside: avoid; margin-top: 20px">
+                  
+
+                  
+                  <!-- First Slip -->
+                  <div style=" width:47%; box-sizing: border-box; margin-bottom: 5px;">
+                                            <!-- Company Header -->
+                  <div style="text-align: center; margin-bottom: 10px;">
+                      <h2 style="font-size: 16px; font-weight: bold; color: black;">
+                          BIAFO INDUSTRIES LIMITED
+                      </h2>
+                      <p style="font-size: 12px; color: black;">
+                          1st Floor, Biafo House, Plot No: 23, Street No: 38-40, I&amp;T Centre, G-10/4, Islamabad, Pakistan
+                      </p>
+                  </div>
+                    <h3 style="text-align: center; font-size: 14px; font-weight: bold; color: black;">
+                      Salary Slip - <t t-esc="report_data['month']"/>
+                    </h3>
+                     <!--Employee Details -->
+                    <table style="width: 100%; font-size: 12px; margin-bottom: 10px;">
+                      <tr>
+                        <td style="width: 50%; padding: 5px;">
+                          <strong>Employee No:</strong> <t t-esc="slip['employee_no_1']"/>
+                        </td>
+                        <td style="width: 50%; padding: 5px;">
+                          <strong>Name:</strong> <t t-esc="slip['name_1']"/>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="width: 50%; padding: 5px;">
+                          <strong>Designation:</strong> <t t-esc="slip['designation_1']"/>
+                        </td>
+                        <td style="width: 50%; padding: 5px;">
+                          <strong>Account No:</strong> <t t-esc="slip['account_no_1']"/>
+                        </td>
+                      </tr>
+                    </table>
+                     <!-- Pay & Allowances Table -->
+<table class="table table-bordered" style="border-collapse: collapse; width: 100%; margin-bottom: 10px;">
+<thead>
+  <tr style="background-color: #f2f2f2;">
+    <th style="width: 50%; text-align: left; font-weight: bold; color: black; padding: 8px; font-size: 10px;">Pay &amp; Allowances</th>
+    <th style="width: 50%; text-align: right; font-weight: bold; color: black; padding: 8px; font-size: 10px;">Amount (Rs.)</th>
+  </tr>
+</thead>
+<tbody>
+  <t t-foreach="slip['pay_allowances_1']" t-as="allowance">
+    <tr>
+      <td style="width: 50%; text-align: left; border: 1px solid #ddd; padding: 6px; font-size: 10px;">
+        <t t-esc="allowance['name']"/>
+      </td>
+      <td style="width: 50%; text-align: right; border: 1px solid #ddd; padding: 6px; font-size: 10px;">
+        <t t-esc="allowance['amount']" t-options="{'widget': 'integer', 'precision': 2}"/>
+      </td>
+    </tr>
+  </t>
+  <tr style="font-weight: bold; background-color: #e6e6e6;">
+    <td style="width: 50%; text-align: left; border: 1px solid #ddd; padding: 6px; font-size: 10px;">Gross</td>
+    <td style="width: 50%; text-align: right; border: 1px solid #ddd; padding: 6px; font-size: 10px;">
+      <t t-esc="slip['gross_1']" t-options="{'widget': 'integer', 'precision': 2}"/>
+    </td>
+  </tr>
+</tbody>
+</table>
+
+                     <!--Deductions Table -->
+                    <table class="table table-bordered" style="border-collapse: collapse; width: 100%; margin-bottom: 10px;">
+                      <thead>
+                        <tr style="background-color: #f2f2f2;">
+                          <th style="width: 50%; text-align: left; font-weight: bold; color: black; padding: 8px; font-size: 10px;">Deductions</th>
+                          <th style="width: 50%; text-align: right; font-weight: bold; color: black; padding: 8px; font-size: 10px;">Amount (Rs.)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <t t-foreach="slip['deductions_1']" t-as="deduction">
+                          <tr>
+                            <td style="text-align: left; border: 1px solid #ddd; padding: 6px; font-size: 10px;">
+                              <t t-esc="deduction['name']"/>
+                            </td>
+                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; font-size: 10px;">
+                              <t t-esc="deduction['amount']" t-options="{'widget': 'integer', 'precision': 2}"/>
+                            </td>
+                          </tr>
+                        </t>
+                        <tr style="font-weight: bold; background-color: #e6e6e6;">
+                          <td style="width: 50%; text-align: left; border: 1px solid #ddd; padding: 6px; font-size: 10px;">Total Deduction</td>
+                          <td style="width: 50%; text-align: right; border: 1px solid #ddd; padding: 6px; font-size: 10px;">
+                            <t t-esc="slip['total_deduction_1']" t-options="{'widget': 'integer', 'precision': 2}"/>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                     <!--Net Salary -->
+                    <table class="table table-bordered" style="border-collapse: collapse; width: 100%; margin-bottom: 10px;">
+                      <tr style="font-weight: bold; background-color: #e6e6e6;">
+                        <td style="width: 50%; text-align: left; border: 1px solid #ddd; padding: 6px; font-size: 10px;">Net Salary</td>
+                        <td style="width: 50%; text-align: right; border: 1px solid #ddd; padding: 6px; font-size: 10px;">
+                          <t t-esc="slip['net_salary_1']" t-options="{'widget': 'integer', 'precision': 2}"/>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+            
+                  <!-- Second Slip (duplicate structure) -->
+                  <div style=" width:47%; box-sizing: border-box; margin-left:600px; margin-top: -55%; margin-right: 0px; margin-left: 53%; ">
+                                            <!-- Company Header -->
+                  <div style="text-align: center; margin-bottom: 10px;">
+                      <h2 style="font-size: 16px; font-weight: bold; color: black;">
+                          BIAFO INDUSTRIES LIMITED
+                      </h2>
+                      <p style="font-size: 12px; color: black;">
+                          1st Floor, Biafo House, Plot No: 23, Street No: 38-40, I&amp;T Centre, G-10/4, Islamabad, Pakistan
+                      </p>
+                  </div>
+                    <h3 style="text-align: center; font-size: 14px; font-weight: bold; color: black;">
+                      Salary Slip - <t t-esc="report_data['month']"/>
+                    </h3>
+                     <!--Employee Details -->
+                    <table style="width: 100%; font-size: 12px; margin-bottom: 10px;">
+                      <tr>
+                        <td style="width: 50%; padding: 5px;">
+                          <strong>Employee No:</strong> <t t-esc="slip['employee_no_2']"/>
+                        </td>
+                        <td style="width: 50%; padding: 5px;">
+                          <strong>Name:</strong> <t t-esc="slip['name_2']"/>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="width: 50%; padding: 5px;">
+                          <strong>Designation:</strong> <t t-esc="slip['designation_2']"/>
+                        </td>
+                        <td style="width: 50%; padding: 5px;">
+                          <strong>Account No:</strong> <t t-esc="slip['account_no_2']"/>
+                        </td>
+                      </tr>
+                    </table>
+                     <!--Pay & Allowances Table -->
+                    <table class="table table-bordered" style="border-collapse: collapse; width: 100%; margin-bottom: 10px;">
+                      <thead>
+                        <tr style="background-color: #f2f2f2;">
+                          <th style="text-align: left; font-weight: bold; color: black; padding: 8px; font-size: 10px;">Pay &amp; Allowances</th>
+                          <th style="text-align: right; font-weight: bold; color: black; padding: 8px; font-size: 10px;">Amount (Rs.)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <t t-foreach="slip['pay_allowances_2']" t-as="allowance">
+                          <tr>
+                            <td style="text-align: left; border: 1px solid #ddd; padding: 6px; font-size: 10px;">
+                              <t t-esc="allowance['name']"/>
+                            </td>
+                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; font-size: 10px;">
+                              <t t-esc="allowance['amount']" t-options="{'widget': 'integer', 'precision': 2}"/>
+                            </td>
+                          </tr> 
+                        </t>
+                        <tr style="font-weight: bold; background-color: #e6e6e6;">
+                          <td style="width: 50%; text-align: left; border: 1px solid #ddd; padding: 6px; font-size: 10px;">Gross</td>
+                          <td style="width: 50%; text-align: right; border: 1px solid #ddd; padding: 6px; font-size: 10px;">
+                            <t t-esc="slip['gross_2']" t-options="{'widget': 'integer', 'precision': 2}"/>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                     <!--Deductions Table -->
+                    <table class="table table-bordered" style="border-collapse: collapse; width: 100%; margin-bottom: 10px;">
+                      <thead>
+                        <tr style="background-color: #f2f2f2;">
+                          <th style="width: 50%; text-align: left; font-weight: bold; color: black; padding: 8px; font-size: 10px;">Deductions</th>
+                          <th style="width: 50%; text-align: right; font-weight: bold; color: black; padding: 8px; font-size: 10px;">Amount (Rs.)</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <t t-foreach="slip['deductions_2']" t-as="deduction">
+                          <tr>
+                            <td style="text-align: left; border: 1px solid #ddd; padding: 6px; font-size: 10px;">
+                              <t t-esc="deduction['name']"/>
+                            </td>
+                            <td style="text-align: right; border: 1px solid #ddd; padding: 6px; font-size: 10px;">
+                              <t t-esc="deduction['amount']" t-options="{'widget': 'integer', 'precision': 2}"/>
+                            </td>
+                          </tr>
+                        </t>
+                        <tr style="font-weight: bold; background-color: #e6e6e6;">
+                          <td style="width: 50%; text-align: left; border: 1px solid #ddd; padding: 6px; font-size: 10px;">Total Deduction</td>
+                          <td style="width: 50%; text-align: right; border: 1px solid #ddd; padding: 6px; font-size: 10px;">
+                            <t t-esc="slip['total_deduction_2']" t-options="{'widget': 'integer', 'precision': 2}"/>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                     <!--Net Salary -->
+                    <table class="table table-bordered" style="border-collapse: collapse; width: 100%; margin-bottom: 10px;">
+                      <tr style="font-weight: bold; background-color: #e6e6e6;">
+                        <td style="width: 50%; text-align: left; border: 1px solid #ddd; padding: 6px; font-size: 10px;">Net Salary</td>
+                        <td style="width: 50%; text-align: right; border: 1px solid #ddd; padding: 6px; font-size: 10px;">
+                          <t t-esc="slip['net_salary_2']" t-options="{'widget': 'integer', 'precision': 2}"/>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+              </t>
+
+
+          </t>
+      </t>
+      </template>
+  </data>
+</odoo>

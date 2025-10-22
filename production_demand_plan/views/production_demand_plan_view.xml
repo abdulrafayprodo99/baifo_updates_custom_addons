@@ -1,0 +1,132 @@
+<odoo>
+       <record id="affinity_material_requirement_form_inherited" model="ir.ui.view">
+            <field name="name">affinity.material.requirement.form.inherited</field>
+            <field name="model">affinity.material.requirement</field>
+            <field name="inherit_id" ref="affinity_production_plan.affinity_material_requirement_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='scheduled_date']" position="after">
+                    <field name="mo_qty"/>
+                    <field name="remaining_qty"/>
+
+                    <!-- <field name="check_manufacturing_order"/> -->
+                    <!-- <field name="mo_number"/> -->
+                    <!-- <button name="create_manufacturing_order" string="Create MO" type="object"/> -->
+                </xpath>
+               </field>
+        </record>
+
+    <record id="view_production_demand_order" model="ir.ui.view">
+        <field name="name">view_production_demand_order.form</field>
+        <field name="model">production.demand.plan</field>
+        <field name="arch" type="xml">
+          <form>
+				<header>
+                    <!-- <button name="post_action" states="draft" string="Confirm" type="object"/>
+                    
+					<button  attrs="{'invisible':[('state','!=', 'approved')]}" states="approved" name="create_in_material_request"  string="Create Material Request" class="oe_highlight" type="object"/>
+					<field name="state" widget="statusbar"/> -->
+                    
+				</header>
+                
+				  
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" string="Name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            
+                            
+                            <field name="doc_type" />
+                            <field name="sale_order" attrs="{'invisible':[('doc_type','!=','sale')]}" />
+                            <field name="customer_po_no"/>
+
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="partner_id_domain" invisible="1"/>
+                            <field name="res_partner" />
+                            <field name="customer_po_date"/>
+                        </group>
+
+                    </group>
+                      
+                     <field name="pdo_line_id" attrs="{'invisible':[('doc_type','!=','sale')]}" >
+                        <tree editable="bottom">
+                            <field name="s_no"/>
+                            <field name="pdo_id"/>
+                            <field name="doc_type" invisible="1"/>
+                            <field name="sale_order_line_id"  />
+                            <field name="product_code"/>
+                             <field name="product_id"/>
+                             <field name="specification"/>
+                            <field name="uom"/>
+                            <field name="sale_balance_qty" />
+                            <field name="shipment_plan" />
+                            <field name="stock_in_hand" />
+                            <field name="demand"  />
+                            
+                            <!-- <field name="stock_demand"/> -->
+                            <field name="scheduled_date"/>
+                            <field name="urgent_requirment"/>
+                            <!-- <field name="remarks"/> -->
+                            <!-- <button  name=""  string="Create MO" type="object"></button> -->
+                        </tree>
+                         
+                    </field>
+                     <field name="stock_pdo_line_id" attrs="{'invisible':[('doc_type','=','sale')]}" >
+                        <tree editable="bottom">
+                            <field name="s_no"/>
+                            <field name="stock_pdo_id"/>
+                            <field name="doc_type" invisible="1"/>
+                            <!-- <field name="sale_order_line_id"  /> -->
+                            <field name="product_code"/>
+                             <field name="product_id"/>
+                             <field name="specification"/>
+                            <field name="uom"/>
+                            <!-- <field name="sale_balance_qty" /> -->
+                            <field name="shipment_plan" />
+                            <field name="stock_in_hand" />
+                            <!-- <field name="demand"  /> -->
+                            <field name="stock_demand"/>
+                            <field name="scheduled_date"/>
+                            <field name="urgent_requirment"/>
+                            <!-- <field name="remarks"/>
+                            <button  name=""  string="Create MO" type="object"></button> -->
+                        </tree>
+                         
+                    </field>
+                    
+                    <!-- <xpath expr="//sheet" position="inside">
+                    </xpath>              -->
+                </sheet>
+            </form>
+        </field>
+      </record>
+      
+  
+                              
+                              
+                              
+      
+
+
+    <record id="view_production_order_plan_action" model="ir.actions.act_window">
+        <field name="name">Production Demand Order (PDO)</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">production.demand.plan</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create Your First Record
+            </p>
+        </field>
+    </record>
+    
+    <menuitem id="pdo_root" name="Production Demand Order" parent="" sequence="10" />
+    <menuitem id="pdo" name="Production Demand Order" action="view_production_order_plan_action" sequence="2" parent="pdo_root" />
+    
+
+</odoo>

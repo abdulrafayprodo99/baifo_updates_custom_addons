@@ -1,0 +1,113 @@
+<odoo>
+  <data>
+
+  <!--Production Planning Views Start-->
+    <record model="ir.ui.view" id="affinity_material_requirement_list">
+      <field name="name">affinity_material_requirement_list</field>
+      <field name="model">affinity.material.requirement</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="date_from"/>
+          <field name="date_to"/>
+          <field name="state"/>
+        </tree>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="affinity_material_requirement_action_window">
+      <field name="name">Production Planning</field>
+      <field name="res_model">affinity.material.requirement</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="affinity_material_requirement_form" model="ir.ui.view">
+            <field name="name">affinity_material_requirement_form</field>
+            <field name="model">affinity.material.requirement</field>
+            <field name="arch" type="xml">
+                <form string="Production Planning">
+                <header>
+                  <button string="Validate" name="validate_planning" type="object" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ('draft'))]}"/>
+                  <button string="Reset to Draft" name="set_planning_to_draft" type="object" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ('validated'))]}"/>
+                  <field name="state" widget="statusbar" statusbar_visible="draft,validated" readonly="1"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1 class="d-flex">
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date_from"></field>
+                        </group>
+                        <group>
+                            <field name="date_to"></field>
+                        </group>
+                    </group>
+                    <notebook>
+                      <page string="Material Demand Lines" name="material_demand_lines">
+                          <field name="material_demand_line_ids" mode="tree">
+                              <tree string="Material Demand Lines" editable="bottom">
+                               
+                                <field name="product_id"/>
+                                <field name="product_demand_quantity"/>
+                                <field name="sale_order_id"/>
+                                <field name="customer_id"/>
+                                <field name="scheduled_date"/>
+                               <!-- <field name="check_manufacturing_order"/> -->
+                               <!-- <field name="mo_number"/> -->
+                                <!-- <button name="create_manufacturing_order" string="Create MO" type="object"/> -->
+                              </tree>
+                            </field>
+                          </page>
+                      <page string="Production Planning Lines" name="material_requirement_lines">
+                          <field name="material_requirement_line_ids" mode="tree">
+                              <tree string="Production Planning Lines" editable="bottom" create="false">
+                                <field name="product_id" force_save="1"/>
+                                <field name="demand_line_ids" force_save="1"/>
+                                <field name="product_category_id" force_save="1"/>
+                                <field name="product_uom_id" force_save="1"/>
+                                <field name="supplier_id" force_save="1"/>
+                                <field name="product_assembled_qty" force_save="1"/>
+                                <field name="product_qty_wip" force_save="1"/>
+                                <field name="product_qty" force_save="1"/>
+                                <field name="product_required_qty" force_save="1"/>
+                                <field name="total_qty_required" force_save="1"/>
+                                <field name="actual_demand_qty"/>
+
+                              </tree>
+                            </field>
+                          </page>
+                      </notebook>
+                  </sheet>
+                </form>
+              </field>
+        </record>
+
+
+  <!--Production Planning Views Start-->
+
+
+    <!-- explicit list view definition -->
+
+    <record id="stock_view_location_form_inherit" model="ir.ui.view">
+      <field name="name">stock.view.location.form.inherit</field>
+      <field name="model">stock.location</field>
+      <field name="inherit_id" ref="stock.view_location_form"/>
+      <field name="arch" type="xml">
+        <field name="usage" position="after">
+          <field name="storage_location" />
+        </field>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+
+    <!-- Top menu item -->
+    <menuitem name="Material Planning" id="affinity_material_planning_menu" parent="mrp.menu_mrp_root"> 
+      <menuitem name="Production Planning" action="affinity_material_requirement_action_window" id="affinity_material_requirement_menu_2"/>
+    </menuitem>
+
+  </data>
+</odoo>

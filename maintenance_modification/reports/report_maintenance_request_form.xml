@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <template id="report_maintenance_request_template_qweb"  >
+    <t t-call="web.basic_layout">
+        <t t-foreach="docs" t-as="doc">
+        
+        <t t-set="company" t-value="doc.env.company"/>
+        <!--<link href="https://fonts.googleapis.com/css2?family=Roboto" rel="stylesheet"/>-->
+        
+        <!-- Header Section -->
+        <div class="page" style="font-family:Segoe UI; font-size:15px">
+          <div class="row align-items-center mt-3">
+              <!-- Logo -->
+              <div class="col-3 text-start">
+                  <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 60px;" alt="Logo"/> 
+              </div>
+              
+              <!-- Header -->
+              <div class="col-5 text-center">
+                  <h3 style="margin: 0;">
+                      <span t-field="company.name"/>
+                  </h3>
+                  <h4 style="font-size: 16px; font-weight: bold; margin-top: 5px; padding-bottom: 20px;">
+                      WORK / MAINTENANCE REQUEST FORM
+                  </h4>
+              </div>
+          </div>
+        </div>
+       
+        <div style="background-color: #000000; color: white; padding: 2px; text-align: center; font-size: 2px; font-weight: bold;">
+        </div>
+
+        <!-- Main Content -->
+        <div style="font-family:Segoe UI; margin: 20px; font-size: 16px; min-height: calc(100vh - 100px);">
+            <table style="width: 100%; border: 1px solid #000; border-collapse: collapse; table-layout: fixed;">
+                <tbody>
+                    <!-- Row 1 -->
+                    <tr>
+                        <td style="padding: 10px 20px; height: 20px; border: 1px solid #000; width: 50%;"><strong>WR Num.:</strong> <span t-field="doc.wr_no"/></td>
+                        <td style="padding: 10px 20px; height: 20px; border: 1px solid #000; width: 50%;"><strong>Team:</strong> <span t-field="doc.maintenance_team_id.name"/></td>
+                    </tr>
+                    <!-- Row 2 -->
+                    <tr>
+                        <td style="padding: 10px 20px; height: 20px; border: 1px solid #000;">
+                            <strong>Work Request Statement:</strong><br/>
+                            <span t-field="doc.description"/>
+                        </td>
+                        <td style="padding: 10px 20px; height: 20px; border: 1px solid #000;"><strong>Responsible:</strong> <span t-field="doc.x_studio_related_field_ctShs"/></td>
+                    </tr>
+                    <!-- Row 3 -->
+                    <tr>
+                        <td style="padding: 10px 20px; height: 20px; border: 1px solid #000;">
+                            <strong>Problem Description:</strong><br/>
+                            <span t-field="doc.description"/>
+                        </td>
+                        <td style="padding: 10px 20px; height: 20px; border: 1px solid #000;"><strong>Job Assignment:</strong> <span t-field="doc.job_assignment"/></td>
+                    </tr>
+                    <!-- Row 4 -->
+                    <tr>
+                        <td style="padding: 10px 20px; height: 20px; border: 1px solid #000;"><strong>Priority:</strong> <span t-field="doc.priority"/></td>
+                        <td style="padding: 10px 20px; height: 20px; border: 1px solid #000;"><strong>Work Permit Num.:</strong> <span t-field="doc.x_studio_work_permit_no"/></td>
+                    </tr>
+                    <!-- Row 5 -->
+                    <tr>
+                        <td style="padding: 10px 20px; height: 20px; border: 1px solid #000;">
+                            <strong>Maintenance Type:</strong><br/>
+                            <label>
+                                <input type="radio" name="maintenance_type" value="Corrective" t-att-checked="doc.maintenance_type == 'corrective'"/> Corrective
+                            </label><br/>
+                            <label>
+                                <input type="radio" name="maintenance_type" value="Preventive" t-att-checked="doc.maintenance_type == 'preventive'"/> Preventive
+                            </label><br/>
+                            <label>
+                                <input type="radio" name="maintenance_type" value="Others" t-att-checked="doc.maintenance_type == 'others'"/> Others
+                            </label>
+                        </td>
+                        <td style="padding: 10px 20px; height: 20px; border: 1px solid #000;"><strong>Work Permit Type:</strong> <span t-field="doc.x_studio_work_permit_type_1"/></td>
+                    </tr>
+                    <!-- Row 6 -->
+                    <tr>
+                        <td style="padding: 10px 20px; height: 20px; border: 1px solid #000;"><strong>Equipment:</strong> <span t-field="doc.equipment_id.name"/></td>
+                        <td style="padding: 10px 20px; height: 20px; border: 1px solid #000;"><strong>Job Start Time:</strong> <span t-field="doc.x_studio_job_start_time"/></td>
+                    </tr>
+                    <!-- Row 7 -->
+                    <tr>
+                        <td style="padding: 10px 20px; height: 20px; border: 1px solid #000;"><strong>Functional Location:</strong> <span t-field="doc.functional_loc"/></td>
+                        <td style="padding: 10px 20px; height: 20px; border: 1px solid #000;"><strong>Job End Time:</strong> <span t-field="doc.x_studio_job_end_time"/></td>
+                    </tr>
+                    <!-- Row 8 -->
+                    <tr>
+                        <td style="padding: 10px 20px; height: 20px; border: 1px solid #000;"><strong>Requested Date:</strong> <span t-field="doc.request_date"/></td>
+                        <td style="padding: 10px 20px; height: 20px; border: 1px solid #000;"><strong>Job Duration:</strong> <span t-field="doc.x_studio_job_duration_1"/></td>
+                    </tr>
+                    <!-- Row 9 -->
+                    <tr>
+                        <td colspan="2" style="padding: 10px 20px; height: 20px; border: 1px solid #000;"><strong>Created By:</strong> <span t-field="doc.employee_id.name"/></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding: 10px 20px; height: 80px; border: 1px solid #000;">
+                            <strong>Rectification Action:</strong><br/>
+                            <span t-field="doc.x_studio_rectification_action_1"/>
+                        </td>
+                    </tr>
+                    <!-- Row 10 -->
+                    <tr>
+                        <td colspan="2" style="padding: 10px 20px; height: 80px; border: 1px solid #000;">
+                            <strong>Job Requester Remarks:</strong><br/>
+                            <span t-field="doc.job_requester_remarks"/>
+                        </td>
+                    </tr>
+                    <!-- Row 11 -->
+                    <tr>
+                        <td colspan="2" style="padding: 10px 20px; height: 80px; border: 1px solid #000;">
+                            <strong>Job Performer Remarks:</strong><br/>
+                            <span t-field="doc.job_performer_remarks"/>
+                        </td>
+                    </tr>
+                    <!-- Row 12 -->
+                    <tr>
+                        <td colspan="2" style="padding: 10px 20px; height: 20px; border: 1px solid #000;">
+                            <strong>Job Status:</strong><br/>
+                            <label>
+                                <input type="radio" name="job_status" value="completed" t-att-checked="'completed' in doc.stage_id.name.lower()"/> Completed
+                            </label>
+                            <label>
+                                <input type="radio" name="job_status" value="not_completed" t-att-checked="'completed' not in doc.stage_id.name.lower()"/> Not Completed
+                            </label>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+<!-- Conditional Table for Preventive Maintenance -->
+<t t-if="doc.maintenance_type == 'preventive'">
+    <div style="page-break-before: always;"> <!-- Add page break here -->
+        <table style="width: 100%; margin-top: 20px; border: 1px solid #000; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th style="padding: 10px; border: 1px solid #000;">PWMID</th>
+                    <th style="padding: 10px; border: 1px solid #000;">Name</th>
+                    <th style="padding: 10px; border: 1px solid #000;">Components</th>
+                    <th style="padding: 10px; border: 1px solid #000;">Frequency</th>
+                    <th style="padding: 10px; border: 1px solid #000;">Action Required</th>
+                    <th style="padding: 10px; border: 1px solid #000;">Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Loop through each discipline line with conditions -->
+                <t t-foreach="doc.equipment_id.discipline_line_ids" t-as="line">
+                    <t t-if="(not doc.frequency or line.frequency.lower() == doc.frequency.lower())  and ((doc.maintenance_team_id.name == 'Electrical &amp; Controls Team' and 'PME' in line.discipline_id.name) or   (doc.maintenance_team_id.name == 'Mechanical Team' and 'PMM' in line.discipline_id.name))">
+                        <tr>
+                            <td style="padding: 5px; border: 1px solid #000;">
+                                <span t-field="line.discipline_id"/>
+                            </td>
+                            <td style="padding: 10px; border: 1px solid #000;">
+                                <span t-field="line.x_studio_related_field_3pzUe"/>
+                            </td>
+                            <td style="padding: 10px; border: 1px solid #000;">
+                                <span t-field="line.components"/>
+                            </td>
+                            <td style="padding: 10px; border: 1px solid #000;">
+                                <span t-field="line.frequency"/>
+                            </td>
+                            <td style="padding: 10px; border: 1px solid #000;">
+                                <span t-field="line.action_required"/>
+                            </td>
+                            <td style="padding: 10px; border: 1px solid #000;">
+                                <span t-field="line.remarks"/>
+                            </td>
+                        </tr>
+                    </t>
+                </t>
+            </tbody>
+        </table>
+    </div>
+</t>
+
+        </div>
+
+<!-- Footer Section -->
+<div class="row" style="margin-top: 80px; solid #333; padding-top: 20px;">
+    <div class="col-4 text-start" style="font-size: 18px; font-weight: bold; color: #444;">
+        Job Requested By
+        <div style="font-size: 16px; font-weight: normal; margin-top: 5px; color: #666;">
+            <t t-esc="doc.request_by.name"/><br/>
+            <t t-if="doc.requested_date">
+                <t t-esc="doc.requested_date.strftime('%Y-%m-%d %H:%M:%S')"/><br/>
+            </t>
+        </div>
+    </div>
+    <div class="col-4 text-center" style="font-size: 18px; font-weight: bold; color: #444;">
+        Job Performed By
+        <div style="font-size: 16px; font-weight: normal; margin-top: 5px; color: #666;">
+            <t t-esc="doc.job_completed_by.name"/><br/>
+            <t t-if="doc.job_completed_date">
+                <t t-esc="doc.job_completed_date.strftime('%Y-%m-%d %H:%M:%S')"/><br/>
+            </t>
+        </div>
+    </div>
+    <div class="col-4 text-end" style="font-size: 18px; font-weight: bold; color: #444;">
+        Job Approved By
+        <div style="font-size: 16px; font-weight: normal; margin-top: 5px; color: #666;">
+            <t t-esc="doc.approved_by.name"/><br/>
+            <t t-if="doc.approved_date">
+                <t t-esc="doc.approved_date.strftime('%Y-%m-%d %H:%M:%S')"/><br/>
+            </t>
+        </div>
+    </div>
+</div>
+
+
+        </t>
+    </t>
+    </template>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <record id="btn_report_maintenance_request_work" model="ir.actions.report">
+        <field name="name">Work / Maintenance Request Form</field>
+        <field name="model">maintenance.request</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">maintenance_modification.report_maintenance_request_template_qweb</field>
+        <field name="report_file">maintenance_modification.report_maintenance_request_template_qweb</field>
+        <!-- <field name="paperformat_id" ref="report_qweb_paperformat" /> -->
+    </record>
+
+</odoo>

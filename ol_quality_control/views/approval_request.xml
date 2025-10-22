@@ -1,0 +1,27 @@
+<odoo>
+    <record id="custom_approval_request_view_form_inherit" model="ir.ui.view">
+        <field name="name">custom.approval.request.view.form.inherit</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_form"/>
+        <field name="arch" type="xml">
+          
+            <xpath expr="//button[@name='action_approve']" position="replace">
+                <button name="action_approve" 
+                string="Verify" type="object"
+                attrs="{'invisible':['|', ('request_status', 'in', ['approved', 'refused', 'cancel']), ('user_status','!=','pending')]}"
+                data-hotkey="q"
+                groups="ol_quality_control.groups_verify_approval"
+                />
+                <button name="action_approve" 
+                groups="ol_quality_control.groups_approve_approval"
+                 string="Approve" 
+                 type="object" attrs="{'invisible':['|', ('request_status', 'in', ['approved', 'refused', 'cancel','pennding']), ('user_status','!=','pending')]}"
+                  data-hotkey="q"/>
+                    
+                
+            </xpath>
+
+       
+        </field>
+    </record>
+</odoo>

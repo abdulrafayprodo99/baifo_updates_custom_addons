@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Action to open Picking Types with a domain filter -->
+    <record id="action_stock_picking_type_mrp_operation" model="ir.actions.act_window">
+        <field name="name">Manufacturing</field>
+        <field name="res_model">stock.picking.type</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('code', '=', 'mrp_operation')]</field>
+    </record>
+
+    <!-- Menu Item (Define AFTER the action to avoid errors) -->
+    <menuitem id="mrp.menu_mrp_production_action"
+              name="Manufacturing Orders"
+              parent="mrp.menu_mrp_manufacturing"
+              action="action_stock_picking_type_mrp_operation"/>
+</odoo>

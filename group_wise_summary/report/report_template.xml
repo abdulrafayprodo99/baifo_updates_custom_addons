@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="sales_group_summary_reports">
+        <t t-call="web.basic_layout">
+            <link href="https://fonts.googleapis.com/css2?family=Roboto" rel="stylesheet"/>
+              <div class="header" style="font-size: 0.9rem !important; font-family: 'Roboto', serif !important;">
+                  <div class="row">
+                      <div class="col-12 text-left">
+                          <h3>Biafo Industries Limited</h3>
+                          <h3>Sales Summary - Product Group Wise</h3>
+                          <t t-if="other['date_from']">
+                                  <b>From :</b>
+                                  <t t-esc="other['date_from']" t-options="{&quot;widget&quot;: &quot;date&quot;,&quot;format&quot;: &quot;dd-MM-yyyy&quot;}"/>
+                          </t>
+                          <br/>
+                          <t t-if="other['date_to']">
+                              <b>To :</b>
+  
+                              <t t-esc="other['date_to']" t-options="{&quot;widget&quot;: &quot;date&quot;,&quot;format&quot;: &quot;dd-MM-yyyy&quot;}"/>
+                          </t>
+                      </div>
+                  </div>
+              </div>
+              <div class="page">
+                  <div class="row">
+                      <div class="col-12">
+                          <table style=" border-collapse:collapse; width: 100%;" class="table-borderless">
+                              <thead>
+                                  <tr style="font-size: 0.9rem !important; font-family: 'Roboto', serif !important;">
+                                      <th style="text-align:left;border-bottom:1px solid black;padding:0px;width:120px;font-weight:bold;">
+                                          <b>Product</b>
+                                      </th>
+                                      <th style="text-align:left;border-bottom:1px solid black;padding:0px;width:200px;font-weight:bold;">
+                                          <b>Description</b>
+                                      </th>
+                                      <th style="text-align:center;border-bottom:1px solid black;padding:0px;width:50px;font-weight:bold;">
+                                          <b>Unit</b>
+                                      </th>
+                                      <th style="text-align:right;border-bottom:1px solid black;padding:0px;width:80px;font-weight:bold;">
+                                          <b>Quantity</b>
+                                      </th>
+                                      <!-- <th style="text-align:right;border-bottom:1px solid black;padding-left:10px;width:100px;font-weight:bold;">
+                                          <b>Gross Amount</b>
+                                      </th> -->
+                                      <th style="text-align:right;border-bottom:1px solid black;padding-left:10px;width:100px;font-weight:bold;">
+                                          <b>Sales Excluding Sales Tax</b>
+                                      </th>
+                                      <th style="text-align:right;border-bottom:1px solid black;padding:0px;width:100px;font-weight:bold;">
+                                          <b>Sales Tax Amount</b>
+                                      </th>
+                                      <th style="text-align:right;border-bottom:1px solid black;padding:0px;width:100px;font-weight:bold;">
+                                          <b>Total Amount</b>
+                                      </th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <t t-foreach="data" t-as="value">
+                                      <tr style="font-size: 0.8rem !important; font-family: 'Roboto', serif !important;">
+                                          <td style="text-align:left; padding:0px; font-weight: normal;">
+                                              <span t-esc="value['product_default_code']"/>
+                                          </td>
+                                          <td style="text-align:left; padding:0px; font-weight: normal;">
+                                              <span t-esc="value['product_name']"/>
+                                          </td>
+                                          <td style="text-align:center; padding:0px; font-weight: normal;">
+                                              <span t-esc="value['unit']"/>
+                                          </td>
+                                          <td style="text-align:right; padding:0px; font-weight: normal;">
+                                              <span t-esc="value['quantity']" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                          </td>
+                                          <!-- <td style="text-align:right; padding:0px; font-weight: normal;">
+                                              <span t-esc="value['gross_amount']" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                          </td> -->
+                                          <td style="text-align:right; padding:0px; font-weight: normal;">
+                                              <span t-esc="value['value_excl']" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                          </td>
+                                          <td style="text-align:right; padding:0px; font-weight: normal;">
+                                              <span t-esc="value['sales_tax_amount']" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                          </td>
+                                          <td style="text-align:right; padding:0px; font-weight: normal;">
+                                              <span t-esc="value['total_amount']" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                          </td>
+                                      </tr>
+                                  </t>
+
+                                  <tr style="font-size: 0.8rem !important; font-family: 'Roboto', serif !important;" >
+                                      <td colspan="3" class="total-cell" style="text-align:right; padding-right:20px; font-weight: bold;">
+                                          Total
+                                      </td>
+                                      <td class="total-cell" style="text-align:right; padding:0px; font-weight: bold; border-bottom:0.07rem solid #e0e0e0; border-top:0.07rem solid #e0e0e0;">
+                                          <span t-esc="totals['quantity']" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                      </td>
+                                      <!-- <td class="total-cell" style="text-align:right; padding:0px; font-weight: bold;">
+                                          <span t-esc="totals['gross_amount']" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                      </td> -->
+                                      <td class="total-cell" style="text-align:right; padding:0px; font-weight: bold; border-bottom:0.07rem solid #e0e0e0; border-top:0.07rem solid #e0e0e0;">
+                                          <span t-esc="totals['value_excl']" t-options='{"widget": "float", "precision": 2, "thousands_sep": ","}'/>
+                                          <!-- <span t-esc="totals['gross_amount']" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/> -->
+                                      </td>
+                                      <td class="total-cell" style="text-align:right; padding:0px; font-weight: bold; border-bottom:0.07rem solid #e0e0e0; border-top:0.07rem solid #e0e0e0;">
+                                          <span t-esc="totals['sales_tax_amount']" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                      </td>
+                                      <td class="total-cell" style="text-align:right; padding:0px; font-weight: bold; border-bottom:0.07rem solid #e0e0e0; border-top:0.07rem solid #e0e0e0;">
+                                          <span t-esc="totals['total_amount']" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                      </td>
+                                  </tr>
+                              </tbody>
+  
+                          </table>
+  
+                      </div>
+                  </div>
+              </div>
+          </t>
+    </template>
+</odoo>

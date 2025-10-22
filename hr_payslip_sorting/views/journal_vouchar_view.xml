@@ -1,0 +1,29 @@
+<odoo>
+    <data>
+        <record id="view_move_tree_custom_department_id" model="ir.ui.view">
+            <field name="name">account.move.tree.custom</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="before">
+                    <field name="department_id"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+        <data>
+            <!-- Inheriting the account move filter view -->
+            <record id="view_account_move_filter_inherit_department_id" model="ir.ui.view">
+                <field name="name">account.move.filter.inherit.custom</field>
+                <field name="model">account.move</field>
+                <field name="inherit_id" ref="account.view_account_move_filter"/>
+                <field name="arch" type="xml">
+                    <!-- Adding the 'group_by' department_id field -->
+                    <xpath expr="//filter[@name='partner']" position="before">
+                        <filter string="Department" name="by_department_id" context="{'group_by':'department_id'}"/>
+                    </xpath>
+                </field>
+            </record>
+        </data>
+    
+</odoo>

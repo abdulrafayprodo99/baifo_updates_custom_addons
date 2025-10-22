@@ -1,0 +1,335 @@
+<odoo>
+
+  <record id="report_payment_wht_line_format" model="report.paperformat">
+    <field name="name">Payment Certificate Report Format</field>
+    <field name="format">A4</field>
+    <field name="orientation">Portrait</field> <!-- Fixed -->
+    <field name="margin_top">10</field>
+    <field name="margin_bottom">10</field>
+    <field name="margin_left">10</field>
+    <field name="margin_right">10</field>
+    <field name="header_spacing">35</field>
+    <field name="dpi">90</field>
+    <field name="header_line">False</field>
+  </record>
+
+  <!-- Define Report Action -->
+  <record id="report_payment_wht_line" model="ir.actions.report">
+    <field name="name">Payment Certificate Report</field>
+    <field name="model">payment.wht.line.report.wizard</field> <!-- Fixed -->
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">wht_extension.report_payment_wht_line_template</field>
+    <field name="report_file">wht_extension.report_payment_wht_line_template</field>
+    <field name="paperformat_id" ref="wht_extension.report_payment_wht_line_format" /> <!-- Fixed -->
+    <field name="print_report_name">'Payment Certificate Report - %s' % (object.partner_id.name)</field>
+  </record>
+
+
+  <template id="report_payment_wht_line_template">
+    <t t-name="wht_extension.report_payment_wht_line_template">
+      <t t-call="web.html_container">
+        <t t-call="web.external_layout">
+                <!--<t t-esc="report_data"/>-->
+              <div class="page" style="font-size: 18px; line-height: 1.5; font-family: 'Times New Roman', Times, serif;">
+              <!--<div class="page" style="font-size:20px; position: relative; min-height: 100vh;font-family: 'Times New Roman', Times, serif;">-->
+        <h4 style="text-align: center; font-style: italic;">
+          Certificate of Collection or Deduction of Income Tax (including salary)<br/>
+          (Under rule 42)
+        </h4>
+
+        <table style="width: 100%; font-size: 14px; margin-bottom: 10px; border: 1px solid white;">
+          <tr>
+            <td style="text-align: left; width: 33%;">
+              
+              S. No. <t t-esc="report_data['serial_no']"/>
+            </td>
+            <td style="text-align: center; width: 34%;font-size:18px">
+              <span t-att-style="'text-decoration: underline;' if not duplicate else ''">Original</span> /
+              <span t-att-style="'text-decoration: underline;' if duplicate else ''">Duplicate</span>
+            </td>
+            <td style="text-align: right; width: 33%;">
+              Date Of Issue: <t t-esc="report_data['issue_date']"/>
+            </td>
+          </tr>
+        </table>
+
+
+
+       <div class="page" style="font-size:18px;">
+
+    <!-- First Row -->
+    <div style="display: -webkit-box; -webkit-box-pack: justify;  align-items: center;">
+        <div style="width: 30%; -webkit-box-flex: 1;">Certified that a sum of</div>
+        <div style="width: 70%; padding-left: 10px; -webkit-box-flex: 1;">
+            Rs. 
+            <span style="border-bottom: 1px solid #000; display: inline-block; width: 200px; line-height: 1;">
+                <t t-esc="'{:,.0f}'.format(report_data['sum_of_tax_amount'])"/>
+            </span>
+        <span style="font-size:15px;margin-left:85px">(Amount of tax collected/deducted in figures)</span>
+        </div>
+    </div>
+
+    <!-- Second Row: Amount in Words -->
+    <div style="display: -webkit-box; -webkit-box-pack: justify; justify-content: space-between; align-items: center; ">
+        <div style="width: 30%; -webkit-box-flex: 1;"/>
+        <div style="width: 70%; padding-left: 10px; -webkit-box-flex: 1; ">
+            <!--Rupees -->
+            <span style="border-bottom: 1px solid #000; display: inline-block; width: 475px; line-height: 1;">
+              <!--<u>-->
+                
+                <t t-esc="report_data['sum_of_tax_amount_words']"/>
+              <!--</u>-->
+            </span>
+        <span style="font-size:15px ">(Amount in words)</span>
+        </div>
+    </div>
+
+    <!-- Third Row: On account of Income Tax collected/deducted from -->
+    <div style="display: -webkit-box; -webkit-box-pack: justify; justify-content: space-between; align-items: center; ">
+        <div style="width: 30%; -webkit-box-flex: 1;padding-right:10px">on account of Income Tax has been collected/deducted from</div>
+        <div style="width: 70%; padding-left: 10px; -webkit-box-flex: 1;">
+            <span style="border-bottom: 1px solid #000; display: inline-block; width: 600px; line-height: 1;">
+                <t t-esc="report_data['partner_name']"/>
+            </span>
+        </div>
+        <!--<div style="width: 20%; -webkit-box-flex: 1;"/>-->
+    </div>
+
+    <!-- Fourth Row: Address -->
+    <div style="display: -webkit-box; -webkit-box-pack: justify; justify-content: space-between; align-items: center;">
+        <div style="width: 30%; -webkit-box-flex: 1;">Name and address of person from whom tax is collected and deducted</div>
+        <div style="width: 70%; padding-left: 10px; -webkit-box-flex: 1;">
+            <span style="border-bottom: 1px solid #000; display: inline-block; width: 600px; line-height: 1;">
+                <t t-esc="report_data['address']"/>
+            </span>
+            <div style="font-size:15px">
+              (In case of an individual, his/her name in full and in case of an association of persons/company, name and style of the association of person/company)
+            </div>
+        </div>
+        <!--<div style="width: 20%; -webkit-box-flex: 1;"/>-->
+    </div>
+
+    <!-- Fifth Row: NTN -->
+    <div style="display: -webkit-box; -webkit-box-pack: justify; justify-content: space-between; align-items: center; ">
+        <div style="width: 30%; -webkit-box-flex: 1;">having National Tax Number</div>
+        <div style="width: 50%; padding-left: 10px; -webkit-box-flex: 1;">
+            <span style="border-bottom: 1px solid #000; display: inline-block; width: 320px; line-height: 1;">
+                <t t-esc="report_data['ntn']"/>
+            </span>
+        </div>
+        <div style="width: 20%; -webkit-box-flex: 1;">
+          <span style="font-size:15px;margin-left:95px">
+            (if any) and
+          </span>
+        </div>
+    </div>
+
+    <!-- Sixth Row: CNIC -->
+    <div style="display: -webkit-box; -webkit-box-pack: justify; justify-content: space-between; align-items: center; ">
+        <div style="width: 30%; -webkit-box-flex: 1;">holder of CNIC NO.</div>
+        <div style="width: 70%; padding-left: 10px; -webkit-box-flex: 1;">
+            <span style="border-bottom: 1px solid #000; display: inline-block; width: 320px; line-height: 1;">
+                <t t-esc="report_data['cnic_no']"/>
+            </span>
+            <span style="font-size:15px;margin-left:100px">(in case of an individual only)</span>
+        </div>
+    </div>
+
+    <!-- Seventh Row: Date of collection/deduction -->
+    <div style="display: -webkit-box; -webkit-box-pack: justify; justify-content: space-between; align-items: center; ">
+        <div style="width: 30%; -webkit-box-flex: 1;">on</div>
+        <div style="width: 70%; padding-left: 10px; -webkit-box-flex: 1;">
+            <span style="border-bottom: 1px solid #000; display: inline-block; width: 320px; line-height: 1;"/>
+        <span style="font-size:15px;margin-left:95px">(Date of collection/deduction)</span>
+        </div>
+    </div>
+
+    <!-- Eighth Row: Period -->
+    <div style="display: -webkit-box; -webkit-box-pack: justify; justify-content: space-between; align-items: center;">
+        <div style="width: 30%; -webkit-box-flex: 1;">On or during the period</div>
+        <div style="width: 70%; padding-left: 10px; -webkit-box-flex: 1;">
+            From <span style="border-bottom: 1px solid #000; display: inline-block; width: 100px; line-height: 1;"><t t-esc="report_data['from_date']"/></span>
+            To <span style="border-bottom: 1px solid #000; display: inline-block; width: 100px; line-height: 1;"><t t-esc="report_data['to_date']"/></span>
+             <span style="font-size:15px;margin-left:130px">(period of collection/deduction)</span>
+        </div>
+        <!--<div style="width: 20%; -webkit-box-flex: 1;"/>-->
+    </div>
+
+    <!-- Ninth Row: Section -->
+    <div style="display: -webkit-box; -webkit-box-pack: justify; justify-content: space-between; align-items: center; ">
+        <div style="width: 30%; -webkit-box-flex: 1;">under section *</div>
+        <div style="width: 70%; padding-left: 10px; -webkit-box-flex: 1;">
+            <span style="border-bottom: 1px solid #000; display: inline-block; width: 320px; line-height: 1;">
+                <t t-esc="report_data['under_section']"/>
+            </span>
+            <span style="font-size:15px;margin-left:90px">(Specify section of ITO, 2001)</span>
+        </div>
+        
+    </div>
+
+    <!-- Tenth Row: Account of -->
+    <div style="display: -webkit-box; -webkit-box-pack: justify; justify-content: space-between; align-items: center;">
+        <div style="width: 30%; -webkit-box-flex: 1;">on account of *</div>
+        <div style="width: 70%; padding-left: 10px; -webkit-box-flex: 1;">
+            <span style="border-bottom: 1px solid #000; display: inline-block; width: 320px; line-height: 1;">
+                <t t-esc="report_data['account_of']"/>
+            </span>
+            <span style="font-size:15px;margin-left:165px">(Specify Nature)</span>
+        </div>
+        <!--<div style="width: 20%; -webkit-box-flex: 1;"/>-->
+    </div>
+
+    <!-- Eleventh Row: Vide -->
+    <div style="display: -webkit-box; -webkit-box-pack: justify; justify-content: space-between; align-items: center; ">
+        <div style="width: 30%; -webkit-box-flex: 1;">Vide</div>
+        <div style="width: 70%; padding-left: 10px; -webkit-box-flex: 1;">
+            <span style="border-bottom: 1px solid #000; display: inline-block; width: 320px; line-height: 1;">
+                <t t-esc="'various'"/>
+            </span>
+        <span style="font-size:15px;margin-left:70px">(Particulars of LC, Contract etc.)</span>
+        </div>
+        <!--<div style="width: 20%; -webkit-box-flex: 1;"/>-->
+    </div>
+
+    <!-- Twelfth Row: Gross Amount -->
+    <div style="display: -webkit-box; -webkit-box-pack: justify; justify-content: space-between; align-items: center; ">
+        <div style="width: 30%; -webkit-box-flex: 1;">on the value amount of</div>
+        <div style="width: 70%; padding-left: 10px; -webkit-box-flex: 1;">
+            Rs. <span style="border-bottom: 1px solid #000; display: inline-block; width: 150px; line-height: 1;">
+                <t t-esc="'{:,.0f}'.format(report_data['value_amount'])"/>
+            </span> <span style="font-size:15px;margin-left:65px">
+            (Gross amount on which tax collected/deducted in figures)
+              
+            </span>
+        </div>
+        <div style="width: 0%; -webkit-box-flex: 1;"/>
+    </div>
+
+    <!-- Thirteenth Row: Amount in Words -->
+    <div style="display: -webkit-box; -webkit-box-pack: justify; justify-content: space-between; align-items: center; ">
+        <div style="width: 30%; -webkit-box-flex: 1;"/>
+        <div style="width: 70%; padding-left: 10px; -webkit-box-flex: 1;">
+            <span style="border-bottom: 1px solid #000; display: inline-block; width: 450px; line-height: 1;">
+                <t t-esc="report_data['value_amount_words']"/>
+            </span> 
+            <span style="font-size:15px:padding-left:20px">
+            (Amount in words)
+              
+            </span>
+        </div>
+        <!--<div style="width: 20%; -webkit-box-flex: 1;"/>-->
+    </div>
+
+</div>
+        <p>This is to further certify that the tax collected / deducted has been deposited in the Federal Government as per the following details:</p>
+        <!--<p></p>-->
+
+        <table style="width: 100%; font-size: 15px; border-collapse: collapse; border: 1px solid white;">
+          <thead>
+            <tr>
+              <th style="text-align: left; color: black;">Date of deposit</th>
+              <th style="text-align: left; color: black;">SBP/NBP/Treasury</th>
+              <th style="text-align: left; color: black;">Branch/City</th>
+              <th style="text-align: right; color: black;">Amount (Rs.)</th>
+              <th style="text-align: center; color: black;">Challan/Treasury/CPR No.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <t t-foreach="report_data['payment_details']" t-as="pay">
+              <tr>
+                <td><span style="text-align: left; border-bottom: 1px solid #000; display: inline-block; width: 100px; padding: 0; margin: 0; line-height: 1;"><t t-esc="pay['tax_date']"/></span></td>
+                <td><span style="text-align: left; border-bottom: 1px solid #000; display: inline-block; width: 130px; padding: 0; margin: 0; line-height: 1;"><t t-esc="pay['bank_name']"/></span></td>
+                <td><span style="text-align: left; border-bottom: 1px solid #000; display: inline-block; width: 200px; padding: 0; margin: 0; line-height: 1;"><t t-esc="pay['branch']"/></span></td>
+                <td><span style="text-align: right; border-bottom: 1px solid #000; display: inline-block; width: 150px; padding: 0; margin: 0; line-height: 1;"><t t-esc="'{:,.0f}'.format(pay['amount_tax'])"/></span></td>
+                <td><span style="text-align: center; border-bottom: 1px solid #000; display: inline-block; width: 200px; padding: 0; margin: 0; line-height: 1;"><t t-esc="pay['cprm_no']"/></span></td>
+              </tr>
+            </t>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" style="text-align: right;">
+                Total Rs.
+              </td>
+              <td>
+                <span style="text-align: right; border-bottom: 1px solid #000; display: inline-block; width: 150px; padding: 0; margin: 0; line-height: 1;"><t t-esc="'{:,.0f}'.format(report_data['sum_of_tax_amount'])"/></span>
+              </td>
+              <td/>
+            </tr>
+          </tfoot>
+        </table>
+    
+        <p>Company/office etc. collecting/deducting the tax:</p>
+        <div style="font-size: 15px;">
+         <table style="width: 100%; border-collapse: collapse; border: 1px solid white;">
+    <tr>
+        <td style="width: 50%; vertical-align: top; padding-right: 20px; border: 1px solid white;">
+            <table style="width: 100%; border: 1px solid white;">
+                <tr>
+                    <td style="width: 20%;">Name:</td>
+                    <td style="padding-left:10px; border-bottom: 1px solid #000;">
+                        <t t-esc="report_data['company_info']['name']"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Address:</td>
+                    <td style="padding-left:10px; border-bottom: 1px solid #000;">
+                        <t t-esc="report_data['company_info']['address']"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td>NTN (if any):</td>
+                    <td style="padding-left:10px; text-align:left; border-bottom: 1px solid #000;">
+                        <t t-esc="report_data['company_info']['ntn'] or ''"/>
+                    </td>
+                </tr>
+                
+            </table>
+        </td>
+        <td>
+            <table style="width: 100%; border: 1px solid white;">
+                <!-- <tr>
+                    <td style="width: 20%; padding-left:100px;">Signature:</td>
+                    <td style="padding-left:10px; border-bottom: 1px solid #000;">
+                        <span style="display: inline-block; width: 100%;"/>
+                    </td>
+                </tr> -->
+                <tr>
+                    <td style="padding-left:100px;">Name:</td>
+                    <td style="padding-left:10px; border-bottom: 1px solid #000;">
+                        <t t-esc="report_data['company_info']['signatory_name']"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-left:100px;">Designation:</td>
+                    <td style="padding-left:10px; border-bottom: 1px solid #000;">
+                        <t t-esc="report_data['company_info']['signatory_designation']"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-left:100px;">Seal:</td>
+                    <td style="padding-left:10px; border-bottom: 1px solid #000;">
+                        <!-- Empty Seal with underline -->
+                        <span style="display: inline-block; width: 100%;"/>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+  
+
+        </div>
+     
+
+      </div>
+    <div class="footer" style="text-align:center; ">
+    This is a computer-generated document and does not require a signature
+</div>
+            </t>
+        
+      </t>
+    </t>
+  </template>
+
+
+</odoo>

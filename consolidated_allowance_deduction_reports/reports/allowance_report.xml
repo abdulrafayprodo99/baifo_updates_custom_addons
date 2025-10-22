@@ -1,0 +1,127 @@
+<odoo>
+    <record id="action_allowance_report" model="ir.actions.report">
+        <field name="name">Allowance Report</field>
+        <field name="model">allowances.deduction</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">consolidated_allowance_deduction_reports.allowance_report_template</field>
+        <field name="report_file">consolidated_allowance_deduction_reports.allowance_report_template</field>
+        <field name="binding_model_id" ref="allowances_deduction_employee_form.model_allowances_deduction"/>
+        <field name="binding_type">report</field>
+    </record>
+ 
+    <template id="allowance_report_template">
+        <t t-call="web.html_container">
+            <t t-set="company_name" t-value="'BIAFO INDUSTRIES LIMITED'"/>
+            <t t-set="month" t-value="report_data.get('month')"/>
+            <t t-set="year" t-value="report_data.get('year')"/>
+            <t t-set="allowance_type" t-value="report_data.get('allowance_type', '').replace('_', ' ').title()"/>
+            <!-- Sort departments to prioritize '1-Head Office' -->
+            <t t-set="sorted_departments" t-value="sorted(report_data.get('departments', []), key=lambda x: x['parent_department'] != '1-Head Office')"/>
+            <t t-set="grand_employee_contribution" t-value="0"/>
+            <t t-set="grand_employer_contribution" t-value="0"/>
+            <t t-set="grand_total" t-value="0"/>
+            <div class="container" style="font-family: Arial, sans-serif; font-size: 12px;">
+                <!-- Header Section -->
+                <h2 style="text-align: center; margin: 5px; text-transform: uppercase;">
+                    <t t-esc="company_name"/>
+                </h2>
+                <h3 style="text-align: center; margin: 5px;">
+                    <u>Allowance Report</u>
+                </h3>
+                <h4 style="text-align: center; margin: 5px;">
+                    Allowance Type: <t t-esc="allowance_type"/>
+                </h4>
+                <h4 style="text-align: center; margin: 5px;">
+                    For <t t-esc="month"/> <t t-esc="year"/>
+                </h4>
+    
+                <!-- Table Section -->
+                <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                    <thead>
+                        <tr style="text-align: center; background-color: #f2f2f2;">
+                            <th style="padding: 8px; text-align: left;">S.No</th>
+                            <th style="padding: 8px; text-align: left;">Department</th>
+                            <th style="padding: 8px; text-align: right;">Employee Contribution</th>
+                            <th style="padding: 8px; text-align: right;">Employer Contribution</th>
+                            <th style="padding: 8px; text-align: right;">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="serial_no" t-value="0"/>
+                        <t t-foreach="sorted_departments" t-as="department">
+                            <!-- Check if department has valid rows -->
+                            <t t-if="any(sub_dep[1]['total'] &gt; 0 for sub_dep in department['sub_departments'].items())">
+                                <t t-set="dept_employee_contribution" t-value="0"/>
+                                <t t-set="dept_employer_contribution" t-value="0"/>
+                                <t t-set="dept_total" t-value="0"/>
+                                <!-- Parent Department Row -->
+                                <tr>
+                                    <td colspan="5" style="font-weight: bold; text-align: left; padding: 5px; background-color: #f9f9f9;">
+                                        <t t-esc="department['parent_department']"/>
+                                    </td>
+                                </tr>
+                                <!-- Sort sub-departments by numeric prefix -->
+                                <t t-set="sorted_sub_departments" t-value="dict(sorted(department['sub_departments'].items(), key=lambda x: int(x[1]['name'].split('-')[0])))"/>
+                                <!-- Sub-department Rows -->
+                                <t t-foreach="sorted_sub_departments.items()" t-as="sub_dep">
+                                    <t t-if="sub_dep[1]['total'] &gt; 0">
+                                        <t t-set="serial_no" t-value="serial_no + 1"/>
+                                        <t t-set="dept_employee_contribution" t-value="dept_employee_contribution + sub_dep[1]['employee_contribution']"/>
+                                        <t t-set="dept_employer_contribution" t-value="dept_employer_contribution + sub_dep[1]['employer_contribution']"/>
+                                        <t t-set="dept_total" t-value="dept_total + sub_dep[1]['total']"/>
+                                        <t t-set="grand_employee_contribution" t-value="grand_employee_contribution + sub_dep[1]['employee_contribution']"/>
+                                        <t t-set="grand_employer_contribution" t-value="grand_employer_contribution + sub_dep[1]['employer_contribution']"/>
+                                        <t t-set="grand_total" t-value="grand_total + sub_dep[1]['total']"/>
+                                        <tr>
+                                            <td style="text-align: center; padding: 5px;">
+                                                <t t-esc="serial_no"/>
+                                            </td>
+                                            <td style="padding: 5px;">
+                                                <t t-esc="sub_dep[1]['name']"/>
+                                            </td>
+                                            <td style="text-align: right; padding: 5px;">
+                                                <t t-esc="'{:,.2f}'.format(sub_dep[1]['employee_contribution'])"/>
+                                            </td>
+                                            <td style="text-align: right; padding: 5px;">
+                                                <t t-esc="'{:,.2f}'.format(sub_dep[1]['employer_contribution'])"/>
+                                            </td>
+                                            <td style="text-align: right; padding: 5px;">
+                                                <t t-esc="'{:,.2f}'.format(sub_dep[1]['total'])"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                                <!-- Department Total Row -->
+                                <tr style="font-weight: bold; border-top: 1px solid black;">
+                                    <td colspan="2" style="text-align: right; padding: 8px;">Department Total</td>
+                                    <td style="text-align: right; padding: 8px;">
+                                        <t t-esc="'{:,.2f}'.format(dept_employee_contribution)"/>
+                                    </td>
+                                    <td style="text-align: right; padding: 8px;">
+                                        <t t-esc="'{:,.2f}'.format(dept_employer_contribution)"/>
+                                    </td>
+                                    <td style="text-align: right; padding: 8px;">
+                                        <t t-esc="'{:,.2f}'.format(dept_total)"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                        <!-- Grand Total Row -->
+                        <tr style="font-weight: bold; border-top: 2px solid black; border-bottom: 2px solid black;">
+                            <td colspan="2" style="text-align: right; padding: 8px;">Grand Total</td>
+                            <td style="text-align: right; padding: 8px;">
+                                <t t-esc="'{:,.2f}'.format(grand_employee_contribution)"/>
+                            </td>
+                            <td style="text-align: right; padding: 8px;">
+                                <t t-esc="'{:,.2f}'.format(grand_employer_contribution)"/>
+                            </td>
+                            <td style="text-align: right; padding: 8px;">
+                                <t t-esc="'{:,.2f}'.format(grand_total)"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+</odoo>

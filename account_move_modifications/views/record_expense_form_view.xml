@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_record_expense_form_view_inherited" model="ir.ui.view">
+        <field name="name">expense.module.form.view.inherit</field>
+        <field name="model">expense.module</field>
+        <field name="inherit_id" ref="Record_Expense.view_expense_module_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date']" position="replace">
+                <field name="date" required="1"/>
+            </xpath>    
+            <xpath expr="//field[@name='posting_date']" position="replace">
+                <field name="posting_date" required="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

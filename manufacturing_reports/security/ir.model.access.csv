@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_daily_production_wizard,access.daily.production.wizard,model_daily_production_wizard,base.group_user,1,1,1,1
+access_material_requirement_wizard,access.material.requirement.wizard,model_material_requirement_wizard,base.group_user,1,1,1,1
+access_stock_sale_position_wizard,access.stock.sale.position.wizard,model_stock_sale_position_wizard,base.group_user,1,1,1,1
+access_bill_of_material_wizard,access.bill.of.material.wizard,model_bill_of_material_wizard,base.group_user,1,1,1,1

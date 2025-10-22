@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="res.groups" id="group_which_can_set_pr_state">
+        <field name="name">Allow to set PR state</field>
+    </record>
+
+</odoo>

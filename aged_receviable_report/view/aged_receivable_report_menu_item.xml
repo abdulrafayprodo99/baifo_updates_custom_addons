@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <menuitem
+        id="custom_aged_receivable_report"
+        name="Aged Receivable Report"
+        action="custom_aged_receivable_report_action"
+        parent="account.menu_finance"
+        sequence="99"/>
+</odoo>

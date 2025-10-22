@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Define action for customer view -->
+    <record id="action_partner_customer_form" model="ir.actions.act_window">
+        <field name="name">Customers</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="domain">[('customer_rank', '>', 0), ('supplier_rank', '=', 0)]</field>
+        <field name="context">{'default_partner_type': 'customer', 'readonly_partner_type': 1}</field>
+    </record>
+
+    <!-- Inherit and modify the Customers menu to call the new action -->
+    <menuitem
+        id="crm.res_partner_menu_customer"
+        name="Customers"
+        parent="crm.crm_menu_sales"
+        action="action_partner_customer_form"
+        sequence="5"
+        groups="sales_team.group_sale_salesman"/>
+
+
+
+    <!-- Define action for vendor view -->
+    <record id="action_partner_vendor_form" model="ir.actions.act_window">
+        <field name="name">Vendors</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="domain">[('customer_rank', '=', 0), ('supplier_rank', '>', 0)]</field>
+        <field name="context">{'default_partner_type': 'vendor', 'readonly_partner_type': 1}</field>
+    </record>
+
+    <!-- Inherit and modify the Vendors menu to call the new action -->
+    <menuitem
+        id="account.menu_account_supplier"
+        name="Vendors"
+        parent="account.menu_finance_payables"
+        action="action_partner_vendor_form"
+        sequence="200"/>
+
+</odoo>

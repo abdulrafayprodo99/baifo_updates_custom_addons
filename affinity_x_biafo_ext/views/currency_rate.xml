@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="stock_picking_main_inherited_form" model="ir.ui.view">
+        <field name="name">stock.picking.main.form.inherit</field>
+        <field name="model">stock.picking</field>
+        <!-- <field name="inherit_id" ref="stock.view_picking_form"/> -->
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+         <!-- attrs="{'invisible': [('picking_type_id', '!=', 1)]}" -->
+            <xpath expr="//form[1]/sheet[1]/group[1]" position="after">
+                <field name="currency_name"/>
+                <label for="currency_rate" string="Currency Rate" attrs="{'invisible': ['|', ('picking_type_id','not in', [1,10,11,16]), ('currency_name','=','PKR')]}"/>
+                <field name="currency_rate" attrs="{'invisible': ['|',('picking_type_id','not in', [1,10,11,16]),('currency_name','=','PKR')]}"/>
+                <button name="apply_currency_rate" type="object" string="Apply currency Rate" attrs="{'invisible': ['|',('picking_type_id','not in', [1,10,11,16]),('currency_name','=','PKR')]}"/></xpath>
+        </field>
+    </record>
+    
+    <record id="account_payment_currency_rate_inherited_form" model="ir.ui.view">
+        <field name="name">account.payment.currency.rate.form.inherit</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form[1]/sheet[1]/group[1]" position="after">
+                <label for="currency_rate"  string="Currency Rate" />
+                <field name="currency_rate" />
+                <button name="apply_currency_rate"  type="object" string="Apply currency Rate"></button>
+            </xpath>
+        </field>
+    </record>
+
+    
+
+    <record id="account_move__currency_rateinherited_form" model="ir.ui.view">
+        <field name="name">account.move.currency.rate.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form[1]/sheet[1]/group[1]" position="after">
+                <field name="current_currency_rate" attrs="{'invisible': ['|',('move_type','not in', ['out_invoice','in_invoice']), ('currency_id','=',157)]}"/>
+                <label for="currency_rate"  string="Currency Rate" attrs="{'invisible': ['|',('move_type','not in', ['out_invoice','in_invoice']), ('currency_id','=',157)]}"/>
+                <field name="currency_rate" attrs="{'invisible': ['|',('move_type','not in', ['out_invoice','in_invoice']), ('currency_id','=',157)]}"/>
+                <button name="apply_currency_rate" type="object"  string="Apply currency Rate" attrs="{'invisible': ['|', ('move_type','not in', ['out_invoice','in_invoice']), ('currency_id','=',157)]}"></button>
+            </xpath>  
+            
+        </field>
+    </record>
+
+
+</odoo>

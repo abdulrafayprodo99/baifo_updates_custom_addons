@@ -1,0 +1,196 @@
+<odoo>
+    <data>
+        <!-- Inherit and modify the sale order form view -->
+<!--        <record id="sale_order_view_form_revision" model="ir.ui.view">-->
+<!--            <field name="name">sale.order.form</field>-->
+<!--            <field name="model">sale.order</field>-->
+<!--            <field name="inherit_id" ref="sale.view_order_form"/>-->
+<!--            <field name="arch" type="xml">-->
+<!--                &lt;!&ndash; Modify the Revision button to make it invisible if state is 'sent' &ndash;&gt;-->
+<!--                <xpath expr="//form/header/button[@name='action_revision']" position="replace">-->
+<!--                    <button name="action_revision" type="object" string="Revision"-->
+<!--                            attrs="{'invisible': [('state', '!=', 'sent')]}" />-->
+<!--                </xpath>-->
+<!--            </field>-->
+<!--        </record>-->
+
+        <record id="sale_order_view_form_reject" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="prodo_x_biafo_ext.sale_order_inherited_form"/>  <!-- Replace with your actual view ID -->
+            <field name="arch" type="xml">
+                <xpath expr="//form/header/button[@name='action_revision']" position="replace">
+                    <button name="action_revision" type="object" string="Revision"
+                            attrs="{'invisible': [('state', '!=', 'sent')]}" />
+                </xpath>
+                <xpath expr="//field[@name='subject']" position="after">
+                    <field name="current_user_group_ids" attrs="{}" invisible="1"/>
+                    <field name="approved_cfo" attrs="{}" invisible="1"/>
+                </xpath>
+                <!-- Remove the previous action_reject button -->
+                <xpath expr="//form/header[2]/button[@name='action_reject']" position="replace">
+                    <!-- Replace with the new version of the action_reject button -->
+                    <button name="action_reject" string="Reject" type="object" class="oe_highlight"
+                            attrs="{'invisible': ['|',
+                                                  '|',
+                                                  '|',
+                                                   '&amp;', ('approval_state', '=', 'verify'), ('current_user_group_ids', 'in', [154, 156]),
+                                                   '&amp;', ('approval_state', 'in', ['waiting', 'approve_coo']), ('current_user_group_ids', 'in', [154]),
+                                                   '&amp;', ('approved_cfo', '=', True), ('current_user_group_ids', 'in', [155]),
+                                                   '&amp;', ('approval_state', 'in', ['waiting']), ('current_user_group_ids', 'in', [156])]}" />
+                </xpath>
+                
+            </field>
+        </record>
+
+        <record id="sale_order_view_form_reject_and_action_approve_cfo" model="ir.ui.view">
+            <field name="name">sale.order.form.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="prodo_x_biafo_ext.sale_order_inherited_form"/>  <!-- Replace with your actual view ID -->
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='subject']" position="after">
+                    <field name="current_user_group_ids" attrs="{}" invisible="1"/>
+
+                    <field name="approved_cfo" attrs="{}" invisible="1"/>
+                </xpath>
+                <!-- Replace the existing button with the new condition -->
+                <xpath expr="//form/header[2]/button[@name='action_approve_cfo']" position="replace">
+                    <button name="action_approve_cfo" string="Approved by CFO" type="object" class="oe_highlight" attrs="{'invisible': ['|', '|', '&amp;', ('approved_cfo', '=', True), ('current_user_group_ids', 'in', [155, 156]), ('current_user_group_ids', 'not in', [155]), ('approval_state', '!=', 'waiting')]}"/>
+                </xpath>
+                <xpath expr="//form/header[2]/button[@name='action_reject']" position="replace">
+                    <!-- Replace with the new version of the action_reject button -->
+                    <button name="action_reject" string="Reject" type="object" class="oe_highlight" 
+                            attrs="{'invisible': ['|', 
+                                                  '|',                                                   
+                                                  '|',                                                   
+                                                  '|',
+                                                  '|',                                                    
+                                                  '&amp;', ('approval_state', '=', 'verify'), ('current_user_group_ids', 'in', [155 ,154, 156]),     
+                                                  '&amp;', ('approval_state', '=', 'prepared'), ('current_user_group_ids', 'in', [153,155 ,156, 157]),                                                
+                                                  '&amp;', ('approval_state', 'in', ['waiting', 'approve_coo']), ('current_user_group_ids', 'in', [153, 154]),                                                    
+                                                  '&amp;', ('approved_cfo', '=', True), ('current_user_group_ids', 'in', [155]),                                                    
+                                                  '&amp;', ('approval_state', 'in', ['waiting']), ('current_user_group_ids', 'in', [156]), ('approval_state', '=', False)]}"/>
+                </xpath>
+
+                <xpath expr="//form/header[2]/button[@name='action_verify']" position="replace">
+                    <!-- Replace with the new version of the action_reject button -->
+                    <button name="action_verify" string="Verified" type="object" class="oe_highlight" 
+                            attrs="{'invisible': ['|', '|', '&amp;',('approval_state', '=', 'verify'), ('current_user_group_ids', 'in', [154]) , ('current_user_group_ids', 'not in', [154]),('approval_state', '=', False)]}"/>
+                </xpath>
+
+                <xpath expr="//form/header[2]/button[@name='action_prepared']" position="replace">
+                    <!-- Replace with the new version of the action_reject button -->
+                    <button name="action_prepared" string="Prepared" type="object" class="oe_highlight" 
+                            attrs="{'invisible': ['|', '&amp;',('approval_state', '=', 'prepared'), ('current_user_group_ids', 'in', [157]) , ('current_user_group_ids', 'not in', [157])]}"/>
+                </xpath>
+            </field>
+        </record>
+        
+
+
+
+        <!-- Inherit and modify the sale order form view -->
+        <record id="sale_order_view_form_send_to_ceo" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="prodo_x_biafo_ext.sale_order_inherited_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='subject']" position="after">
+                    <field name="current_user_group_ids" attrs="{}" invisible="1"/>
+
+                    <field name="sent_to_ceo" attrs="{}" invisible="1"/>
+                    <field name="sent_to_cfo" attrs="{}" invisible="1"/>
+                </xpath>
+
+
+                <xpath expr="//form/header[2]/button[@name='send_to_ceo']" position="replace">
+                    <!-- Replace with the new version of the send_to_ceo button -->
+                    <button name="send_to_ceo" string="SEND TO CEO" type="object" class="oe_highlight"
+                    attrs="{'invisible': [
+                        '|',
+                        '&amp;',
+                        '&amp;',
+                        ('sent_to_ceo', '=', True),
+                        ('current_user_group_ids', 'in', [153]),
+                        '&amp;',
+                        ('sent_to_cfo', '=', True),
+                        ('current_user_group_ids', 'in', [153]),
+                        ('current_user_group_ids', 'not in', [153])
+                    ]}" />
+                
+                </xpath>
+
+                <xpath expr="//form/header[2]/button[@name='send_to_cfo']" position="replace">
+                    <!-- Replace with the new version of the send_to_cfo button -->
+                    <button name="send_to_cfo" string="SEND TO CFO" type="object" class="oe_highlight"
+                            attrs="{'invisible': ['|', '|', '|', '&amp;', ('sent_to_ceo', '=', True), ('current_user_group_ids', 'in', [153]), '&amp;', ('sent_to_cfo', '=', True), ('current_user_group_ids', 'in', [153]),  '&amp;', ('approved_cfo', '=', True), ('current_user_group_ids', 'in', [153]), ('current_user_group_ids', 'not in', [153])]}" />
+                </xpath>
+
+                <xpath expr="//form/header[2]/button[@name='action_approve_coo']" position="replace">
+                    <!-- Replace with the new version of the action_approve_coo button -->
+                    <button name="action_approve_coo" string="Approved BY HOD" type="object" class="oe_highlight"
+                            attrs="{'invisible': ['|', '|', '|', '&amp;', ('sent_to_ceo', '=', True), ('current_user_group_ids', 'in', [153]), '&amp;', ('sent_to_cfo', '=', True), ('current_user_group_ids', 'in', [153]), '&amp;', ('approved_cfo', '=', True), ('current_user_group_ids', 'in', [153]), ('current_user_group_ids', 'not in', [153])]}" />
+                </xpath>
+            </field>
+        </record>
+
+
+       <!-- Inherit and modify the sale order form view -->
+       <record id="sale_order_view_form_action_approve_ceo" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="prodo_x_biafo_ext.sale_order_inherited_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/header[2]/button[@name='action_approve_ceo']" position="replace">
+                    <!-- Replace with the new version of the action_approve_ceo button -->
+                    <button name="action_approve_ceo" string="Approved BY CEO" type="object" class="oe_highlight"
+                            attrs="{'invisible': ['|',('approval_state' , 'not in', ['approve_cfo', 'approve_coo']) , ('current_user_group_ids', 'not in', [156])]}" />
+                </xpath>
+    
+            </field>
+        </record>
+
+
+           <!-- Inherit and modify the sale order form view -->
+           <record id="sale_order_view_form_action_prepared_sale" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="prodo_x_biafo_ext.sale_order_inherited_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/header[3]/button[@name='action_prepared_sale']" position="replace">
+                    <!-- Replace with the new version of the action_prepared_sale button -->
+                    <button name="action_prepared_sale" string="PREPARED" type="object" class="oe_highlight"
+                            attrs="{'invisible': ['|',('approval_state_sale' , '!=', False) , ('current_user_group_ids', 'not in', [154, 157])]}" />
+                </xpath>
+
+                <xpath expr="//form/header[3]/button[@name='action_reject_sale']" position="replace">
+                    <!-- Replace with the new version of the action_prepared_sale button -->
+
+                    <button name="action_reject_sale_2" string="REJECT" type="object" class="oe_highlight"
+                            attrs="{'invisible': ['|', '|',  '|', ('approval_state_sale' , 'in', ['approve'] ) ,'&amp;', ('approval_state_sale' , 'in', ['verify'] ),('current_user_group_ids', 'in', [154, 157]),  '&amp;',('approval_state_sale' , 'in', ['prepared'] ) , ('current_user_group_ids', 'in', [157]) ,'&amp;', ('approval_state_sale' , 'not in', ['prepared', 'verify' ] ), ('current_user_group_ids', 'in', [153, 155, 156]),]}" />
+                </xpath>
+     
+            </field>
+        </record>
+
+
+        <!-- Inherit and modify the sale order form view -->
+        <record id="sale_order_view_form_action_revision" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/header/button[@name='action_revision']" position="replace">
+                <!-- Replace with the new version of the action_revision button -->
+                <button name="action_revision" string="REVISION" type="object" class="oe_highlight"
+                        attrs="{'invisible': ['|', '|', ('state' , '!=', 'sent'), ('approval_state_sale' , 'in', ['prepared', 'verify']) , ('current_user_group_ids', 'not in', [157])]}" />
+
+                
+            </xpath>
+    
+        </field>
+    </record>
+
+
+    </data>
+</odoo>

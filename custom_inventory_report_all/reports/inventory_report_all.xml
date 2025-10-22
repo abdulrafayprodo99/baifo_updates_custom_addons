@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="report_inventory_report_all_btn" model="ir.actions.report">
+        <field name="name">Inventory Status Report</field>
+        <field name="model">custom.inventory.report.all</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_inventory_report_all.report_inventory_all_template</field>
+        <field name="report_file">custom_inventory_report_all.report_inventory_all_template</field>
+        <!-- <field name="print_report_name">'Products Labels - %s' % (object.name)</field> -->
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="custom_inventory_report_all.custom_report_inventory_all_paperformat" />
+    </record>
+
+    <record id="action_inventory_excel_report" model="ir.actions.report">
+        <field name="name">Inventory Excel Report (All)</field>
+        <field name="model">custom.inventory.report.all</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">custom_inventory_report_all.report_inventory_xlsx</field>
+        <field name="report_file">custom_inventory_report_all.report_inventory_xlsx</field>
+        <field name="binding_model_id" eval="False"/>
+    </record>
+    
+</odoo>

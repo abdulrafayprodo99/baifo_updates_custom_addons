@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- GENERAL LEDGER -->
+    <record id="machine_history_sheet_wizard_form" model="ir.ui.view">
+        <field name="name">Machine History Sheet</field>
+        <field name="model">machine.history.sheet.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group >
+                    <field name="equipment_id" />
+                    <field name="start_date" />
+                    <field name="end_date" />
+                </group>
+                <footer>  
+                    <button
+                        name="button_export_pdf"
+                        string="Export PDF"
+                        type="object"
+                    />
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_machine_history_sheet" model="ir.actions.act_window">
+        <field name="name">Machine History Sheet</field>
+        <field name="res_model">machine.history.sheet.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="machine_history_sheet_wizard_form" />
+        <field name="target">new</field>
+    </record>
+    <menuitem id="menuitem_machine_history_sheet_wizard" name="Machine History Sheet" action="action_machine_history_sheet" parent="maintenance.maintenance_reporting" sequence="1" />
+</odoo>

@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<template id="report_machine_history_sheet_template_all">
+		<t t-call="web.basic_layout">
+			<!--<style>-->
+			<!--	table {-->
+			<!--		width: 100%;-->
+			<!--		border-collapse: collapse;-->
+			<!--		table-layout: fixed; /* Ensures columns take up the available space evenly */-->
+			<!--	}-->
+	
+			<!--	th, td {-->
+			<!--		border: 1px solid black;-->
+			<!--		padding: 10px; /* Adds spacing inside cells */-->
+			<!--		text-align: center; /* Centers content */-->
+			<!--		vertical-align: middle; /* Ensures content is vertically aligned */-->
+			<!--		white-space: normal; /* Allow text to wrap inside cells */-->
+			<!--		word-wrap: break-word; /* Ensure long words wrap */-->
+			<!--	}-->
+	
+			<!--	tr {-->
+			<!--		min-height: 50px; /* Ensures a consistent row height */-->
+			<!--	}-->
+	
+			<!--	td {-->
+			<!--		min-height: 50px; /* Prevents cells from collapsing */-->
+			<!--	}-->
+	
+			<!--	/* Set minimum width for specific columns */-->
+			<!--	th:nth-child(2), td:nth-child(2), /* Date */-->
+			<!--	th:nth-child(5), td:nth-child(5), /* Start Time */-->
+			<!--	th:nth-child(6), td:nth-child(6), /* End Time */-->
+			<!--	th:nth-child(9), td:nth-child(9) { /* Remarks */-->
+			<!--		min-width: 130px; /* Adjust width to prevent collapsing */-->
+			<!--	}-->
+	
+			<!--	/* Reduce width of Sr.No column */-->
+			<!--	th:nth-child(1), td:nth-child(1) { /* Sr.No */-->
+			<!--		width: 60px; /* Decreased width for Sr.No */-->
+			<!--	}-->
+	
+			<!--	/* Increase width of Job and Description columns */-->
+			<!--	th:nth-child(5), td:nth-child(5), /* Job */-->
+			<!--	th:nth-child(6), td:nth-child(6) { /* Description */-->
+			<!--		white-space: normal; /* Enable wrapping of text in the Description and Job columns */-->
+			<!--		word-wrap: break-word;-->
+			<!--		min-width: 220px; /* Increased width for Job and Description columns */-->
+			<!--	}-->
+	
+			<!--	th:nth-child(3), td:nth-child(3), /* W.R No */-->
+			<!--	th:nth-child(4), td:nth-child(4), /* Genre */-->
+			<!--	th:nth-child(7), td:nth-child(7), /* Equipment */-->
+			<!--	th:nth-child(8), td:nth-child(8) { /* Rectification Action */-->
+			<!--		min-width: 130px; /* Adjust width to prevent collapse */-->
+			<!--	}-->
+	
+			<!--	/* Style for "Performed By" badges */-->
+			<!--	td span {-->
+			<!--		display: inline-block;-->
+			<!--		padding: 5px 10px;-->
+			<!--		border-radius: 10px;-->
+			<!--		background-color: #F9E0D9;-->
+			<!--		min-width: 100px;-->
+			<!--		text-align: center;-->
+			<!--	}-->
+	
+			<!--	/* Adjust the page for A4 */-->
+			<!--	.page {-->
+			<!--		max-width: 100%;-->
+			<!--		margin: 0 auto;-->
+			<!--		font-family: 'Segoe UI', sans-serif;-->
+			<!--		font-size: 15px;-->
+			<!--	}-->
+	
+			<!--	@media print {-->
+			<!--		.page {-->
+			<!--			width: 210mm; /* A4 width */-->
+			<!--			height: 297mm; /* A4 height */-->
+			<!--			padding: 20mm; /* Add padding to fit content on A4 */-->
+			<!--		}-->
+	
+			<!--		table {-->
+			<!--			width: 100%;-->
+			<!--		}-->
+	
+			<!--		.header, .footer {-->
+			<!--			display: none; /* Hide headers and footers when printing */-->
+			<!--		}-->
+			<!--	}-->
+			<!--</style>-->
+			
+			<style>
+    table {
+        width: 95%; /* slightly less than full width */
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    th, td {
+        border: 1px solid black;
+        padding: 4px; /* reduced from 10px */
+        font-size: 12px; /* reduced font size */
+        text-align: center;
+        vertical-align: middle;
+        white-space: normal;
+        word-wrap: break-word;
+    }
+
+    tr, td {
+        min-height: 30px; /* reduced height */
+    }
+
+    th:nth-child(2), td:nth-child(2),
+    th:nth-child(5), td:nth-child(5),
+    th:nth-child(6), td:nth-child(6),
+    th:nth-child(9), td:nth-child(9) {
+        min-width: 100px; /* slightly reduced */
+    }
+
+    th:nth-child(1), td:nth-child(1) {
+        width: 40px; /* narrower Sr.No column */
+    }
+
+    th:nth-child(5), td:nth-child(5),
+    th:nth-child(6), td:nth-child(6) {
+        min-width: 160px; /* reduced from 220px */
+    }
+
+    th:nth-child(3), td:nth-child(3),
+    th:nth-child(4), td:nth-child(4),
+    th:nth-child(7), td:nth-child(7),
+    th:nth-child(8), td:nth-child(8) {
+        min-width: 100px;
+    }
+
+    td span {
+        padding: 3px 6px;
+        font-size: 11px;
+        min-width: 80px;
+    }
+
+    .page {
+        max-width: 100%;
+        font-family: 'Segoe UI', sans-serif;
+        font-size: 13px; /* smaller text */
+    }
+
+    @media print {
+        .page {
+            width: 210mm;
+            height: 297mm;
+            padding: 15mm;
+        }
+        .header, .footer {
+            display: none;
+        }
+    }
+</style>
+
+			
+			<t t-set="company" t-value="env.company"/>
+			<!-- <link href="https://fonts.googleapis.com/css2?family=Roboto" rel="stylesheet"/> -->
+			<!-- Header Section -->
+			<div class="header">
+				<div class="row align-items-center mt-3">
+					<!-- Logo -->
+					<div class="col-3 text-start">
+						<img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 60px;" alt="Logo"/>
+					</div>
+					<!-- Header -->
+					<div class="col-5 text-center">
+						<h3 style="margin: 0;">
+							<span t-field="company.name"/>
+						</h3>
+						<h3 style="font-size: 16px; font-weight: bold; margin-top: 5px; padding-bottom: 5px;">
+							OVERALL MAINTENANCE
+						</h3>
+					</div>
+				</div>
+				<div class="row align-items-center pt-1" style="border:1px solid black;">
+					<div class="offset-3 col-5 text-center">
+						<h3 style="font-size: 15px; font-weight: bold; margin-top: 5px; padding-bottom: 5px;">
+							<t t-esc="team"/>
+						</h3>
+					</div>
+				</div>
+				<div class="row align-items-center pt-1" style="border:1px solid black;">
+					<div class="offset-3 col-5 text-center">
+						<h3 style="font-size: 15px; font-weight: bold; margin-top: 5px; padding-bottom: 5px;">
+                <t t-esc="range_date"/>
+						</h3>
+					</div>
+				</div>
+				<div class="row pt-1" style="border:1px solid black;">
+        	<div class="col-6 text-start">
+          		<h3 style="font-size: 14px; font-weight: bold; margin: 5px 0; padding-left: 5px;">
+          			MONTH:
+          			<t t-esc="datetime.datetime.now().strftime('%B').upper()"/>
+          		</h3>
+          	</div>
+          	<div class="col-6 text-end">
+          		<h3 style="font-size: 14px; font-weight: bold; margin: 5px 0; padding-right: 5px;">
+          			DATE:
+          			<t t-esc="datetime.datetime.now().strftime('%B %d, %Y').upper()"/>
+          		</h3>
+          	</div>
+        </div>
+			</div>
+			<div class="page w-100 pt-3" style="font-family:Segoe UI; font-size:15px">
+				<table style="width:100%;" border="1">
+					<thead>
+						<tr style="border:1px solid black;">
+							<th>
+								Sr.No
+							</th>
+							<th>
+								Date
+							</th>
+                            <th>
+								W.R No
+							</th>
+							<th>
+								Genre
+							</th>
+                            <th>
+								Job Start Time
+							</th>
+							<th>
+								Job End Time
+							</th>
+							<th>
+								Description
+							</th>
+							<th>
+								Equipment
+							</th>
+                            <th>
+								Functional Location
+							</th>
+							<th>
+								Remidial Action
+							</th>
+							<th>
+								Status
+							</th>
+							<th>
+								Remark
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+                    <t t-set="sr_no" t-value="1"/>
+						<tr t-foreach="list(requests)" t-as="req">
+							<td>
+								<t t-esc="sr_no"/>
+							</td>
+							<td>
+								<t t-esc="req['schedule'] if req['schedule'] else '-'"/>
+							</td>
+							<td>
+								<t t-esc="req['wr_no'] if req['wr_no'] else '-'"/>
+							</td>
+                            <td>
+								<t t-esc="req['genre'] if req['genre'] else '-'"/>
+							</td>
+							<td>
+								<t t-esc="req['start_date'] if req['start_date'] else '-'"/>
+							</td>
+							<td>
+								<t t-esc="req['end_date'] if req['end_date'] else '-'"/>
+							</td>
+							<td>
+								<t t-esc="req['description'] if req['description'] else '-'"/>
+							</td>
+							<td>
+								<t t-esc="req['equipment'] if req['equipment'] else '-'"/>
+							</td>
+							<td>
+								<t t-esc="req['functional_location'] if req['functional_location'] else '-'"/>
+							</td>
+							<td>
+								<t t-esc="req['x_studio_rectification_action_1'] if req['x_studio_rectification_action_1'] else '-'"/>
+							</td>
+							<td>
+								<t t-esc="req['status'] if req['status'] else '-'"/>
+							</td>
+							<td>
+								<t t-esc="req['job_performer_remarks'] if req['job_performer_remarks'] else '-'"/>
+							</td>
+                        <t t-set="sr_no" t-value="sr_no + 1"/>
+						</tr>
+					</tbody>
+				</table>
+				 <div class="w-100 p-4">
+					<table style="width:100%;" border="1">
+						<thead>
+							<tr>
+							<th>Total Maintenance Requests Received</th>
+							<th>Total Jobs Completed</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+							<td style="text-align:center;font-size:17px;"><t t-esc="total_due"/></td>
+							<td style="text-align:center;font-size:17px;"><t t-esc="total_done"/></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</t>
+	</template>
+	<record id="btn_report_machine_history_sheet_all" model="ir.actions.report">
+		<field name="name">OVERALL MAINTENANCE REPORT</field>
+		<field name="model">machine.history.sheet.wizard.all</field>
+		<field name="report_type">qweb-pdf</field>
+		<field name="report_name">maintenance_modification.report_machine_history_sheet_template_all</field>
+		<field name="report_file">maintenance_modification.report_machine_history_sheet_template_all</field>
+		<!-- <field name="paperformat_id" ref="report_qweb_paperformat" /> -->
+	</record>
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_daily_production_wizard" model="ir.ui.view">
+            <field name="name">daily.production.wizard.form</field>
+            <field name="model">daily.production.wizard</field>
+            <field name="arch" type="xml">
+                <form string="daily Production Wizard">
+                    <group>
+                        <field name="from_date"/>
+                        <field name="to_date"/>
+                        <field name="lot_producing_id"/>
+                        <field name="pdo_id"/>
+                        <field name="is_batch_no"/>
+                    </group>
+                    <footer>
+                        <button string="Generate Report" type="object" name="generate_report" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+
+        <!-- Inherited Menu Item without Group Restrictions -->
+        <record id="stock_account.menu_valuation" model="ir.ui.menu">
+            <field name="name">Valuation</field>
+            <field name="parent_id" ref="stock.menu_warehouse_report"/>
+            <field name="sequence">250</field>
+            <field name="action" ref="stock_account.stock_valuation_layer_action"/>
+            <field name="groups_id" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

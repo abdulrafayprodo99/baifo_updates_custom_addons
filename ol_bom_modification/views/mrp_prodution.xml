@@ -1,0 +1,19 @@
+<odoo>
+    <record id="view_mrp_production_bom_id_domain_update" model="ir.ui.view">
+        <field name="name">mrp.production.bom.id.domain.update</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+             <!-- Target the bom_id field and replace the domain -->
+            <xpath expr="//field[@name='bom_id']" position="attributes">
+                <attribute name="domain">
+                    [
+                        '&amp;', '|', ('company_id', '=', False), ('company_id', '=', company_id),
+                        '&amp;', '|', ('product_id', '=', product_id), ('product_tmpl_id.product_variant_ids', '=', product_id),
+                        '&amp;', ('product_id', '!=', False), ('type', '=', 'normal'), ('state', '=', 'approved')
+                    ]
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="quality_inspection_report">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-foreach="docs" t-as="doc">
+                    <div class="page">
+                        <div class="header">
+                            <div class="header_working">
+                                <div class="row">
+                                    <div class="col-1">
+                                        <span t-field="doc.company_id.logo" t-options-widget="'image'" style="display:inline-block;width:40px;width:50px"/>
+                                    </div>
+                                    <div class="col-10">
+                                        <div class="row">
+                                            <center>
+                                                <b>
+                                                    <span style="font-size:20px">Biafo Industries Limited</span>
+                                                </b>
+                                            </center>
+                                        </div>
+                                        <div class="row">
+                                            <center>
+                                                <b>
+                                                    <span style="font-size:17px">Quality Inspection Report</span>
+                                                </b>
+                                            </center>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="second_line" style="font-size:13px;">
+                            <div class="row">
+                                <div class="col-6" style="text-align:left">
+                                    <span>Date: </span>
+                                    <t t-set="a" t-value="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y %I:%M:%S %p')"/>
+                                    <t t-esc="a"/>
+                                </div>
+                                <div class="col-6" style="text-align:right">
+                                    <span>Doc Name: </span>
+                                    <span t-field="doc.name"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="border:1px solid black"/>
+                        <div class="details" style="font-size:14px;">
+                            <div class="row mt-2">
+                                <div class="col-6">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <b>
+                                                <span>Item Name:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-8" style="text-align:left">
+                                            <span t-field="doc.product_id"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <b>
+                                                <span>QR Type:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-8" style="text-align:left">
+                                            <span t-field="doc.team_id"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <b>
+                                                <span>QIR Date:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-8" style="text-align:left">
+                                            <span t-field="doc.date"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <b>
+                                                <span>Document Reference:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-8" style="text-align:left">
+                                            <span t-field="doc.doc_refrence"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <b>
+                                                <span>Doc Name:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-8" style="text-align:left">
+                                            <span t-field="doc.name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <b>
+                                                <span>Document Date:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-8" style="text-align:left">
+                                            <span t-field="doc.doc_date"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <b>
+                                                <span>Sample:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-8" style="text-align:left">
+                                            <span t-field="doc.sample"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <b>
+                                                <span>Partner ID:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-7" style="text-align:left">
+                                            <span t-field="doc.partner_id"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <b>
+                                                <span>Batch:</span>
+                                            </b>
+                                        </div>
+                                        <div class="col-8" style="text-align:left">
+                                            <span t-field="doc.lot_id"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="border:1px solid black"/>
+                        <div class="qwerty" style="font-size:13px;">
+                            <table style="border-collapse:collapse; width:100%;" class="table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:left;border-bottom:1px solid black;padding:2px;width:200px">
+                                            <b>Code</b>
+                                        </th>
+                                        <th style="text-align:left;border-bottom:1px solid black;padding:2px;width:200px">
+                                            <b>Norm</b>
+                                        </th>
+                                        <th style="text-align:left;border-bottom:1px solid black;padding:4px;width:300px;">
+                                            <b>Quality Parameter</b>
+                                        </th>
+                                        <!-- <th style="text-align:left;border-bottom:1px solid black;padding:4px;width:140px">
+                                            <b>Sale Order</b>
+                                        </th> -->
+                                        <th style="text-align:left;border-bottom:1px solid black;padding:4px;width:140px">
+                                            <b>Standard</b>
+                                        </th>
+                                        <th style="text-align:left;border-bottom:1px solid black;padding:4px;width:130px">
+                                            <b>Tolerance Limit</b>
+                                        </th>
+                                        <th style="text-align:center;border-bottom:1px solid black;padding:4px;width:90px">
+                                            <b>Actual Result</b>
+                                        </th>
+                                        <th style="text-align:left;border-bottom:1px solid black;padding:4px;width:200px">
+                                            <b>QIC Status</b>
+                                        </th>
+                                        <th style="text-align:left;border-bottom:1px solid black;padding:4px;width:200px">
+                                            <b>Remarks</b>
+                                        </th>
+                                        <th style="text-align:left;border-bottom:1px solid black;padding:4px;width:200px">
+                                            <b>Status</b>
+                                        </th>
+                                        <th style="text-align:left;border-bottom:1px solid black;padding:4px;width:200px">
+                                            <b>Action Required</b>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="doc.line_id" t-as="line">
+                                        <td>
+                                            <span t-field="line.point_id"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="line.norm"/>
+                                        </td>
+                                        <td style="text-align:center; padding:4px;">
+                                            <span t-field="line.quality_title"/>
+                                        </td>
+                                        <td style="text-align:left; padding:4px;">
+                                            <span t-field="line.x_studio_standard"/>
+                                        </td>
+                                        <td style="text-align:left; padding:4px;">
+                                            <span t-field="line.standards"/>
+                                        </td>
+                                        <td style="text-align:left; padding:4px;">
+                                            <span t-field="line.result"/>
+                                        </td>
+                                        <td style="text-align:left; padding:4px;">
+                                            <span t-field="line.state"/>
+                                        </td>
+                                        <td style="text-align:left; padding:4px;">
+                                            <span t-field="line.remarks"/>
+                                        </td>
+                                        <td style="text-align:center; padding:4px;">
+                                            <span t-field="line.status_qir"/>
+                                        </td>
+                                        <td style="text-align:center; padding:4px;">
+                                            <span t-field="line.fail_type"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="approved_verified_request" style="font-size:13px; margin-top: 50px;">
+                            <div class="row">
+                                <div class="col-3"/>
+                                <div class="col-2" style="text-align:center">
+                                    <span t-field="doc.prepared_by"/>
+                                </div>
+                                <div class="col-2"/>
+                                <div class="col-2" style="text-align:center">
+                                    <span t-field="doc.approved_by"/>
+                                </div>
+                                <div class="col-3"/>
+                            </div>
+                            <div class="row">
+                                <div class="col-3"/>
+                                <div class="col-2" style="text-align:center;border-top:1px solid black">
+                                    <b>
+                                        <span>Prepared By</span>
+                                    </b>
+                                </div>
+                                <div class="col-2"/>
+                                <div class="col-2" style="text-align:center;border-top:1px solid black">
+                                    <b>
+                                        <span>Approved By</span>
+                                    </b>
+                                </div>
+                                <div class="col-3"/>
+                            </div>
+                            <div class="row">
+                                <div class="col-3"/>
+                                <div class="col-2" style="text-align:center">
+                                    <span t-field="doc.prepared_by_timestamp"/>
+                                </div>
+                                <div class="col-2"/>
+                                <div class="col-2" style="text-align:center">
+                                    <span t-field="doc.approved_by_timestamp"/>
+                                </div>
+                                <div class="col-3"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Report Action -->
+    <record id="action_report_quality_inspection" model="ir.actions.report">
+        <field name="name">Quality Inspection Report</field>
+        <field name="model">rqi.model</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ol_quality_control.quality_inspection_report</field>
+        <field name="report_file">ol_quality_control.quality_inspection_report</field>
+        <field name="print_report_name">'Quality_Inspection_Report_%s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_rqi_model"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

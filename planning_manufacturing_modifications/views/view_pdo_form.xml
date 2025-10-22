@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding='utf-8'?>
+<odoo>
+
+    <data>
+        <record id="production_demand_plan_form_view_modified" model='ir.ui.view'>
+            <field name='name'>production.demand.plan.form.view.inherited</field>
+            <field name="model">production.demand.plan</field>
+            <field name="inherit_id" ref="production_demand_plan.view_production_demand_order"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form//header" position="inside">
+                    <button name="action_revise" attrs="{'invisible': ['|', ('approval_state', '!=', 'approve'), ('approval_state', '=', 'canceled')]}" string="Revise" type="object" class="oe_highlight"/>
+                    <button name="action_cancel" attrs="{'invisible': [('approval_state', '=', 'canceled')]}" string="Cancel" type="object" />    
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="affinity_material_requirement_form_inherit" model="ir.ui.view">
+            <field name="name">affinity.material.requirement.form.inherit</field>
+            <field name="model">affinity.material.requirement</field>
+            <field name="inherit_id" ref="affinity_production_plan.affinity_material_requirement_form"/>
+            <field name="arch" type="xml">
+                <!-- #Aneeq 43,165 -->
+                <xpath expr="//field[@name='material_demand_line_ids']/tree/field[@name='sale_order_id']" position="after">
+                    <!-- <field name="dispatch_date" /> -->
+                </xpath>
+                <xpath expr="//field[@name='scheduled_date']" position="attributes">
+                    <attribute name="string">Production Start Date</attribute>
+                </xpath>
+                <xpath expr="//field[@name='scheduled_date']" position="after">
+                    <field name="production_end_date" />
+                </xpath>
+                <xpath expr="//field[@name='material_demand_line_ids']/tree" position="inside">
+                    <button name="action_check_and_unlink" type="object" string="Complete" attrs="{'invisible': [('remaining_qty', '!=', 0)]}"/>
+                    <button name="open_manufacturing_order" type="object" icon="fa-list" string=""/>
+                </xpath>
+                <!-- #Aneeq 43,165 -->
+            </field>
+        </record>
+        
+    </data>
+
+</odoo>

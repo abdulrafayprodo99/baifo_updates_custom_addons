@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="product_ledger_wizard" model="ir.ui.view">
+        <field name="name">product.ledger.wizard</field>
+        <field name="model">product.ledger.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Product Ledger Report">
+                <group name="name">
+                    <group name="name">
+                        <field name="product_ids" widget="many2many_tags"/>
+                        <field name="from_product_id" 
+                        attrs="{'required':[('to_product_id','!=',False)], 'invisible':[('filter_type','not in',['by_product_date'])]}"
+                        />
+                        <field name="to_product_id"
+                        attrs="{'required':[('from_product_id','!=',False)], 'invisible':[('filter_type','not in',['by_product_date'])]}"
+                        />
+                    </group>
+                    <group name="name">
+                        <field name="filter_type" />
+                        <field name="from_date" 
+                        attrs="{'required':[('to_date','!=',False)], 'invisible':[('filter_type','not in',['by_date','by_product_date'])]}"
+                        />
+                        <field name="to_date"
+                        attrs="{'required':[('from_date','!=',False)], 'invisible':[('filter_type','not in',['by_date','by_product_date'])]}"
+                        />
+                        <!-- <field name="date_filter" /> -->
+                    </group>
+                </group>
+                <footer>
+                    <button string="Print" type="object" name="get_report" class="btn-primary"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="product_action_ledger" model="ir.actions.act_window">
+        <field name="name">Product Action Ledger Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.ledger.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="product_ledger_wizard"/>
+        <field name="target">new</field>
+    </record>
+    <menuitem
+        id="product_ledger_menu_id"
+        name="Product Ledger Report"
+        parent="stock.menu_warehouse_report"
+        action="product_action_ledger"
+        sequence="99"/>
+</odoo>

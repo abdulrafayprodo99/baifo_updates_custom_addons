@@ -1,0 +1,42 @@
+<odoo>
+    <data>
+        <!-- Define the tree view for rqi.model -->
+        <record id="view_rqi_model_tree_custom" model="ir.ui.view">
+            <field name="name">rqi.model.tree</field>
+            <field name="model">rqi.model</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <!-- Field: name -->
+                    <field name="name" string="Number"/>
+                    <field name="doc_refrence" optional="show"/>
+                    <field name="lot_id" optional="show"/>
+                    <!-- <field name="ref_type"  invisible="1"/>
+                    <field name="mo" string="Document Reference MO" readonly="1"/>
+                    <field name="grn" string="Document Reference GRN" readonly="1"/> -->
+                    <field name="operation_type_filter"/>
+                    <field name="product_id" optional="show"/>
+                    <field name="team_id" optional="show"/>
+
+                    <!-- Field: state_approval -->
+                    <field name="state_approval"/>
+                    <field name="operation_type" invisible="1"/>
+
+                    <!-- Field: team_id -->
+                    <field name="team_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_rqi_model" model="ir.actions.act_window">
+            <field name="name">Quality Inspection Reports</field>
+            <field name="res_model">rqi.model</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_rqi_model_tree_custom"/>
+        </record>
+
+        <!-- Define a menu item to access this tree view -->
+        <menuitem id="menu_rqi_model" name="Quality Inspection" parent="quality_control.menu_quality_reporting" action="action_rqi_model"/>
+
+      
+    </data>
+</odoo>

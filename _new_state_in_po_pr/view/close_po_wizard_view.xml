@@ -1,0 +1,17 @@
+<odoo>
+    <record id="view_close_po_wizard_form" model="ir.ui.view">
+        <field name="name">close.po.wizard.form</field>
+        <field name="model">close.po.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Close Purchase Order">
+                <group>
+                    <field name="close_reason" widget='text'/>
+                </group>
+                <footer>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                    <button string="Confirm" type="object" name="action_confirm" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

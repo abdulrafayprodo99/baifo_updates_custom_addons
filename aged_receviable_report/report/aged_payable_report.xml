@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<template id="aged_payable_report">
+		<t t-name="aged_receviable_report.aged_payable_report">
+
+			<t t-call="aged_receviable_report.external_layout_aged_payable">
+				<t t-call="web.html_container">
+					<div class="page">
+					
+						<div class="center-content text-center">
+							<h1 style="font-family: 'Times New Roman', serif;">
+								Biafo Industries Limited
+							</h1>
+							<!-- <h4 style="font-family: 'Times New Roman', serif;">
+								Live
+							</h4> -->
+							<h2 style="font-family: 'Times New Roman', serif; color: black">
+								Aged Payable Analysis As at <t t-esc="recorded_date"/>
+							</h2>
+							<h4 style="font-family: 'Times New Roman', serif;">(Rupees)</h4>
+						</div>
+						<!-- <hr style="width: 100%; background-color: black; height: 1px; border: none; margin-bottom:8px" /> -->
+						<!-- Table Structure -->
+						<table class="table table-condensed py-5" style="margin: 20px;">
+						<thead style="border-top: 2px solid black;border-bottom: 2px solid black; padding: 5px; margin-bottom: 15px !important; border-right-color: white; border-left-color: white; text-align: center; margin-top: 15px;">
+							<tr>
+								<th rowspan="2" class="text-start align-middle fw-bold" style="border-bottom: 2px solid black; color: black;">
+								Narration
+								</th>
+								<th rowspan="2" class="text-start align-middle fw-bold" style="width: 400px; border-bottom: 2px solid black; color: black;">Partner Name</th>
+								<th rowspan="2" class="text-start align-middle fw-bold" style="width: 200px; border-bottom: 2px solid black; color: black;">Doc No.</th>
+								<th rowspan="2" class="text-start align-middle fw-bold" style="width: 150px; border-bottom: 2px solid black; color: black;">Date</th>
+								<th rowspan="2" class="text-start align-middle fw-bold" style="border-bottom: 2px solid black; color: black;">Credit Days</th>
+								<th rowspan="2" class="text-start align-middle fw-bold" style="border-bottom: 2px solid black; color: black;">Exact Days</th>
+								<th rowspan="2" class="text-start align-middle fw-bold" style="border-bottom: 2px solid black; color: black;">Overdue</th>
+								<th colspan="1" class="text-end fw-bold" style="border-bottom: 2px solid black; color: black;">Net Due Amount</th>
+								<th colspan="7" class="text-center fw-bold" style="border-bottom: 2px solid black; color: black;">Overdue Amounts</th>
+								<th rowspan="2" class="align-middle fw-bold" style="border-bottom: 2px solid black; color: black;"/>
+							</tr>
+							<tr class="text-end"> 
+								<th class="align-middle fw-bold" style="border-bottom: 2px solid black; color: black;"/>
+								<th class="text-center fw-bold" style="border-bottom: 2px solid black; color: black;">1 - 15 Days</th>
+								<th class="text-center fw-bold" style="border-bottom: 2px solid black; color: black;">16 - 30 Days</th>
+								<th class="text-center fw-bold" style="border-bottom: 2px solid black; color: black;">31 - 45 Days</th>
+								<th class="text-center fw-bold" style="border-bottom: 2px solid black; color: black;">46 - 60 Days</th>
+								<th class="text-center fw-bold" style="border-bottom: 2px solid black; color: black;">61 - 75 Days</th>
+								<th class="text-center fw-bold" style="border-bottom: 2px solid black; color: black;">75+ Days</th>
+								<th rowspan="2" class="align-middle" style="border-bottom: 2px solid black; color: black;">Totals</th>
+							</tr>
+						</thead>
+
+						<!-- Added margin-top to the tbody for space -->
+						<tbody style="border-top-color: white; border-bottom-color: white; border-right-color: white; border-left-color: white; text-align: center; margin-top: 15px;">
+							<!-- Data Population -->
+							<t t-set="grand_total_net" t-value="0"/>
+							<t t-set="grand_total_15" t-value="0"/>
+							<t t-set="grand_total_31" t-value="0"/>
+							<t t-set="grand_total_46" t-value="0"/>
+							<t t-set="grand_total_61" t-value="0"/>
+							<t t-set="grand_total_75" t-value="0"/>
+							<t t-set="grand_total_75_plus" t-value="0"/>
+							<t t-set="grand_total" t-value="0"/>
+							<t t-set="current_partners" t-value="partners_ids"/>
+							<t t-set="date" t-value="recorded_date"/>
+							<t t-set="previous_narration_for_total" t-value="''"/>
+							<t t-set="previous_narration" t-value="''"/>
+							<t t-foreach="sorted(grouped_data.items(), key=lambda item: str(item[1]['bills'][0]['narration']) if item[1]['bills'] else '')" t-as="item">
+    
+								<t t-set="partner" t-value="item[1]"/>
+								<t t-foreach="partner['bills']" t-as="invoice">
+										<!--<t t-set="grand_total_net" t-value="grand_total_net + ((invoice['currency_rate']*invoice['amount_due']) if invoice['currency_name'] != 'PKR' else invoice['amount_due'] if invoice['over_due'] &lt; 1 else 0)"/>-->
+									<t t-set="grand_total_net" t-value="grand_total_net + (invoice['amount_due'] if invoice['over_due_days'] &lt; 1 else 0)"/>
+									<!--<t t-set="grand_total_15" t-value="grand_total_15 + ((invoice['currency_rate']*invoice['amount_due']) if invoice['currency_name'] != 'PKR' else invoice['amount_due'] if 0 &lt; invoice['over_due'] &lt; 16 else 0)"/>-->
+									<t t-set="grand_total_15" t-value="grand_total_15 + (invoice['amount_due'] if 0 &lt; invoice['over_due_days'] &lt; 16 else 0)"/>
+									<!--<t t-set="grand_total_31" t-value="grand_total_31 + ((invoice['currency_rate']*invoice['amount_due']) if invoice['currency_name'] != 'PKR' else invoice['amount_due'] if 15 &lt; invoice['over_due'] &lt; 31 else 0)"/>-->
+									<t t-set="grand_total_31" t-value="grand_total_31 + ( invoice['amount_due'] if 15 &lt; invoice['over_due_days'] &lt; 31 else 0)"/>
+									<!--<t t-set="grand_total_46" t-value="grand_total_46 + ((invoice['currency_rate']*invoice['amount_due']) if invoice['currency_name'] != 'PKR' else invoice['amount_due'] if 30&lt; invoice['over_due'] &lt; 46 else 0)"/>-->
+									<t t-set="grand_total_46" t-value="grand_total_46 + ( invoice['amount_due'] if 30&lt; invoice['over_due_days'] &lt; 46 else 0)"/>
+									<!--<t t-set="grand_total_61" t-value="grand_total_61 + ((invoice['currency_rate']*invoice['amount_due']) if invoice['currency_name'] != 'PKR' else invoice['amount_due'] if 45 &lt; invoice['over_due'] &lt; 61 else 0)"/>-->
+									<t t-set="grand_total_61" t-value="grand_total_61 + ( invoice['amount_due'] if 45 &lt; invoice['over_due_days'] &lt; 61 else 0)"/>
+									<!--<t t-set="grand_total_75" t-value="grand_total_75 + ((invoice['currency_rate']*invoice['amount_due']) if invoice['currency_name'] != 'PKR' else invoice['amount_due'] if 60 &lt; invoice['over_due'] &lt; 76 else 0)"/>-->
+									<t t-set="grand_total_75" t-value="grand_total_75 + (invoice['amount_due'] if 60 &lt; invoice['over_due_days'] &lt; 76 else 0)"/>
+									<!--<t t-set="grand_total_75_plus" t-value="grand_total_75_plus + ((invoice['currency_rate']*invoice['amount_due']) if invoice['currency_name'] != 'PKR' else invoice['amount_due'] if invoice['over_due'] &gt; 75 else 0)"/>-->
+									<t t-set="grand_total_75_plus" t-value="grand_total_75_plus + ( invoice['amount_due'] if invoice['over_due_days'] &gt; 75 else 0)"/>
+									<t t-set="grand_total" t-value="grand_total + invoice['amount_due']"/>
+						
+									
+									<!-- Row for Each Invoice -->
+									<tr class="mx-2" style="margin-bottom: 20px;">
+										<td class="my-2 mx-2 fw-bold text-start">
+											<t t-if="previous_narration != invoice['narration']">
+												<strong><t t-esc="invoice['narration']"/></strong>
+											</t>
+										</td>
+										<td style="width: 400px;" class="my-2 text-start mx-2 fw-bold">
+											<t t-if="previous_narration != invoice['narration']">
+												<strong><t t-esc="invoice['partner_name']"/></strong>
+											</t>
+										</td>
+										<td class="my-2 text-start mx-2" style="width: 200px;"><t t-esc="invoice['name']"/></td>
+										<td class="my-2 text-start mx-2" style="width: 150px;"><t t-esc="invoice['date']"/></td>
+										<td class="my-2 text-start mx-2"><t t-esc="invoice['credit']"/></td>
+										<td class="my-2 text-start mx-2"><t t-esc="invoice['exact']"/></td>
+										<td class="my-2 mx-2 text-start">
+											<t t-if="invoice['over_due_days'] &gt; 0">
+												(<t t-esc="abs(invoice['over_due_days'])"/>)
+											</t>
+											<t t-else="">
+												<t t-esc="abs(invoice['over_due_days'])"/>
+											</t>
+										</td>
+										<td class="my-2 mx-2 text-end">
+											<t t-if="invoice['over_due_days'] &lt; 1">
+												<t t-if="invoice['currency_name'] !='PKR'">
+												<!-- <t t-esc="'{:,}'.format(int(invoice['currency_rate'] * invoice['amount_due']))"/> -->
+												<t t-esc="'{:,}'.format(int(invoice['amount_due']))"/>
+
+												</t>
+												<t t-else="">
+												<t t-esc="'{:,}'.format(int(invoice['amount_due']))"/>
+												</t>
+											</t>
+											<t t-else="">
+												-
+											</t>
+										</td>
+										<td class="my-2 mx-2 text-end">
+											<t t-if="0 &lt; invoice['over_due_days'] &lt; 16">
+												<!--<t t-esc="'{:,}'.format(int(invoice['amount_due']))"/>-->
+												<!-- <t t-if="invoice['currency_name'] !='PKR'">
+												<t t-esc="'{:,}'.format(int(invoice['currency_rate'] * invoice['amount_due']))"/>
+												</t>
+												<t t-else="">
+												<t t-esc="'{:,}'.format(int(invoice['amount_due']))"/>
+												</t> -->
+
+												<t t-esc="'{:,}'.format(int(invoice['amount_due']))"/>
+
+											</t>
+											<t t-else="">
+												-
+											</t>
+										</td>
+										<td class="my-2 mx-2 text-end">
+											<t t-if="15 &lt; invoice['over_due_days'] &lt; 31">
+												<!-- <t t-if="invoice['currency_name'] !='PKR'">
+												<t t-esc="'{:,}'.format(int(invoice['currency_rate'] * invoice['amount_due']))"/>
+												</t>
+												<t t-else=""> -->
+												<t t-esc="'{:,}'.format(int(invoice['amount_due']))"/>
+												<!-- </t> -->
+												<!--<t t-esc="'{:,}'.format(int(invoice['amount_due']))"/>-->
+											</t>
+											<t t-else="">
+												-
+											</t>
+										</td>
+										<td class="my-2 mx-2 text-end">
+											<t t-if="30 &lt; invoice['over_due_days'] &lt; 46">
+												<!--<t t-esc="'{:,}'.format(int(invoice['amount_due']))"/>-->
+												<!-- <t t-if="invoice['currency_name'] !='PKR'">
+												<t t-esc="'{:,}'.format(int(invoice['currency_rate'] * invoice['amount_due']))"/>
+												</t>
+												<t t-else="">
+												<t t-esc="'{:,}'.format(int(invoice['amount_due']))"/>
+												</t> -->
+												<t t-esc="'{:,}'.format(int(invoice['amount_due']))"/>
+
+											</t>
+											<t t-else="">
+												-
+											</t>
+										</td>
+										<td class="my-2 mx-2 text-end">
+											<t t-if="45 &lt; invoice['over_due_days'] &lt; 61">
+												<!--<t t-esc="'{:,}'.format(int(invoice['amount_due']))"/>-->
+												<!-- <t t-if="invoice['currency_name'] !='PKR'">
+												<t t-esc="'{:,}'.format(int(invoice['currency_rate'] * invoice['amount_due']))"/>
+												</t>
+												<t t-else="">
+												<t t-esc="'{:,}'.format(int(invoice['amount_due']))"/>
+												</t> -->
+												<t t-esc="'{:,}'.format(int(invoice['amount_due']))"/>
+
+											</t>
+											<t t-else="">
+												-
+											</t>
+										</td>
+										<td class="my-2 mx-2 text-end">
+											<t t-if="60 &lt; invoice['over_due_days'] &lt; 76">
+												<!--<t t-esc="'{:,}'.format(int(invoice['amount_due']))"/>-->
+												<!-- <t t-if="invoice['currency_name'] !='PKR'">
+												<t t-esc="'{:,}'.format(int(invoice['currency_rate'] * invoice['amount_due']))"/>
+												</t>
+												<t t-else="">
+												<t t-esc="'{:,}'.format(int(invoice['amount_due']))"/>
+												</t> -->
+												<t t-esc="'{:,}'.format(int(invoice['amount_due']))"/>
+
+											</t>
+											<t t-else="">
+												-
+											</t>
+										</td>
+										<td class="my-2 mx-2 text-end">
+											<t t-if="invoice['over_due_days'] &gt; 75">
+												<t t-esc="'{:,}'.format(int(invoice['amount_due']))"/>
+												<!-- <t t-if="invoice['currency_name'] !='PKR'">
+												<t t-esc="'{:,}'.format(int(invoice['currency_rate'] * invoice['amount_due']))"/>
+												</t>
+												<t t-else="">
+												<t t-esc="'{:,}'.format(int(invoice['amount_due']))"/>
+												</t> -->
+											</t>
+											<t t-else="">
+												-
+											</t>
+										</td>
+										<td class="my-2 mx-2 text-end">
+											<t t-esc="'{:,}'.format(int(invoice['amount_due']))"/>
+											<!-- <t t-if="invoice['currency_name'] !='PKR'">
+											<t t-esc="'{:,}'.format(int(invoice['currency_rate'] * invoice['amount_due']))"/>
+											</t>
+											<t t-else="">
+											<t t-esc="'{:,}'.format(int(invoice['amount_due']))"/>
+											</t> -->
+										</td>
+										<td class="my-2 mx-2"/> <!-- Example for Remarks -->
+									</tr>
+						
+									<!-- Update Previous Narration -->
+									<t t-set="previous_narration" t-value="invoice['narration']"/>
+								</t>
+									<!-- Subtotal Row for Each Narration -->
+									<t t-if="previous_narration_for_total != invoice['narration']">
+										<tr class="mx-2 text-end" style="margin-bottom: 20px;">
+											<td class="my-2 text-end mx-2 " colspan="7" style="font-size:16px !important; font-family:sans-serif;">
+												<strong>
+													Total for
+													<t t-esc="invoice['partner_name']"/>
+													:
+												</strong>
+											</td>
+											<td class="my-2 mx-2 text-end" style="font-size:16px !important; font-family:sans-serif;border-top: 2px solid black; border-bottom: 2px solid black; padding: 5px;">
+												<strong>
+													<t t-if="int(sum((invoice['currency_rate'] * invoice['amount_due']) if invoice['currency_name'] != 'PKR' and invoice['over_due'] &lt; 1 else invoice['amount_due'] for invoice in partner['bills'] if invoice['over_due_days'] &lt; 1)) &gt; 0">
+														<t t-esc="'{:,}'.format(int(sum(invoice['amount_due'] for invoice in partner['bills'] if invoice['over_due_days'] &lt; 1)))"/>
+													</t>
+													<t t-else="">
+														-
+													</t>
+												</strong>
+											</td>
+											<td class="my-2 mx-2 text-end" style="border-bottom: 2px solid black; padding: 5px; font-size:16px !important; font-family:sans-serif;border-top: 2px solid black;">
+												<strong>
+													<t t-if="int(sum((invoice['currency_rate'] * invoice['amount_due']) if 0 &lt; invoice['over_due_days'] &lt; 16 and invoice['currency_name'] != 'PKR' else invoice['amount_due'] for invoice in partner['bills'] if 0 &lt; invoice['over_due_days'] &lt; 16)) &gt; 0">
+														<t t-esc="'{:,}'.format(int(sum(invoice['amount_due'] for invoice in partner['bills'] if 0 &lt; invoice['over_due_days'] &lt; 16)))"/>
+													</t>
+													<t t-else="">
+														-
+													</t>
+												</strong>
+											</td>
+											<td class="my-2 mx-2 text-end" style="border-bottom: 2px solid black; padding: 5px; font-size:16px !important; font-family:sans-serif;border-top: 2px solid black;">
+												<strong>
+													<t t-if="int(sum((invoice['currency_rate'] * invoice['amount_due']) if 15 &lt; invoice['over_due_days'] &lt; 31 and invoice['currency_name'] != 'PKR' else invoice['amount_due'] for invoice in partner['bills'] if 15 &lt; invoice['over_due_days'] &lt; 31)) &gt; 0">
+														<t t-esc="'{:,}'.format(int(sum(invoice['amount_due'] for invoice in partner['bills'] if 15 &lt; invoice['over_due_days'] &lt; 31)))"/>
+													</t>
+													<t t-else="">
+														-
+													</t>
+												</strong>
+											</td>
+											<td class="my-2 mx-2 text-end" style="border-bottom: 2px solid black; padding: 5px; font-size:16px !important; font-family:sans-serif;border-top: 2px solid black;">
+												<strong>
+													<t t-if="int(sum((invoice['currency_rate'] * invoice['amount_due']) if 30 &lt; invoice['over_due_days'] &lt; 46 and invoice['currency_name'] != 'PKR' else invoice['amount_due'] for invoice in partner['bills'] if 30 &lt; invoice['over_due_days'] &lt; 46)) &gt; 0">
+														<t t-esc="'{:,}'.format(int(sum( invoice['amount_due'] for invoice in partner['bills'] if 30 &lt; invoice['over_due_days'] &lt; 46)))"/>
+													</t>
+													<t t-else="">
+														-
+													</t>
+												</strong>
+											</td>
+											<td class="my-2 mx-2 text-end" style="border-bottom: 2px solid black; padding: 5px; font-size:16px !important; font-family:sans-serif;border-top: 2px solid black;">
+												<strong>
+													<t t-if="int(sum((invoice['currency_rate'] * invoice['amount_due']) if 45 &lt; invoice['over_due_days'] &lt; 61 and invoice['currency_name'] != 'PKR' else invoice['amount_due'] for invoice in partner['bills'] if 45 &lt; invoice['over_due_days'] &lt; 61)) &gt; 0">
+														<t t-esc="'{:,}'.format(int(sum( invoice['amount_due'] for invoice in partner['bills'] if 45 &lt; invoice['over_due_days'] &lt; 61)))"/>
+													</t>
+													<t t-else="">
+														-
+													</t>
+												</strong>
+											</td>
+											<td class="my-2 mx-2 text-end" style="border-bottom: 2px solid black; padding: 5px; font-size:16px !important; font-family:sans-serif;border-top: 2px solid black;">
+												<strong>
+													<t t-if="int(sum((invoice['currency_rate'] * invoice['amount_due']) if 60 &lt; invoice['over_due_days'] &lt; 76 and invoice['currency_name'] != 'PKR' else invoice['amount_due'] for invoice in partner['bills'] if 60 &lt; invoice['over_due_days'] &lt; 76)) &gt; 0">
+														<t t-esc="'{:,}'.format(int(sum( invoice['amount_due'] for invoice in partner['bills'] if 60 &lt; invoice['over_due_days'] &lt; 76)))"/>
+													</t>
+													<t t-else="">
+														-
+													</t>
+												</strong>
+											</td>
+											<td class="my-2 mx-2 text-end" style="border-bottom: 2px solid black; padding: 5px; font-size:16px !important; font-family:sans-serif;border-top: 2px solid black;">
+												<strong>
+													<t t-if="int(sum((invoice['currency_rate'] * invoice['amount_due']) if invoice['over_due_days'] &gt; 75 and invoice['currency_name'] != 'PKR' else invoice['amount_due'] for invoice in partner['bills'] if invoice['over_due_days'] &gt; 75)) &gt; 0">
+														<t t-esc="'{:,}'.format(int(sum( invoice['amount_due'] for invoice in partner['bills'] if invoice['over_due_days'] &gt; 75)))"/>
+													</t>
+													<t t-else="">
+														-
+													</t>
+												</strong>
+											</td>
+											<td class="my-2 mx-2 text-end" style="border-bottom: 2px solid black; padding: 5px; font-size:16px !important; font-family:sans-serif;border-top: 2px solid black;">
+												<strong>
+													<t t-if="int(sum((invoice['currency_rate'] * invoice['amount_due']) if invoice['currency_name'] != 'PKR' else invoice['amount_due'] for invoice in partner['bills'])) &gt; 0">
+														<t t-esc="'{:,}'.format(int(sum( invoice['amount_due'] for invoice in partner['bills'])))"/>
+													</t>
+													<t t-else="">
+														-
+													</t>
+												</strong>
+											</td>
+											<td class="my-2 mx-2"/>
+										</tr>
+									</t>
+								<t t-set="previous_narration_for_total" t-value="invoice['narration']"/>
+							</t>
+						
+								<tr class="mx-2" style="margin-bottom: 20px; font-size:16px !important; font-family:sans-serif;">
+									<td colspan="7" class="text-end">
+										<strong>
+											Grand Total :
+										</strong>
+									</td>
+									<td class="my-2 mx-2 text-end" style="border-bottom: 2px solid black; padding: 5px;">
+										<strong>
+										<!--<t t-set="obj" t-value="docs.get_grand_total(basket={'start':-1},partners=current_partners,date=date)"/>-->
+											<!--<t t-esc="'{:,}'.format(obj)"/>-->
+											<t t-esc="'{:,}'.format(int(grand_total_net))"/>
+										</strong>
+									</td>
+									<td class="my-2 mx-2 text-end" style="border-bottom: 2px solid black; padding: 5px;">
+										<strong>
+										  <t t-esc="'{:,}'.format(int(grand_total_15))"/>
+										<!--<t t-set="obj" t-value="docs.get_grand_total(basket={'start':1,'end':15},partners=current_partners,date=date)"/>-->
+											<!--<t t-esc="'{:,}'.format(obj)"/>-->
+										</strong>
+									</td>
+									<td class="my-2 mx-2 text-end" style="border-bottom: 2px solid black; padding: 5px;">
+										<strong>
+											<t t-esc="'{:,}'.format(int(grand_total_31))"/>
+										<!--<t t-set="obj" t-value="docs.get_grand_total(basket={'start':16,'end':30},partners=current_partners,date=date)"/>-->
+											<!--<t t-esc="'{:,}'.format(obj)"/>-->
+										</strong>
+									</td>
+									<td class="my-2 mx-2 text-end" style="border-bottom: 2px solid black; padding: 5px;">
+										<strong>
+										<!--<t t-set="obj" t-value="docs.get_grand_total(basket={'start':31,'end':45},partners=current_partners,date=date)"/>-->
+											<!--<t t-esc="'{:,}'.format(obj)"/>-->
+											<t t-esc="'{:,}'.format(int(grand_total_46))"/>
+										</strong>
+									</td>
+									<td class="my-2 mx-2 text-end" style="border-bottom: 2px solid black; padding: 5px;">
+										<strong>
+										<!--<t t-set="obj" t-value="docs.get_grand_total(basket={'start':46,'end':60},partners=current_partners,date=date)"/>-->
+											<!--<t t-esc="'{:,}'.format(obj)"/>-->
+											<t t-esc="'{:,}'.format(int(grand_total_61))"/>
+										</strong>
+									</td>
+									<td class="my-2 mx-2 text-end" style="border-bottom: 2px solid black; padding: 5px;">
+										<strong>
+										<!--<t t-set="obj" t-value="docs.get_grand_total(basket={'start':61,'end':75},partners=current_partners,date=date)"/>-->
+											<!--<t t-esc="'{:,}'.format(obj)"/>-->
+											<t t-esc="'{:,}'.format(int(grand_total_75))"/>
+										</strong>
+									</td>
+									<td class="my-2 mx-2 text-end" style="border-bottom: 2px solid black; padding: 5px;">
+										<strong>
+										<t t-set="obj" t-value="docs.get_grand_total(basket={'end':76}, partners=current_partners,date=date)"/>
+											<!--<t t-esc="'{:,}'.format(obj)"/>-->
+											 <!--<t t-esc="obj"/> -->
+											<t t-esc="'{:,}'.format(int(grand_total_75_plus))"/>
+										</strong>
+									</td>
+									<td class="my-2 mx-2 text-end" style="border-bottom: 2px solid black; padding: 5px;">
+										<strong>
+										<!--<t t-set="obj" t-value="docs.get_grand_total(basket={},partners=current_partners,date=date)"/>-->
+										<!--	<t t-esc="'{:,}'.format(obj)"/>-->
+											<t t-esc="'{:,}'.format(int(grand_total))"/>
+										</strong>
+									</td>
+									<td class="my-2 mx-2"/>
+								</tr>
+						</tbody>
+
+						</table>
+					</div>
+				</t>
+			</t>
+
+		</t>
+	</template>
+	<template id="external_layout_aged_payable" >
+		<t t-if="not o" t-set="o" t-value="doc" />
+		<t t-if="not company">
+			<!-- Multicompany -->
+			<t t-if="company_id">
+				<t t-set="company" t-value="company_id" />
+			</t>
+			<t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+				<t t-set="company" t-value="o.company_id.sudo()" />
+			</t>
+			<t t-else="else">
+				<t t-set="company" t-value="res_company" />
+			</t>
+		</t>
+		<!-- <t t-if="company.external_report_layout_id" t-call="{{company.external_report_layout_id.sudo().key}}"> -->
+		<!-- <t t-out="0"/></t> -->
+		<!-- <t t-else="else" t-call="web.external_layout_standard"> -->
+		<!-- <t t-out="0"/></t> -->
+		<div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
+			<!-- heading -->
+		</div>
+		<div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout {{  'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}" t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+			<div class="pt-5">
+				<!-- This div ensures that the address is not croppezd by the header. -->
+				<t t-call="web.address_layout" />
+			</div>
+			<t t-out="0" />
+		</div>
+		<div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+			<div class="text-center" style="border-top: 1px solid black;">
+				<!-- <ul class="list-inline mb4">
+					<div t-field="company.report_footer" />
+				</ul> -->
+				<!-- Page Number -->
+				<div t-if="report_type == 'pdf'" class="text-muted">
+					Page:
+					<span class="page" /> / <span class="topage" />
+				</div>
+				<div t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted">
+					<span t-field="o.name" />
+				</div>
+			</div>
+		</div>
+	</template>
+	<record id="paperformat" model="report.paperformat">
+		<field name="name">Landscape Aged Payable Sheet</field>
+		<field name="default" eval="True" />
+		<field name="format">A3</field>
+		<field name="orientation">Landscape</field>
+		<field name="margin_top">13.00</field>
+		<field name="margin_bottom">13.00</field>
+		<field name="margin_left">5</field>
+		<field name="margin_right">5</field>
+		<field name="header_spacing">12</field>
+		<field name="disable_shrinking" eval="False" />
+		<field name="header_line" eval="False" />
+		<field name="dpi">110</field>
+	</record>
+	<record id="action_report_aged_payable" model="ir.actions.report">
+		<field name="name">Aged Payable Report</field>
+		<field name="model">aged.payable.wizard</field>
+		<field name="report_type">qweb-pdf</field>
+		<field name="report_name">aged_receviable_report.aged_payable_report</field>
+		<field name="report_file">aged_receviable_report.aged_payable_report</field>
+		<field name="paperformat_id" ref="paperformat" />
+	</record>
+</odoo>

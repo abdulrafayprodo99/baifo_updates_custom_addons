@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_account_asset_form_inherit" model="ir.ui.view">
+        <field name="name">account.asset.form.inherit.asset.history</field>
+        <field name="model">account.asset</field>
+        <field name="inherit_id" ref="account_asset.view_account_asset_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='original_move_line_ids']" position="attributes">
+                <attribute name="domain">[('parent_state', '=', 'posted'),('company_id', '=', company_id),('account_id.account_type', 'in', ('asset_fixed', 'asset_non_current', 'asset_current')),('move_id.move_type', '=', ('in_invoice')),('move_id.asset_id', '=', False),]</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='asset_class']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='sub_asset_class']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+
+            <xpath expr="//field[@name='original_value']" position="before">
+                <field name="acc_class_id"/>
+                <field name="sub_acc_class_id"/>
+
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Asset History">
+                    <field name="asset_history_ids">
+                        <tree editable="bottom">
+                            <field name="date"/>
+                            <field name="transfer_from"/>
+                            <field name="transfer_to"/>
+                            <field name="transfer_detail"/>
+                            <field name="receiver_detail"/>
+                            <field name="remarks"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+
+
+
+
+</odoo>

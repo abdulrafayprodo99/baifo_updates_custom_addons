@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit and modify the account.payment form view -->
+<record id="view_account_payment_inherit" model="ir.ui.view">
+    <field name="name">account.payment.form.inherit</field>
+    <field name="model">account.payment</field>
+    <field name="inherit_id" ref="account.view_account_payment_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//header/button[@name='action_post']" position="attributes">
+            <attribute name="string">POST</attribute>
+            <attribute name="attrs">{'invisible': [
+                '|',
+                '&amp;',
+                    ('approval_state', '!=', 'approve'),
+                    ('approval_state_customer_payment', '!=', 'approve'),
+                ('state', '!=', 'draft')
+            ]}</attribute>
+        </xpath>
+    </field>
+</record>
+
+
+
+
+    <!-- Inherit and modify the account.move form view -->
+    <record id="view_account_move_inherit" model="ir.ui.view">
+        <field name="name">account.move.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_post'][1]" position="attributes">
+                <attribute name="string">POST</attribute>
+                <attribute name="attrs">{'invisible': ['|','|',('approval_state', '!=', 'approve'),('hide_post_button', '=', True), ('move_type', '!=', 'entry')]}</attribute>
+            </xpath>
+            <xpath expr="//header/button[@name='action_post'][2]" position="attributes">
+                <attribute name="string">POST</attribute>
+                <attribute name="attrs">{'invisible': ['|', '|','|',('approval_state', '!=', 'approve') , ('hide_post_button', '=', True), ('move_type', '=', 'entry'), ('display_inactive_currency_warning','=',True)]} </attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit and modify the expense.module form view -->
+    <record id="view_expense_module_inherit" model="ir.ui.view">
+        <field name="name">expense.module.form.inherit</field>
+        <field name="model">expense.module</field>
+        <field name="inherit_id" ref="Record_Expense.view_expense_module_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='server_post_expense_action']" position="attributes">
+                <attribute name="string">POST</attribute>
+                <attribute name="attrs">{'invisible': ['|',('approval_state_expense', '!=', 'approve')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_move_form_inherit_price_unit_readonly" model="ir.ui.view">
+        <field name="name">account.move.form.price_unit.readonly</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Target the price_unit field inside the invoice_line_ids tree -->
+            <xpath expr="//field[@name='invoice_line_ids']//tree//field[@name='price_unit']" position="attributes">
+                <attribute name="attrs">{'readonly': True}</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+
+</odoo>

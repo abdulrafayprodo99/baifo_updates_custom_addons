@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="display_store_user_time_true" model="ir.config_parameter">
+            <field name="key">hia_user_login_status.store_user_time</field>
+            <field name="value">True</field>
+        </record>
+    </data>
+</odoo>

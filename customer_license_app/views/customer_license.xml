@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree View -->
+    <record id="view_customer_license_tree" model="ir.ui.view">
+        <field name="name">customer.license.tree</field>
+        <field name="model">customer.license</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" string="Name"/>
+                <field name="customer_code_old" string="Customer Code Old"/>
+                <field name="customer_code_new" string="Customer Code New"/>
+                <field name="validity_from" string="Validity From"/>
+                <field name="validity_to" string="Validity To"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View with Chatter -->
+    <record id="view_customer_license_form" model="ir.ui.view">
+        <field name="name">customer.license.form</field>
+        <field name="model">customer.license</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <!-- Header section (add buttons here if needed) -->
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="customer_code_old"/>
+                            <field name="validity_from"/>
+                        </group>
+                        <group>
+                            <field name="customer_name"/>
+                            <field name="customer_code_new"/>
+                            <field name="validity_to"/>
+                        </group>
+                    </group>
+                    <button string="Update Name" class="oe_highlight" type="object" name="update" />
+                </sheet>
+                <!-- Chatter section -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget='mail_followers'/>
+                    <field name="message_ids" widget='mail_thread'/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                </div>
+
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="customer_license_action" model="ir.actions.act_window">
+        <field name="name">Customer License</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">customer.license</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="customer_license_root" name="Customer License" parent="" sequence="10" />
+    <menuitem id="customer_license" name="Customer License" parent="customer_license_root" action="customer_license_action" sequence="11"/>
+
+</odoo>

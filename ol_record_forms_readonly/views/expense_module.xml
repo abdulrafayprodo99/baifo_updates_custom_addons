@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding='utf-8'?>
+<odoo>
+
+    <record id="view_expense_module_readonly_form" model='ir.ui.view'>
+        <field name='name'>expense.module.readonly.form</field>
+        <field name="model">expense.module</field>
+        <field name="inherit_id" ref="Record_Expense.view_expense_module_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='is_posted']" position='after'>
+                <field name="expense_module_readonly_check" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//form" position="attributes">
+                <attribute name="js_class">expense_module_form_disable_readonly</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

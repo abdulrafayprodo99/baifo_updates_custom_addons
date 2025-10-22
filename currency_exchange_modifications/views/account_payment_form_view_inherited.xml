@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding='utf-8'?>
+<odoo>
+
+    <record id="account_payment_form_view_modified_for_currency_rates_" model='ir.ui.view'>
+        <field name='name'>account.payment.form.view.inherited.for.currency.rates</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="prodo_x_biafo_ext.account_payment_currency_rate_inherited_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='currency_rate']" position="replace">
+                <label for="currency_rate" string="Currency Rate" invisible="1"/>    
+            </xpath>
+            <xpath expr="//field[@name='currency_rate']" position="replace">
+                <field name="currency_rate" string="Currency Rate" invisible="1"/>    
+            </xpath>
+            <xpath expr="//button[@name='apply_currency_rate']" position="replace">
+                <button name="apply_currency_rate" type="object" string="Apply currency Rate" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//div[@name='amount_div']" position="after">
+                <div class="d-flex" colspan="2">
+                    <field name="currency_name" invisible="1"/>
+                    <label style="width:30%;margin-right:10px;" for="currency_rate" string="Currency Rate" attrs="{'invisible': [('currency_name','=','PKR')], 'readonly': [('state', '!=', 'draft')]}"/>
+                    <field style="width:30%;margin-right:10px;" name="currency_rate" nolabel="1" attrs="{'invisible': [('currency_name','=','PKR')], 'readonly': [('state', '!=', 'draft')]}" />
+                    <!-- <button style="margin-left:5%;width:20%;" name="apply_currency_rate" type="object" string="Apply currency Rate" class="btn-primary"/> -->
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

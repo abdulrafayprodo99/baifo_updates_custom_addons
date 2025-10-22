@@ -1,0 +1,2 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+access_stock_sale_position_wizard_custom_manager,stock_sale_position_wizard_custom_manager,model_stock_sale_position_wizard_custom,,1,1,1,1

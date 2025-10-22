@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id='aged_receviable_report.supplier_report'>
+        <t t-call="aged_receviable_report.external_layout_supplier_legder">
+            <t t-call="web.html_container">
+                <div class="page">
+                    <div class="center-content p-5">
+                        <div class="text-center">
+                            <h1 style="font-family: 'Times New Roman', serif; margin: 0;">Biafo Industries Limited</h1>
+                            <h2 style="font-family: 'Times New Roman', serif; margin: 0;color: black">Partner Ledger</h2>
+                            <h4 style="font-family: 'Times New Roman', serif; margin: 0;">
+                                (<span>
+                                    From date: <t t-esc="report_header_values[2] if len(report_header_values) &gt; 2 else ''"/> to date: <t t-esc="report_header_values[3] if len(report_header_values) &gt; 3 else ''"/>
+                                    From Partner: <t t-esc="report_header_values[0] if len(report_header_values) &gt; 0 else ''"/> to Partner: <t t-esc="report_header_values[1] if len(report_header_values) &gt; 1 else ''"/>
+                                </span>)
+                            </h4>
+                            <h4 style="font-family: 'Times New Roman', serif; margin: 0;">(Rupees)</h4>
+                        </div>
+                    </div>
+                    <table class="table table-condensed">
+                        <thead style="border-top: 2px solid black;border-bottom: 2px solid black; padding: 5px; margin-bottom: 15px !important; border-right-color: white; border-left-color: white; margin-top: 15px; font-family:sans-serif;">
+                            <tr>         
+                                <t t-foreach="report_columns" t-as="column">
+                                  <t t-if="column == 'date'">
+                                    <th class="text-center" style="font-weight: bold;color: black; text-align: left !important;">Date</th>
+                                  </t>
+                                  <t t-if="column == 'doc'">
+                                      <th class="text-center" style="font-weight: bold;color: black; text-align: left !important;">Doc</th>
+                                  </t>
+                                  <t t-if="column == 'narration'">
+                                      <th class="" style="font-weight: bold;color: black; text-align: left !important;">Narration</th>
+                                  </t>
+                                  <t t-if="column == 'product_code'">
+                                      <th class="text-center" style="font-weight: bold;color: black; text-align: left !important;">Product Code</th>
+                                  </t>
+                                  <t t-if="column == 'product_description'">
+                                      <th class="text-center" style="font-weight: bold;color: black; text-align: left !important;">Product Description</th>
+                                  </t>
+                                  <t t-if="column == 'unit'">
+                                      <th class="text-end" style="font-weight: bold;color: black">Unit</th>
+                                  </t>
+                                  <t t-if="column == 'quantity'">
+                                      <th class="text-end" style="font-weight: bold;color: black">Quantity</th>
+                                  </t>
+                                  <t t-if="column == 'rate'">
+                                      <th class="text-end" style="font-weight: bold;color: black">Rate</th>
+                                  </t>
+                                  <t t-if="column == 'excluding_sale_tax'">
+                                      <th class="text-end" style="font-weight: bold;color: black">Excluding Sale Tax</th>
+                                  </t>
+                                  <t t-if="column == 'sale_tax_amount'">
+                                      <th class="text-end" style="font-weight: bold;color: black">Sale Tax Amount</th>
+                                  </t>
+                                  <t t-if="column == 'debit'">
+                                      <th class="text-end" style="font-weight: bold;color: black">Debit</th>
+                                  </t>
+                                  <t t-if="column == 'credit'">
+                                      <th class="text-end" style="font-weight: bold;color: black">Credit</th>
+                                  </t>
+                                  <t t-if="column == 'balance'">
+                                      <th class="text-end" style="font-weight: bold;color: black">Closing Balance</th>
+                                  </t>
+                                </t>
+                            </tr>
+                        </thead>
+                        <tbody style="margin-y: 20px;border-top-color: white; border-bottom-color: white; border-right-color: white; border-left-color: white; text-align: center; margin-top: 15px;">
+                            <t t-foreach="report_values.items()" t-as="key_value_pair">
+                                <t t-set="key" t-value="key_value_pair[0]"/>
+                                <t t-if="key != 'grand_total'">
+                                    <tr style="font-family:sans-serif;">
+                                        <td style="text-align: left !important;">
+                                            <strong>
+                                                <t t-esc="report_values[key]['opening']['number']"/>
+                                            </strong>
+                                        </td>
+                                        <td style="text-align: left !important;">
+                                            <strong>
+                                                <t t-esc="report_values[key]['opening']['name']"/>
+                                            </strong>
+                                        </td>
+                                        <td colspan="10" class="text-end">
+                                            <strong>
+                                                Opening
+                                            </strong>
+                                        </td>
+                                        <td class="text-end">
+                                            <t t-if="report_values[key]['opening']['opening_balance'] &lt; 0">
+                                                <strong>
+                                                    <t t-esc="'{:,.2f}'.format(abs(report_values[key]['opening']['opening_balance']))"> Cr</t>
+                                                </strong>
+                                            </t>
+                                            <t t-else="">
+                                                <strong>
+                                                    <t t-esc="'{:,.2f}'.format(report_values[key]['opening']['opening_balance'])"/>
+                                                </strong>
+                                            </t>
+                                        </td>
+                                        
+                                    </tr>
+                                  <t t-set="value" t-value="key_value_pair[1]"/>
+                                  <!-- <t t-set="datetime" t-value="o.datetime"/> -->
+                                    <t t-foreach="report_values[key]['data']" t-as="line">
+                                      <tr>
+                                        <t t-foreach="report_columns" t-as="column">
+                                          <td t-if="column == 'date'" style="text-align: left !important;">
+                                            <t t-esc="line['date'] "/>
+                                            <!-- <t t-esc="line['date'].strftime('%d-%m-%Y')"/> -->
+                                            <!-- <t t-esc="datetime.strptime(line['date'], '%Y-%m-%d').strftime('%d-%m-%Y')"/> -->
+                                          </td>
+                                          <td t-if="column == 'doc'" style="text-align: left !important;">
+                                              <t t-esc="line['doc_id']"/>
+                                          </td>
+                                          <td t-if="column == 'narration'" style="text-align: left !important;">
+                                              <t style="text-align: left !important;" t-esc="line['narration']"/>
+                                          </td>
+                                          <td t-if="column == 'product_code'" style="text-align: left !important;">
+                                              <t t-esc="line['product_code']"/>
+                                          </td>
+                                          <td t-if="column == 'product_description'" style="text-align: left !important;">
+                                              <t t-esc="line['product_description']"/>
+                                          </td>
+                                          <td class="text-end" t-if="column == 'unit'">
+                                              <t t-esc="line['unit']"/>
+                                          </td>
+                                          <td class="text-end" t-if="column == 'quantity'">
+                                              <t t-esc="'{:,.2f}'.format(line['quantity'])"/>
+                                          </td>
+                                          <td class="text-end" t-if="column == 'rate'">
+                                              <t t-esc="'{:,.2f}'.format(line['rate'])"/>
+                                          </td>
+                                          <td class="text-end" t-if="column == 'excluding_sale_tax'">
+                                              <t t-esc="'{:,.2f}'.format(line['value_excluding_sales_tax'])"/>
+                                          </td>
+                                          <td class="text-end" t-if="column == 'sale_tax_amount'">
+                                              <t t-esc="'{:,.2f}'.format(line['sales_tax_amount'])"/>
+                                          </td>
+                                          <td class="text-end" t-if="column == 'debit'">
+                                              <t t-esc="'{:,.2f}'.format(line['debit'])"/>
+                                          </td>
+                                          <td class="text-end" t-if="column == 'credit'">
+                                              <t t-esc="'{:,.2f}'.format(line['credit'])"/>
+                                          </td>
+                                          <td class="text-end" t-if="column == 'balance'">
+                                            <t t-if="line['closing_balance'] &lt; 0">
+                                                <t t-esc="'{:,.2f}'.format(abs(line['closing_balance']))"/> Cr
+                                            </t>
+                                            <t t-else="">
+                                                <t t-esc="'{:,.2f}'.format(line['closing_balance'])"/>
+                                            </t>
+                                          </td>
+                                        </t>
+                                      </tr>
+                                    </t>
+                                    <tr>
+                                      <t t-foreach="report_columns" t-as="column">
+                                          <t t-if="column == 'date'">
+                                              <td class="text-center" style="text-align: left !important;"/>
+                                          </t>
+                                          <t t-if="column == 'doc'">
+                                              <td class="text-center" style="text-align: left !important;"/>
+                                          </t>
+                                          <t t-if="column == 'narration'" style="text-align: left !important;">
+                                              <td class="" style="text-align: left !important;"/>
+                                          </t>
+                                          <t t-if="column == 'product_code'">
+                                              <td class="" style="text-align: left !important;"/>
+                                          </t>
+                                          <t t-if="column == 'product_description'">
+                                              <td class="" style="text-align: left !important;"/>
+                                          </t>
+                                          <t t-if="column == 'unit'">
+                                              <td class="text-end" style="border-bottom: 2px solid black; padding: 5px; font-size:16px !important; font-family:sans-serif;border-top: 2px solid black;"/>
+                                          </t>
+                                          <t t-if="column == 'quantity'">
+                                              <td class="text-end" style="border-bottom: 2px solid black; padding: 5px; font-size:16px !important; font-family:sans-serif;border-top: 2px solid black;"/>
+                                          </t>
+                                          <t t-if="column == 'rate'">
+                                              <td class="text-end" style="border-bottom: 2px solid black; padding: 5px; font-size:16px !important; font-family:sans-serif;border-top: 2px solid black;">Total</td>
+                                          </t>
+                                          <t t-if="column == 'excluding_sale_tax'">
+                                              <td class="text-end" style="border-bottom: 2px solid black; padding: 5px; font-size:16px !important; font-family:sans-serif;border-top: 2px solid black;"><t t-esc="'{:,.2f}'.format(report_values[key]['total']['total_exclude_tax'])"/></td>
+                                          </t>
+                                          <t t-if="column == 'sale_tax_amount'">
+                                              <td class="text-end" style="border-bottom: 2px solid black; padding: 5px; font-size:16px !important; font-family:sans-serif;border-top: 2px solid black;"><t t-esc="'{:,.2f}'.format(report_values[key]['total']['total_tax_amount'])"/></td>
+                                          </t>
+                                          <t t-if="column == 'debit'">
+                                              <td class="text-end" style="border-bottom: 2px solid black; padding: 5px; font-size:16px !important; font-family:sans-serif;border-top: 2px solid black;"><t t-esc="'{:,.2f}'.format(report_values[key]['total']['total_debit'])"/></td>
+                                          </t>
+                                          <t t-if="column == 'credit'">
+                                              <td class="text-end" style="border-bottom: 2px solid black; padding: 5px; font-size:16px !important; font-family:sans-serif;border-top: 2px solid black;"><t t-esc="'{:,.2f}'.format(report_values[key]['total']['total_credit'])"/></td>
+                                          </t>
+                                          <t t-if="column == 'balance'">
+                                              <td class="text-end" style="border-bottom: 2px solid black; padding: 5px; font-size:16px !important; font-family:sans-serif;border-top: 2px solid black;">
+                                                  <t t-set="closing" t-value="report_values[key]['total']['total_balance']"/>
+                                                  <t t-if="closing &lt; 0">
+                                                      <span><t t-esc="'{:,.2f}'.format(abs(report_values[key]['total']['total_balance']))"/></span>
+                                                  </t>
+                                                  <t t-else="">
+                                                      <t t-esc="'{:,.2f}'.format(report_values[key]['total']['total_balance'])"/>
+                                                  </t> Cr
+                                              </td>
+                                          </t>
+                                      </t>
+                                  </tr>
+                                </t>
+                            </t>
+                            <t t-foreach="report_values.items()" t-as="total">
+                            <t t-set="key_total" t-value="total[0]"/>
+                            <t t-if="key_total == 'grand_total'">
+                                <tr>
+                                    <t t-foreach="report_columns" t-as="col">
+                                        <t t-if="col == 'date'">
+                                            <td class="text-center" style="text-align: left !important;"/>
+                                        </t>
+                                        <t t-if="col == 'doc'">
+                                            <td class="text-center" style="text-align: left !important;"/>
+                                        </t>
+                                        <t t-if="col == 'narration'">
+                                            <td class="" style="text-align: left !important;"/>
+                                        </t>
+                                        <t t-if="col == 'product_code'">
+                                            <td class="text-center" style="text-align: left !important;"/>
+                                        </t>
+                                        <t t-if="col == 'product_description'">
+                                            <td class="text-center" style="text-align: left !important;"/>
+                                        </t>
+                                        <t t-if="col == 'unit'">
+                                            <td class="text-end"/>
+                                        </t>
+                                        <t t-if="col == 'quantity'">
+                                            <td class="text-end" style="border-bottom: 2px solid black; padding: 5px; font-size:16px !important; font-family:sans-serif;border-top: 2px solid black;"/>
+                                        </t>
+                                        <t t-if="col == 'rate'">
+                                            <td class="text-end" style="border-bottom: 2px solid black; padding: 5px; font-size:16px !important; font-family:sans-serif;border-top: 2px solid black;">Grand Total</td>
+                                        </t>
+                                        <t t-if="col == 'excluding_sale_tax'">
+                                            <td class="text-end" style="border-bottom: 2px solid black; padding: 5px; font-size:16px !important; font-family:sans-serif;border-top: 2px solid black;"><t t-esc="'{:,.2f}'.format(report_values['grand_total']['grand_total_exclude_tax2'])"/></td>
+                                        </t>
+                                        <t t-if="col == 'sale_tax_amount'">
+                                            <td class="text-end" style="border-bottom: 2px solid black; padding: 5px; font-size:16px !important; font-family:sans-serif;border-top: 2px solid black;"><t t-esc="'{:,.2f}'.format(report_values['grand_total']['grand_total_tax_amount2'])"/></td>
+                                        </t>.
+                                        <t t-if="col == 'debit'">
+                                            <td class="text-end" style="border-bottom: 2px solid black; padding: 5px; font-size:16px !important; font-family:sans-serif;border-top: 2px solid black;"><t t-esc="'{:,.2f}'.format(report_values['grand_total']['grand_total_debit2'])"/></td>
+                                        </t>
+                                        <t t-if="col == 'credit'">
+                                            <td class="text-end" style="border-bottom: 2px solid black; padding: 5px; font-size:16px !important; font-family:sans-serif;border-top: 2px solid black;"><t t-esc="'{:,.2f}'.format(report_values['grand_total']['grand_total_credit2'])"/></td>
+                                        </t>
+                                        <t t-if="col == 'balance'">
+                                            <td class="text-end" style="border-bottom: 2px solid black; padding: 5px; font-size:16px !important; font-family:sans-serif;border-top: 2px solid black;"><t t-esc="'{:,.2f}'.format(abs(report_values['grand_total']['grand_total_balance2']))"/> Cr</td>
+                                        </t>
+                                    </t>
+                                </tr>
+                            </t>
+                          </t>
+                        </tbody>
+                </table>
+                </div>
+            </t>
+        </t>
+    </template>
+    <template id="external_layout_supplier_legder" >
+		<t t-if="not o" t-set="o" t-value="doc" />
+		<t t-if="not company">
+			<t t-if="company_id">
+				<t t-set="company" t-value="company_id" />
+			</t>
+			<t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+				<t t-set="company" t-value="o.company_id.sudo()" />
+			</t>
+			<t t-else="else">
+				<t t-set="company" t-value="res_company" />
+			</t>
+		</t>
+		<div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
+		</div>
+		<div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout {{  'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}" t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+			<div class="pt-5">
+                <t t-call="web.address_layout" />
+			</div>
+			<t t-out="0" />
+		</div>
+		<div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+			<div class="text-center" style="border-top: 1px solid black;">
+				<div t-if="report_type == 'pdf'" class="text-muted">
+					Page:
+					<span class="page" /> / <span class="topage" />
+				</div>
+				<div t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted">
+					<span t-field="o.name" />
+				</div>
+			</div>
+		</div>
+	</template>
+
+    <record id="paperformatsupplierledger" model="report.paperformat">
+		<field name="name">Landscape Aged Payable Sheet</field>
+		<field name="default" eval="True" />
+		<field name="format">A3</field>
+		<field name="orientation">Landscape</field>
+		<field name="margin_top">2.00</field>
+		<field name="margin_bottom">12.00</field>
+		<field name="margin_left">5</field>
+		<field name="margin_right">5</field>
+		<field name="header_spacing">12</field>
+		<field name="disable_shrinking" eval="False" />
+		<field name="header_line" eval="False" />
+		<field name="dpi">110</field>
+	</record>
+
+    <record id="action_report_supplier_ledger" model="ir.actions.report">
+        <field name="name">Partner Ledger Report</field>
+        <field name="model">partner.ledger.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">aged_receviable_report.supplier_report</field>
+        <field name="report_file">aged_receviable_report.supplier_report</field>
+        <field name="paperformat_id" ref="paperformatsupplierledger" />
+    </record>
+    
+</odoo>

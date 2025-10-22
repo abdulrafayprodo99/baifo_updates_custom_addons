@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_procurement_budget_management,access.procurement.budget.management,model_procurement_budget_management,,1,1,1,1
+access_budget_move_lines,access.budget.move.lines,model_budget_move_lines,,1,1,1,1
+access_purchase_budget_estimation_lines,access.purchase.budget.estimation.lines,model_purchase_budget_estimation_lines,,1,1,1,1
+access_procurement_budget_management_lines,access.procurement.budget.management.lines,model_procurement_budget_management_lines,,1,1,1,1
+access_procurement_budget_wizard,access.procurement.budget.wizard,model_procurement_budget_wizard,,1,1,1,1

@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="view_tax_payment_report_wizard" model="ir.ui.view">
+        <field name="name">tax.payment.report.wizard.form</field>
+        <field name="model">tax.payment.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Tax Payment Receipt Excel">
+                <group>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                </group>
+                <footer>
+                    <button name="generate_report" string="Generate Excel" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_tax_payment_report_wizard" model="ir.actions.act_window">
+        <field name="name">Tax Payment Report</field>
+        <field name="res_model">tax.payment.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    
+    
+    <record id="view_payment_wht_tree_excel_btn" model="ir.ui.view">
+        <field name="name">payment.wht.tree.excel.btn</field>
+        <field name="model">payment.wht.line</field>
+        <field name="inherit_id" ref="wht_extension.view_payment_wht_receipt_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">button_name</attribute>
+            </xpath>
+        </field>
+    </record>
+    
+
+
+    
+</odoo>

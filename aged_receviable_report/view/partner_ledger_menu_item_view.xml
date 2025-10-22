@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="partner_ledger_report" model="ir.ui.view">
+        <field name="name">partner.ledger.report</field>
+        <field name="model">partner.ledger.report</field>
+        <field name="arch" type="xml">
+            <form string="Supplier Ledger">
+                <group name="main_options">
+                    <group>
+                        <!-- Selection Mode: Use Supplier List or Range -->
+                        <field name="selection_mode"/>
+                    </group>
+                    <group>
+                        <!-- Suppliers List Field (Visible when selection_mode is 'supplier_ids') -->
+                        <field name="supplier_ids" 
+                               widget="many2many_tags" 
+                               options="{'no_create': True}" 
+                               attrs="{'invisible': [('selection_mode', '=', 'range')]}"/>
+                        <!-- From and To Supplier Fields (Visible when selection_mode is 'range') -->
+                        <field name="from_supplier" 
+                               attrs="{'invisible': [('selection_mode', '=', 'supplier_ids')]}"/>
+                        <field name="to_supplier" 
+                               attrs="{'invisible': [('selection_mode', '=', 'supplier_ids')]}"/>
+                    </group>
+                    <group>
+                        <!-- Date Range Fields -->
+                        <field name="from_date"/>
+                        <field name="to_date"/>
+                    </group>
+                </group>
+                
+                <!-- Columns Selection Group -->
+                <group name="columns">
+                    <group string="Column 1">
+                        <field name="date"/>
+                        <field name="doc"/>
+                        <field name="narration"/>
+                        <field name="product_code"/>
+                        <field name="product_description"/>
+                        <field name="unit"/>
+                    </group>
+                    <group string="Column 2">
+                        <field name="quantity"/>
+                        <field name="rate"/>
+                        <field name="excluding_sale_tax"/>
+                        <field name="sale_tax_amount"/>
+                        <field name="debit"/>
+                        <field name="credit"/>
+                        <field name="balance"/>
+                    </group>
+                </group>
+                
+                <!-- Footer with Action Buttons -->
+                <footer>
+                    <button string="Show Report" type="object" name="action_supplier" class="btn-primary"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Define the client action for triggering OWL component -->
+    <record id="action_supplier_ledger_report_js" model="ir.actions.client">
+        <field name="name">Partner Ledger Report</field>
+        <field name="tag">aged_receivable_report.action_supplier_ledger_report</field>
+    </record>
+</odoo>

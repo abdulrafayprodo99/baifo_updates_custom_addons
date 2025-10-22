@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem 
+        id="sub_menu_action_open_asset_class"
+        name="Asset Class" 
+        parent="account.menu_finance_entries_management"
+        sequence="102"
+        action="action_open_asset_class"
+    />
+
+    <menuitem 
+        id="sub_menu_action_open_sub_asset_class" 
+        name="Sub Asset Class"
+        parent="account.menu_finance_entries_management"
+        sequence="102"
+        action="action_open_sub_asset_class"
+    />
+  
+</odoo>

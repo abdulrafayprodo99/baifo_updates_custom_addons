@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ledger_report_action" model="ir.actions.act_window">
+        <field name="name">Partner Ledger Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">partner.ledger.report</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="partner_ledger_report"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_ledger_report" name="Partner Ledger Report"
+    parent="account.menu_finance_reports" 
+    action="ledger_report_action"
+    sequence="99"/>
+
+    <!-- <menuitem id="Supplier_ledger_report" name="Supplier Ledger Report"
+    parent="account.menu_finance" 
+    action="action_supplier_ledger_report_js"
+    sequence="99"/> -->
+
+</odoo>

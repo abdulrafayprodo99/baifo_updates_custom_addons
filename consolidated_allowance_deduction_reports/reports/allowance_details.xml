@@ -1,0 +1,128 @@
+<odoo>
+    <record id="action_allowance_details" model="ir.actions.report">
+        <field name="name">Allowance Details Report</field>
+        <field name="model">allowances.deduction</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">consolidated_allowance_deduction_reports.allowance_details_template</field>
+        <field name="report_file">consolidated_allowance_deduction_reports.allowance_details_template</field>
+        <field name="binding_model_id" ref="allowances_deduction_employee_form.model_allowances_deduction"/>
+        <field name="binding_type">report</field>
+    </record>
+<template id="allowance_details_template">
+    <t t-call="web.html_container">
+        <t t-set="data" t-value="report_data"/>
+        <t t-set="grouped_data" t-value="data['grouped_data']"/>
+        <t t-set="grand_totals" t-value="data['grand_totals']"/>
+
+        <!-- Report Header -->
+        <div class="text-center" style="margin-top: 20px; margin-bottom: 20px; font-family: Arial;">
+            <h1 style="text-transform: uppercase; font-weight: bold; margin: 0;">
+                BIAFO INDUSTRIES LIMITED
+            </h1>
+            <h2 style="text-transform: uppercase; font-weight: bold; margin: 0;">
+                <t t-esc="data['allowance_type'].replace('_', ' ')"/> CONTRIBUTION
+            </h2>
+            <h3 style="margin: 5px 0; font-weight: normal;">
+                Employee / Management Contribution
+            </h3>
+            <p style="margin: 0;">For <t t-esc="data['month']"/> <t t-esc="data['year']"/></p>
+        </div>
+
+        <!-- Table Header -->
+        <table class="table table-condensed" style="width: 100%; margin-top: 20px; border-collapse: collapse; font-family: Arial;">
+            <thead>
+                <tr style="border-bottom: 1px solid black;">
+                    <th style="text-align: center;">S.No</th>
+                    <th style="text-align: left;">EMP.CODE</th>
+                    <th style="text-align: left;">NAME</th>
+                    <th style="text-align: left;">DESIGNATION</th>
+                    <th style="text-align: right;">Employee Contribution</th>
+                    <th style="text-align: right;">Employer Contribution</th>
+                    <th style="text-align: right;">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <t t-set="serial" t-value="1"/>
+                <t t-foreach="grouped_data.items()" t-as="office">
+                    <!-- Filter offices with totals > 0 -->
+                    <t t-if="sum(e['total'] or 0 for d in office[1].items() for e in d[1] if e['total'] > 0) > 0">
+                        <tr>
+                            <td colspan="7" style="font-weight: bold; padding: 5px; background-color: #f0f0f0;"> 
+                                <t t-esc="office[0]"/> <!-- Office Name -->
+                            </td>
+                        </tr>
+                        <t t-foreach="office[1].items()" t-as="department">
+                            <!-- Filter departments with rows having totals > 0 -->
+                            <t t-if="any(e['total'] > 0 for e in department[1])">
+                                <tr>
+                                    <td colspan="7" style="padding-left: 20px; font-weight: bold;">
+                                        <t t-esc="department[0]"/> <!-- Department Name -->
+                                    </td>
+                                </tr>
+                                <t t-foreach="department[1]" t-as="employee">
+                                    <!-- Exclude employees with total = 0 -->
+                                    <t t-if="employee['total'] > 0">
+                                        <tr>
+                                            <td style="text-align: center;">
+                                                <t t-esc="serial"/>
+                                                <t t-set="serial" t-value="serial + 1"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="employee['emp_code'] or 'N/A'"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="employee['emp_name'] or 'N/A'"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="employee['designation'] or 'N/A'"/>
+                                            </td>
+                                            <td style="text-align: right;">
+                                                <t t-esc="'{:,.2f}'.format(employee['employee_contribution'] or 0)"/>
+                                            </td>
+                                            <td style="text-align: right;">
+                                                <t t-esc="'{:,.2f}'.format(employee['employer_contribution'] or 0)"/>
+                                            </td>
+                                            <td style="text-align: right;">
+                                                <t t-esc="'{:,.2f}'.format(employee['total'] or 0)"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                                <!-- Department Subtotal with border-top -->
+                                <tr style="border-top: 2px solid black; font-weight: bold;">
+                                    <td colspan="4" style="text-align: right;">SUB TOTAL</td>
+                                    <td style="text-align: right;">
+                                        <t t-esc="'{:,.2f}'.format(sum(e['employee_contribution'] or 0 for e in department[1] if e['total'] > 0))"/>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <t t-esc="'{:,.2f}'.format(sum(e['employer_contribution'] or 0 for e in department[1] if e['total'] > 0))"/>
+                                    </td>
+                                    <td style="text-align: right;">
+                                        <t t-esc="'{:,.2f}'.format(sum(e['total'] or 0 for e in department[1] if e['total'] > 0))"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                    </t>
+                </t>
+            </tbody>
+            <tfoot>
+                <!-- Grand Total with only border-top -->
+                <tr style="border-top: 2px solid black; border-bottom: 2px solid black; font-weight: bold;">
+                    <td colspan="4" style="text-align: right;">GRAND TOTAL</td>
+                    <td style="text-align: right;">
+                        <t t-esc="'{:,.2f}'.format(grand_totals['employee_contribution'] or 0)"/>
+                    </td>
+                    <td style="text-align: right;">
+                        <t t-esc="'{:,.2f}'.format(grand_totals['employer_contribution'] or 0)"/>
+                    </td>
+                    <td style="text-align: right;">
+                        <t t-esc="'{:,.2f}'.format(grand_totals['total'] or 0)"/>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </t>
+</template>
+
+</odoo>

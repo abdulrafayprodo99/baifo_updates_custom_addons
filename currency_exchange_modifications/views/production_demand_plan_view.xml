@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="production_demand_plan_form_inherit" model="ir.ui.view">
+        <field name="name">production.demand.plan.form.inherit</field>
+        <field name="model">production.demand.plan</field>
+        <field name="inherit_id" ref="production_demand_plan.view_production_demand_order"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='location_dest_id']" position="after">
+                <field name="cost_field" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

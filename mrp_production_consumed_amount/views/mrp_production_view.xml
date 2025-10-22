@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_mrp_production_form_inherit" model="ir.ui.view">
+        <field name="name">mrp.production.form.inherit</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <div style="text-align:right; width: 100%; padding: 30px;">
+                    <label for="total_quantity_done"  class="oe_inline"/>
+                        <field name="total_quantity_done" string="Total Consumed"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- M Azeem added below record for the fields. Task: 43344 -->
+    <record id="view_mrp_production_tree_inherit" model="ir.ui.view">
+        <field name="name">mrp.production.tree.inherit</field>
+        <field name="model">mrp.production</field>  
+        <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>  
+        <field name="arch" type="xml">
+            <!-- Hiding the old field -->
+            <field name="date_planned_start" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+
+            <!-- Adding new date field -->
+            <field name="name" position="after">
+                <field name="planned_date_start" optional="show"/>
+                <field name="date_planned_finished" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

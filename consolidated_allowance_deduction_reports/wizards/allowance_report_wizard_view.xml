@@ -1,0 +1,42 @@
+<odoo>
+    <!-- Wizard View -->
+    <record id="view_allowance_report_wizard" model="ir.ui.view">
+        <field name="name">allowance.report.wizard.form</field>
+        <field name="model">allowance.report.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="month"/>
+                    <field name="year"/>
+                    <field name="allowance_type"/>
+                    <field name="report_type" widget="radio"/>
+                </group>
+                <footer>
+                    <button name="generate_report" string="Generate Report" type="object" class="btn-primary" />
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Wizard Action -->
+    <record id="action_allowance_report_wizard" model="ir.actions.act_window">
+        <field name="name">Generate Allowance Report</field>
+        <field name="res_model">allowance.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Menu Item for Wizard -->
+    <menuitem id="menu_allowance_report_wizard"
+              name="Allowance Report"
+              parent="hr_payroll.menu_hr_payroll_report"
+              action="action_allowance_report_wizard"
+              sequence="10"/>
+
+    <menuitem id="allowances_deduction_parent"
+          name='Allowances Deduction'
+          parent='allowances_deduction_employee_form.allowances_deduction_parent'
+          action='allowances_deduction_employee_form.action_allowances_deduction'
+          sequence="1"/>
+</odoo>

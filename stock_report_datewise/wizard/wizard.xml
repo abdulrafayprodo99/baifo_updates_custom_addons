@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <!-- model.name form view -->
+<record id="stock_report_wizard_view" model="ir.ui.view">
+    <field name="name">Stock Report Date Wise Wizard</field>
+    <field name="model">stock.report.datewise</field>
+    <field name="arch" type="xml">
+        <form string="Stock Report Wizard">
+            <group>
+                <field name='date_from'/>
+            </group>
+            <group>
+                <field name='date_to'/>
+               
+            </group>
+            <footer>
+                    <button name="generate_report" type="object" string="Print" class="oe_highlight"/>
+                    <button string="Cancel" class="btn btn-default" special="cancel"/>
+            </footer>
+        </form>
+    </field>
+</record>
+<!-- model.name action window -->
+<record id="stock_report_wizard_action" model="ir.actions.act_window">
+    <field name="name">Stock Report Wizard Date Wise</field>
+    <field name="res_model">stock.report.datewise</field>
+    <field name="view_mode">form</field>
+    <field name="target">new</field>
+</record>
+<menuitem id="stock_report_date_wise"
+              name="Stock Report Date Wise"
+              parent="stock.menu_warehouse_report"
+              action="stock_report_wizard_action"
+    />
+
+</odoo>

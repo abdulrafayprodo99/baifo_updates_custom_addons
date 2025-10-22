@@ -1,0 +1,17 @@
+<odoo>
+    <record id="view_approval_note_modification" model="ir.ui.view">
+        <field name="name">approval.note.modification</field>
+        <field name="model">rfq.comparison</field>
+        <field name="inherit_id" ref="prodo_x_biafo_ext.view_rfq_comparison_model_form"/>
+        <field name="arch" type="xml">
+             <!-- Target the remarks field and make it required -->
+            <xpath expr="//field[@name='remarks']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+
+            <xpath expr="//button[@name='action_approve_by_ceo']" position="attributes">
+                <attribute name="string">Approve By CEO</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

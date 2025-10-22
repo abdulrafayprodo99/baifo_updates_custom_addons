@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="view_account_specific_form">
+        <field name="name">account.account.form.inherit</field>
+        <field name="inherit_id" ref="account.view_account_form" />
+        <field name="model">account.account</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <field name="deprecated" position="after">
+                <field name="centralized" />
+            </field>
+        </field>
+    </record>
+
+
+
+    <!-- <record model="ir.ui.view" id="view_tag_account_move_line_tree_inherited">
+        <field name="name">view.tag.account.move.line.tree</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_tree" />
+        <field name="arch" type="xml">
+        <xpath expr="//field[@name='account_id']" position="after">
+            <field name="tax_tag_ids" widget="many2many_tags"/>
+        </xpath>
+        </field>
+    </record> -->
+
+
+
+
+</odoo>

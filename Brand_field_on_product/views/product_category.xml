@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Rao Abdul Rehman -->
+    <!-- Inherit the product category tree view -->
+    <record id="custom_product_category_list_view" model="ir.ui.view">
+        <field name="name">custom.product.category.tree.view</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_list_view"/>
+        <field name="arch" type="xml">
+            <!-- Using the provided XPath to insert field after display_name -->
+            <xpath expr="//field[@name='display_name']" position="after">
+                <field optional="show" name="child_ids" widget="many2many_tags"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="custom_view_picking_form" model="ir.ui.view">
+        <field name="name">custom.stock.picking.form.view</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <!-- Using the provided XPath to insert field after display_name -->
+            <xpath expr="//button[@name='action_show_details']" position="replace">
+                <button name="action_show_details_modified" type="object" icon="fa-list" width="0.1" title="Details" attrs="{'invisible': [('show_details_visible', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

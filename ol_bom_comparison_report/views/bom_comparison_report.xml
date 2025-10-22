@@ -1,0 +1,286 @@
+<odoo>
+    <!-- Report Action -->
+
+    <record id="paperformat_bom_comparison" model="report.paperformat">
+        <field name="name">BOM Comparison Report Format</field>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field> <!-- Changed to Landscape -->
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_spacing">35</field>
+        <field name="dpi">90</field>
+        <field name="header_line">False</field>
+        <field name="disable_shrinking">False</field>
+    </record>    
+
+    <record id="action_bom_comparison_pdf" model="ir.actions.report">
+        <field name="name">BOM Comparison Report</field>
+        <field name="model">bom.comparison.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ol_bom_comparison_report.report_bom_comparison_pdf</field>
+        <field name="report_file">ol_bom_comparison_report.report_bom_comparison_pdf</field>
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="ol_bom_comparison_report.paperformat_bom_comparison" />
+        <field name="print_report_name">'BOM Comparison Summary Report'</field>
+    </record>
+
+    <!-- Report Template -->
+    <template t-name="ol_bom_comparison_report.report_bom_comparison_pdf">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+            <link href="https://fonts.googleapis.com/css2?family=EB+Garamond" rel="stylesheet"/>
+               <div class="page" style="font-family:Segoe UI;">
+                    <!-- Header Section -->
+                    <h3 style="text-align: center; font-size: 18px; font-weight:bold;">Biafo Industries Limited</h3>
+                    <h4 style="text-align: center; font-size: 18px; font-weight:bold;">BOM Comparison Summary Report</h4>
+                    <p style="text-align: center;">
+                        <t t-esc="report_data['period']"/> |
+                        <strong/> <t t-esc="report_data['product_desc']"/>
+                        
+                    </p>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>
+                        Date: <t t-esc="report_data['date']"/>
+                        </span>
+                        <span style="float: right;">
+                            Time: <t t-esc="report_data['time']"/>
+                        </span>
+                    </div>
+                    <div style="border-top: 1px solid black; padding: 5px 0; margin-top:7px;"/>
+                    
+                    <h5 style="padding-bottom: 20px;"/>
+                    <table class="table" style="width: 100%; margin-top: 10px; border: none; border-collapse: collapse; text-align: center; border-spacing: 0; font-size: 13px;">
+                                <colgroup>
+                                      <col style="width: 4.5%;"/>
+                                    <col style="width: 9.5%;"/>
+                                    <col style="width: 22%;"/>
+                                    <col style="width: 10%;"/>
+                                    <col style="width: 10%;"/>
+                                    <col style="width: 5%;"/>
+                                    <col style="width: 10%;"/>
+                                    <col style="width: 10%;"/>
+                                    <col style="width: 5%;"/>
+                                    <col style="width: 10%;"/>
+                                    <col style="width: 10%;"/>
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <!--<th style="border:none; border-style:hidden;"/>-->
+                                        <th colspan="3" style="outline:none; border-color: white; padding: 5px;"/>
+                                        <th colspan="2" style="outline:none; border-color: white; border-bottom: 1px solid black; padding: 5px 0px 5px 40px; border-top:none; font-weight: bold;">Actual</th>
+                                        <th style="border:none;"/>
+                                        <th colspan="2" style="outline:none; border-color: white; border-bottom: 1px solid black; padding: 5px 0px 5px 40px; font-weight: bold;">Standard</th>
+                                        <th style="border:none;"/>
+                                        <th colspan="2" style="outline:none; border-color: white; border-bottom: 1px solid black;  padding: 5px 0px 5px 40px; font-weight: bold;">Variance</th>
+                                        <th style="outline:none; border-color: white; border-style: hidden; padding: 5px;"/>
+                                    </tr>
+
+                                    <tr style="border:none;">
+                                        <th style="text-align:left; outline:none; border-color: white; border-bottom: 1px solid black; padding: 5px; font-weight: bold;">Type</th>
+                                        <th style="text-align:left; outline:none; border-color: white; border-bottom: 1px solid black; padding: 5px; font-weight: bold;">Product</th>
+                                        <th style="text-align:left; outline:none; border-color: white; border-bottom: 1px solid black; padding: 5px; font-weight: bold;">Description</th>
+                                        <th style="outline:none; border-color: white; border-bottom: 1px solid black; padding: 5px 5px; font-weight: bold;  text-align:right;">Quantity</th>
+                                        <th style="outline:none; border-color: white; border-bottom: 1px solid black; padding: 5px 5px; font-weight: bold;  text-align:right;">Amount</th>
+                                        <th style="border:none;"/>
+                                        <th style="outline:none; border-color: white; border-bottom: 1px solid black; padding: 5px 25px; font-weight: bold;  text-align:right;">Quantity</th>
+                                        <th style="outline:none; border-color: white; border-bottom: 1px solid black; padding: 5px 20px; font-weight: bold;  text-align:right;">Amount</th>
+                                        <th style="border:none;"/>
+                                        <th style="outline:none; border-color: white; border-bottom: 1px solid black; padding: 5px 45px; font-weight: bold;  text-align:right;">Quantity</th>
+                                        <th style="outline:none; border-color: white; border-bottom: 1px solid black; padding: 5px 10px; font-weight: bold;  text-align:right;">Amount</th>
+                                        <th style="border:none; outline:none; border-style:hidden;"/>
+                                    </tr>
+                                    
+                                </thead>
+                            </table>
+                    
+                    <!-- Products Section -->
+                    <t t-foreach="report_data['products']" t-as="product">
+                        <div style="padding-bottom: 25px;">
+                            
+                            <table class="table" style="width: 100%; margin-top: 10px; border: none; border-collapse: collapse; text-align: center; border-spacing: 0; font-size: 13px;">
+                                <colgroup>
+                                    <col style="width: 4.5%;"/>
+                                    <col style="width: 9.5%;"/>
+                                    <col style="width: 22%;"/>
+                                    <col style="width: 10%;"/>
+                                    <col style="width: 10%;"/>
+                                    <col style="width: 5%;"/>
+                                    <col style="width: 10%;"/>
+                                    <col style="width: 10%;"/>
+                                    <col style="width: 5%;"/>
+                                    <col style="width: 10%;"/>
+                                    <col style="width: 10%;"/>
+                                </colgroup>
+                                <tr>
+                                        <strong>
+                                        <td style="outline:none; border-color: white; text-align:left; padding: 5px; border-style:hidden; font-weight: bold;" colspan="9">Production</td>
+                                        </strong>
+                                    </tr>
+                                <tbody style="border-color:white;">
+                                <t t-set="total_actual_quantity" t-value="0"/>
+                                <t t-set="total_actual_amount" t-value="0"/>
+                                <t t-set="total_standard_quantity" t-value="0"/>
+                                <t t-set="total_standard_amount" t-value="0"/>
+                                <t t-set="total_variance_quantity" t-value="0"/>
+                                <t t-set="total_variance_amount" t-value="0"/>
+                                <t t-foreach="product['production']" t-as="prod">
+                                    <tr>
+                                        <td style="outline:none; border-color: white;  border-top: none; padding: 1px;" colspan="1"/>
+                                        <td style="outline:none; border-color: white; text-align:left; padding: 5px;"><t t-esc="prod['product_code']"/></td>
+                                        <td style="outline:none; border-color: white; text-align:left; padding: 5px;"><t t-esc="prod['description']"/></td>
+                                        <td style="outline:none; border-color: white; text-align:right; padding:;">
+                                            <t t-set="total_actual_quantity" t-value="total_actual_quantity + prod['actual']['quantity']"/>
+                                            <t t-esc="'({:,.2f})'.format(abs(prod['actual']['quantity'])) if prod['actual']['quantity'] &lt; 0 else '{:,.2f}'.format(prod['actual']['quantity'])"/>
+                                        </td>
+                                        <td style="outline:none; border-color: white; text-align:right; padding: 5px 10px;">
+                                            <t t-set="total_actual_amount" t-value="total_actual_amount + prod['actual']['amount']"/>
+                                            <t t-esc="'({:,.2f})'.format(abs(prod['actual']['amount'])) if prod['actual']['amount'] &lt; 0 else '{:,.2f}'.format(prod['actual']['amount'])"/>
+                                        </td>
+                                        <td style="outline:none; border-color: white; padding: 5px;"/>
+                                        <td style="outline:none; border-color: white; text-align:right; padding:;">
+                                            <t t-set="total_standard_quantity" t-value="total_standard_quantity + prod['standard']['quantity']"/>
+                                            <t t-esc="'({:,.2f})'.format(abs(prod['standard']['quantity'])) if prod['standard']['quantity'] &lt; 0 else '{:,.2f}'.format(prod['standard']['quantity'])"/>
+                                        </td>
+                                        <td style="outline:none; border-color: white; text-align:right; padding: 5px 15px;">
+                                            <t t-set="total_standard_amount" t-value="total_standard_amount + prod['standard']['amount']"/>
+                                            <t t-esc="'({:,.2f})'.format(abs(prod['standard']['amount'])) if prod['standard']['amount'] &lt; 0 else '{:,.2f}'.format(prod['standard']['amount'])"/>
+                                        </td>
+                                        <td style="outline:none; border-color: white; padding: 5px;"/>
+                                        <td style="outline:none; border-color: white; text-align:right; padding: ;">
+                                            <t t-set="total_variance_quantity" t-value="total_variance_quantity + prod['variance']['quantity']"/>
+                                            <t t-esc="'({:,.2f})'.format(abs(prod['variance']['quantity'])) if prod['variance']['quantity'] &lt; 0 else '{:,.2f}'.format(prod['variance']['quantity'])"/>
+                                        </td>
+                                        <td style="outline:none; border-color: white; text-align:right; padding: 5px 10px;">
+                                            <t style="padding: 5px 30px;" t-set="total_variance_amount" t-value="total_variance_amount + prod['variance']['amount']"/>
+                                            <t t-esc="'({:,.2f})'.format(abs(prod['variance']['amount'])) if prod['variance']['amount'] &lt; 0 else '{:,.2f}'.format(prod['variance']['amount'])"/>
+                                        </td>
+                                        <td style="outline:none; border-color: white; padding: 5px;"/>
+                                    </tr>
+                                </t>
+                                <!-- Production Total Row -->
+                                    <tr style=" border:0px white; ">
+                                    
+                                        <td style="text-align:right; padding: 5px 10px; border-top: 0px white; border-bottom: 0px white; font-weight: bold;">
+                                            <!--<t t-esc="'({:,.2f})'.format(abs(total_actual_quantity)) if total_actual_quantity &lt; 0 else '{:,.2f}'.format(total_actual_quantity)"/>-->
+                                        </td>
+                                        <td colspan="3" style="text-align: right; padding: 5px; font-weight: bold;"><strong>Total</strong></td>
+                                        <td style="text-align:right; padding: 5px 10px; border-top: 2px solid black; border-bottom: 2px solid black; font-weight: bold;">
+                                            <t t-esc="'({:,.2f})'.format(abs(total_actual_amount)) if total_actual_amount &lt; 0 else '{:,.2f}'.format(total_actual_amount)"/>
+                                        </td>
+                                        <td style="padding: 5px; border-style:hidden;"/>
+                                        <td style="text-align:right; padding: 5px 10px; border-style:hidden; border-top: 0px white; border-bottom: 0px white; font-weight: bold;">
+                                            <!--<t t-esc="'({:,.2f})'.format(abs(total_standard_quantity)) if total_standard_quantity &lt; 0 else '{:,.2f}'.format(total_standard_quantity)"/>-->
+                                        </td>
+                                        <td style="text-align:right; padding: 5px 15px; border-top: 2px solid black; border-bottom: 2px solid black; font-weight: bold;">
+                                            <t t-esc="'({:,.2f})'.format(abs(total_standard_amount)) if total_standard_amount &lt; 0 else '{:,.2f}'.format(total_standard_amount)"/>
+                                        </td>
+                                        <td style="padding: 5px;"/>
+                                        <td style="text-align:right; padding: 5px 10px; border-style:hidden; border:none; border-top: 0px solid black; border-bottom: 0px white; font-weight: bold;">
+                                            <!--<t t-esc="'({:,.2f})'.format(abs(total_variance_quantity)) if total_variance_quantity &lt; 0 else '{:,.2f}'.format(total_variance_quantity)"/>-->
+                                        </td>
+                                        <td style="text-align:right; padding: 5px 10px; border-top: 2px solid black; border-bottom: 2px solid black; font-weight: bold;">
+                                            <t t-esc="'({:,.2f})'.format(abs(total_variance_amount)) if total_variance_amount &lt; 0 else '{:,.2f}'.format(total_variance_amount)"/>
+                                        </td>
+                                        <td style="padding: 5px;"/>
+                                    </tr>
+                            </tbody>
+                            </table>
+
+                            <!-- Consumption Table -->
+                            <table class="table" style="border-stlye:hidden; boder: 0px white; width: 100%; margin-top: 10px; margin-bottom: 20px;  padding-bottom: 20px; text-align: center; font-size: 13px;">
+                                <colgroup>
+                                   <col style="width: 4.5%;"/>
+                                    <col style="width: 9.5%;"/>
+                                    <col style="width: 22%;"/>
+                                    <col style="width: 10%;"/>
+                                    <col style="width: 10%;"/>
+                                    <col style="width: 5%;"/>
+                                    <col style="width: 10%;"/>
+                                    <col style="width: 10%;"/>
+                                    <col style="width: 5%;"/>
+                                    <col style="width: 10%;"/>
+                                    <col style="width: 10%;"/>
+                                </colgroup>
+                                <thead>
+                                    <tr style="boder: 0px white;">
+                                        <td style="outline:none; border-color: white; text-align:left; padding: 5px; border-style:hidden; font-weight: bold;" colspan="9">Consumption</td>
+                                    </tr>
+                                </thead>
+                                <tbody style="border-color:white; padding-bottom: 20px;">
+                                <t t-set="total_actual_quantity" t-value="0"/>
+                                <t t-set="total_actual_amount" t-value="0"/>
+                                <t t-set="total_standard_quantity" t-value="0"/>
+                                <t t-set="total_standard_amount" t-value="0"/>
+                                <t t-set="total_variance_quantity" t-value="0"/>
+                                <t t-set="total_variance_amount" t-value="0"/>
+                                <t t-foreach="product['consumption']" t-as="cons">
+                                    <tr>
+                                        <td style="outline:none; border-color: white;  border-top: none; padding: 5px;" colspan="1"/>
+                                        <td style="outline:none; border-color: white; text-align:left; padding: 5px;"><t t-esc="cons['product_code']"/></td>
+                                        <td style="outline:none; border-color: white; text-align:left; padding: 5px;"><t t-esc="cons['description']"/></td>
+                                        <td style="outline:none; border-color: white; text-align:right; padding: 5px 10px;">
+                                            <t t-set="total_actual_quantity" t-value="total_actual_quantity + cons['actual']['quantity']"/>
+                                            <t t-esc="'{:,.2f}'.format(abs(cons['actual']['quantity'])) if cons['actual']['quantity'] &lt; 0 else '{:,.2f}'.format(cons['actual']['quantity'])"/>
+                                        </td>
+                                        <td style="outline:none; border-color: white; text-align:right; padding: 5px 10px;">
+                                            <t t-set="total_actual_amount" t-value="total_actual_amount + cons['actual']['amount']"/>
+                                            <t t-esc="'{:,.2f}'.format(abs(cons['actual']['amount'])) if cons['actual']['amount'] &lt; 0 else '{:,.2f}'.format(cons['actual']['amount'])"/>
+                                        </td>
+                                        <td style="outline:none; border-color: white; padding: 5px;"/>
+                                        <td style="outline:none; border-color: white; text-align:right; padding: 5px 10px;">
+                                            <t t-set="total_standard_quantity" t-value="total_standard_quantity + cons['standard']['quantity']"/>
+                                            <t t-esc="'({:,.2f})'.format(abs(cons['standard']['quantity'])) if cons['standard']['quantity'] &lt; 0 else '{:,.2f}'.format(cons['standard']['quantity'])"/>
+                                        </td>
+                                        <td style="outline:none; border-color: white; text-align:right; padding: 5px 10px;">
+                                            <t t-set="total_standard_amount" t-value="total_standard_amount + cons['standard']['amount']"/>
+                                            <t t-esc="'({:,.2f})'.format(abs(cons['standard']['amount'])) if cons['standard']['amount'] &lt; 0 else '{:,.2f}'.format(cons['standard']['amount'])"/>
+                                        </td>
+                                        <td style="outline:none; border-color: white; padding: 5px;"/>
+                                        <td style="outline:none; border-color: white; text-align:right; padding: 5px 10px;">
+                                            <t t-set="total_variance_quantity" t-value="total_variance_quantity + cons['variance']['quantity']"/>
+                                            <t t-esc="'({:,.2f})'.format(abs(cons['variance']['quantity'])) if cons['variance']['quantity'] &lt; 0 else '{:,.2f}'.format(cons['variance']['quantity'])"/>
+                                        </td>
+                                        <td style="outline:none; border-color: white; text-align:right; padding: 5px 10px;">
+                                            <t t-set="total_variance_amount" t-value="total_variance_amount + cons['variance']['amount']"/>
+                                            <t t-esc="'({:,.2f})'.format(abs(cons['variance']['amount'])) if cons['variance']['amount'] &lt; 0 else '{:,.2f}'.format(cons['variance']['amount'])"/>
+                                        </td>
+                                        <td style="outline:none; border-color: white; padding: 5px;"/>
+                                    </tr>
+                                </t>
+                                <!-- Consumption Total Row -->
+                                <tr style="padding-bottom:20px !important; boder: 0px white;">
+                                    <td style="text-align:right; padding: 5px 10px; border-top: 0px white; border-bottom: 0px white; font-weight: bold;">
+                                        <!--<t t-esc="'({:,.2f})'.format(abs(total_actual_quantity)) if total_actual_quantity &lt; 0 else '{:,.2f}'.format(total_actual_quantity)"/>-->
+                                    </td>
+                                    <td colspan="3" style="text-align: right; padding: 5px; font-weight: bold;"><strong>Total</strong></td>
+                                    <td style="text-align:right; padding: 5px 10px; border-top: 2px solid black; border-bottom: 2px solid black; font-weight: bold;">
+                                        <t t-esc="'{:,.2f}'.format(abs(total_actual_amount)) if total_actual_amount &lt; 0 else '{:,.2f}'.format(total_actual_amount)"/>
+                                    </td>
+                                    <td style="padding: 5px;"/>
+                                    <td style="text-align:right; padding: 5px 10px; border-top: 0px white; border-bottom: 0px white; font-weight: bold;">
+                                        <!--<t t-esc="'({:,.2f})'.format(abs(total_standard_quantity)) if total_standard_quantity &lt; 0 else '{:,.2f}'.format(total_standard_quantity)"/>-->
+                                    </td>
+                                    <td style="text-align:right; padding: 5px 10px; border-top: 2px solid black; border-bottom: 2px solid black; font-weight: bold;">
+                                        <t t-esc="'({:,.2f})'.format(abs(total_standard_amount)) if total_standard_amount &lt; 0 else '{:,.2f}'.format(total_standard_amount)"/>
+                                    </td>
+                                    <td style="padding: 5px;"/>
+                                    <td style="text-align:right; padding: 5px 10px; border-top: 0px white; border-bottom: 0px white; font-weight: bold;">
+                                        <!--<t t-esc="'({:,.2f})'.format(abs(total_variance_quantity)) if total_variance_quantity &lt; 0 else '{:,.2f}'.format(total_variance_quantity)"/>-->
+                                    </td>
+                                    <td style="text-align:right; padding: 5px 10px; border-top: 2px solid black; border-bottom: 2px solid black; font-weight: bold;">
+                                        <t t-esc="'({:,.2f})'.format(abs(total_variance_amount)) if total_variance_amount &lt; 0 else '{:,.2f}'.format(total_variance_amount)"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            </table>
+                        </div>
+                        <hr/>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

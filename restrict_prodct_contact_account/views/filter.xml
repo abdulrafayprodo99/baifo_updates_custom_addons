@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="product_template_search_view_inherit" model="ir.ui.view">
+        <field name="name">product.template.search.stock.form.inherit</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="stock.product_template_search_form_view_stock"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='real_stock_negative']" position="after">
+                <separator/>
+                <filter string="To Approve" 
+                name="to_approve" 
+                domain="[('active', '=', False), ('approval_state', '=', 'prepared')]"
+                />
+            </xpath>
+
+            <xpath expr="//filter[@name='real_stock_negative']" position="after">
+                <separator/>
+                <filter string="To Verify" 
+                name="to_published" 
+                domain="[('active', '=', False), ('is_published', '=', False)]"
+                />
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="product_template_search_view_inherit_ribbin" model="ir.ui.view">
+        <field name="name">product.template.search.stock.form.inherit.ribbon</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sale_ok']" position="before">
+                <span class="d-inline-block">
+                    <field name="is_published"/>
+                    <label for="is_published"/>
+                </span>
+            </xpath>
+            <xpath expr="//widget[@name='web_ribbon']" position="replace">
+                <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': ['|', '|' ,('active', '=', True), '&amp;', ('active', '=', False), ('approval_state', '=', 'prepared'), '&amp;', ('active', '=', False), ('is_published', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+
+
+
+
+    <record id="res_partner_search_view_inherit" model="ir.ui.view">
+        <field name="name">res.partner.search.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='type_company']" position="after">
+                <separator/>
+                <filter string="To Approve" 
+                name="to_approve" 
+                domain="[('active', '=', False), ('approval_state', '=', 'verify')]"
+                />
+            </xpath>
+
+            <xpath expr="//filter[@name='type_company']" position="after">
+                <separator/>
+                <filter string="To Verify" 
+                name="to_published" 
+                domain="[('active', '=', False), ('is_published', '=', False)]"
+                />
+            </xpath>
+        </field>
+    </record>
+
+
+
+<!--    <record id="res_partner_search_view_inherit_ribbon" model="ir.ui.view">-->
+<!--        <field name="name">res.partner.search.form.inherit.ribbon</field>-->
+<!--        <field name="model">res.partner</field>-->
+<!--        <field name="inherit_id" ref="base.view_partner_form"/>-->
+
+<!--        <field name="arch" type="xml">-->
+<!--            <xpath expr="//field[@name='company_type']" position="after">-->
+<!--                <span class="d-inline-block">-->
+<!--                    <field name="is_published"/>-->
+<!--                    <label for="is_published"/>-->
+<!--                </span>-->
+<!--            </xpath>-->
+<!--            <xpath expr="//widget[@name='web_ribbon']" position="replace">-->
+<!--                <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': ['|', '|' ,('active', '=', True), '&amp;', ('active', '=', False), ('approval_state', '=', 'prepared'), '&amp;', ('active', '=', False), ('is_published', '=', False)]}"/>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
+
+
+    <record id="res_partner_kanban_view_inherit_ribbon" model="ir.ui.view">
+        <field name="name">res.partner.kanban.form.inherit.ribbon</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban/templates/t/div/div" position="replace">
+                <field name="approval_state" invisible="1"/>
+                <field name="is_published" invisible="1"/>
+                <div class="ribbon ribbon-top-right" attrs="{'invisible': ['|', '|' ,('active', '=', True), '&amp;', ('active', '=', False), ('approval_state', '=', 'prepared'), '&amp;', ('active', '=', False), ('is_published', '=', False)]}">
+                    <span class="bg-danger">Archived</span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+
+
+
+
+    
+
+    <record id="account_account_search_view_inherit" model="ir.ui.view">
+        <field name="name">account.account.search.form.inherit</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='expensesacc']" position="after">
+                <separator/>
+                <filter string="To Approve" 
+                name="to_approve" 
+                domain="[('deprecated', '=', True), ('approval_state', '=', 'prepared')]"
+                />
+            </xpath>
+
+            <xpath expr="//filter[@name='expensesacc']" position="after">
+                <separator/>
+                <filter string="To Verify" 
+                name="to_published" 
+                domain="[('deprecated', '=', True), ('is_published', '=', False)]"
+                />
+            </xpath>
+
+        </field>
+    </record>
+
+
+    <record id="account_account_form_view_inherit" model="ir.ui.view">
+        <field name="name">account.account.form.inherit</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <span class="d-inline-block">
+                    <field name="is_published"/>
+                    <label for="is_published"/>
+                </span>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- <record id="quant_search_view_inherit_product_expiry" model="ir.ui.view">
+        <field name="name">stock.quant.search.inherit</field>
+        <field name="model">stock.quant</field>
+        <field name="inherit_id" ref="stock.quant_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='reserved']" position="after">
+                <separator/>
+                <filter string="Expiration Alerts" name="expiration_alerts"
+                    domain="[('lot_id.alert_date', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
+            </xpath>
+        </field>
+     </record> -->
+</odoo>

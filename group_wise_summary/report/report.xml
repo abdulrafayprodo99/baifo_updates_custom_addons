@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    
+    <record id="sales_group_summary_report_pdf" model="ir.actions.report">
+        <field name="name">Group Wise Sales Summary Report</field>
+        <field name="model">sales.group.summary.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">group_wise_summary.sales_group_summary_reports</field>
+        <field name="report_file">group_wise_summary.sales_group_summary_reports</field>
+    </record>
+
+    
+</odoo>

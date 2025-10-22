@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_equipment_category_view_form_inherit" model="ir.ui.view">
+        <field name="name">maintenance.equipment.category.view.form.inherit</field>
+        <field name="model">maintenance.equipment.category</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_category_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='technician_user_id']" position="after">
+                <field name="equip_category_id"/>
+                <field name="equip_category_name"/>
+            </xpath>
+        </field>
+    </record>
+
+<record id="hr_equipment_view_form_inherit" model="ir.ui.view">
+    <field name="name">maintenance.equipment.view.form.inherit</field>
+    <field name="model">maintenance.equipment</field>
+    <field name="inherit_id" ref="maintenance.hr_equipment_view_form"/>
+    <field name="arch" type="xml">
+        <!-- Existing XPaths -->
+        <xpath expr="//field[@name='technician_user_id']" position="replace">
+            <field name="technician_user_id" domain="[('share', '=', False)]" string="Responsible"/>
+        </xpath>
+        <xpath expr="//field[@name='category_id']" position="after">
+            <field name="functional_location"/>
+        </xpath>
+        <xpath expr="//field[@name='equipment_assign_to']" position="before">
+            <field name="location" position="move" />
+        </xpath>
+        <xpath expr="//field[@name='equipment_assign_to']" position="after">
+            <field name="department_id" />
+            <field name="cost_center" />
+        </xpath>
+        <xpath expr="//field[@name='partner_ref']" position="after">
+            <field name="asset_tag_no" />
+            <field name="asset_tag_name" />
+        </xpath>
+        
+        <!-- Add a new Discipline Page after Maintenance Page -->
+        <xpath expr="//page[@name='maintenance']" position="after">
+            <page string="PM Work Instructions">
+                    <field name="discipline_line_ids">
+                        <tree editable="bottom">
+                            <field name="discipline_id" string="PMWI"/>
+                            <field name="name" string="Discipline"/>
+                            <field name="components" string="Components"/>
+                            <field name="frequency" string="Frequency"/>
+                            <field name="action_required" string="Action Required"/>
+                            <field name="remarks" string="Remarks"/>
+                        </tree>
+                    </field>
+            </page>
+        </xpath>
+
+        <!-- Add machine history sheet -->
+        <xpath expr="//page[@name='maintenance']" position="inside">
+            <h1>Machine History Sheet</h1>
+            <field name="machine_history_ids" nolabel="1">
+                <tree editable="bottom">
+                    <field name="schedule_date" string="Date"/>
+                    <field name="wr_no" />
+                    <field name="description"/>
+                    <field name="x_studio_job_start_time"/>
+                    <field name="x_studio_job_end_time"/>
+                    <field name="x_studio_rectification_action_1"/>
+                    <field name="job_assignment" widget="many2many_tags" string="Performed By" />
+                    <field name="job_performer_remarks" string="Remarks" />
+                </tree>
+            </field>
+        </xpath>
+    </field>
+</record>
+
+
+    <record id="hr_equipment_view_tree_inherit" model="ir.ui.view">
+        <field name="name">maintenance.equipment.view.tree.inherit</field>
+        <field name="model">maintenance.equipment</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='technician_user_id']" position="replace">
+                <field name="x_studio_team_hod"  string="Responsible"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- Access Control for discipline.line model -->
+        <record id="access_discipline_line_user" model="ir.model.access">
+            <field name="name">discipline.line user</field>
+            <field name="model_id" ref="model_discipline_line"/>
+            <field name="group_id" ref="base.group_user"/> <!-- Grant access to all users -->
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+</odoo>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!-- Form View Inheritance for 'Close PR' Button -->
+<!--        <record id="purchase_request_inherit_form_close_pr" model="ir.ui.view">-->
+<!--            <field name="name">purchase.request.form.inherit</field>-->
+<!--            <field name="model">purchase.request</field>-->
+<!--            <field name="inherit_id" ref="prodo_x_biafo_ext.purchase_request_inherited_form"/>-->
+<!--            <field name="arch" type="xml">-->
+<!--                &lt;!&ndash; Adding the 'close_pr' state to the statusbar &ndash;&gt;-->
+<!--&lt;!&ndash;                <xpath expr="//field[@name='approval_state']" position="attributes">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <attribute name="statusbar_visible">store_supervisors,verify,approve,cancel,close_pr</attribute>&ndash;&gt;-->
+<!--&lt;!&ndash;                </xpath>&ndash;&gt;-->
+<!--                -->
+<!--                <xpath expr="//button[@name='open_cancel_wizard']" position="before">-->
+<!--&lt;!&ndash;                    <button name="action_close_pr" attrs="{'invisible': [('approval_state', '!=', 'approve')]}" &ndash;&gt;-->
+<!--&lt;!&ndash;                            string="Close PR" type="object" class="oe_highlight"/>&ndash;&gt;-->
+<!--                </xpath>-->
+<!--            </field>-->
+<!--        </record>-->
+
+        <record id="purchase_request_line_inherit_form_close_pr" model="ir.ui.view">
+            <field name="name">purchase.line.request.form.inherit</field>
+            <field name="model">purchase.request</field>
+            <field name="inherit_id" ref="prodo_x_biafo_ext.purchase_request_inherited_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet[1]" position="inside">
+                    <field name="check_user_exists_in_group" invisible="1"/>
+                </xpath>
+                <xpath expr="//header[1]" position="inside">
+                    <button name="reset_to_approve" string="Reset" type="object" class="btn-primary" attrs="{'invisible': ['|',('approval_state', '!=', 'close_pr'),('check_user_exists_in_group','!=',True)]}" />                    
+                </xpath>
+                <xpath expr="//field[@name='line_ids']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('approval_state', '=', 'close_pr')]}</attribute>
+                </xpath>
+                <xpath expr="//button[@name='open_cancel_wizard']" position="replace">
+                <button name="open_cancel_wizard" attrs="{'invisible': [('approval_state', 'in', ['cancel','close_pr'])]}" string="Cancel"  type="object" class="oe_highlight"/>
+            </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

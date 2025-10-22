@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <record id="view_contract_management_tree" model="ir.ui.view">
+        <field name="name">contract.management.tree</field>
+        <field name="model">contract.management</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" string="Number"/>
+                <field name="doc_type" string="Doc Type"/>
+                <field name="purchase_id" string="Purchase Number" attrs="{'invisible': ['|',('doc_type', '!=', 'purhcase'),('doc_type', '!=', False)]}"/>
+                <field name="sale_id" string="Sale Order" attrs="{'invisible': ['|',('doc_type', '!=', 'sale'),('doc_type', '!=', False)]}"/>
+            </tree>
+        </field>
+    </record>
+    
+    
+    
+    <record id="view_contract_management_form" model="ir.ui.view">
+        <field name="name">contract.management.form</field>
+        <field name="model">contract.management</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" string="Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="doc_type" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="contrect_id" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="contrect_no" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="start_date" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field name="end_date" attrs="{'readonly': [('id', '!=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="purchase_id"  attrs="{'invisible': [('doc_type', 'in', ['sale',False])], 'readonly': [('id', '!=', False)]}"/>
+                            <field name="sale_id"  attrs="{'invisible': [('doc_type', 'in', ['purhcase',False])], 'readonly': [('id', '!=', False)]}"/>
+                            <field name="partner_id" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field filename="attachment_filename" name="attachment" string="Attachment File" attrs="{'readonly': [('id', '!=', False)]}"/>
+                            <field invisible="1" name="attachment_filename" attrs="{'readonly': [('id', '!=', False)]}"/>
+                        </group>
+                                              
+                    </group>
+                    <button string="Update Contract" class="oe_highlight" type="object" name="update_contract_id_on_sale_or_purchase" />
+
+                    
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    
+    
+    
+    
+    
+    
+    <record id="contract_management_action" model="ir.actions.act_window">
+        <field name="name">Contract Management</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">contract.management</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="contract_management_module_purchase" name="Contract Management" parent="purchase.menu_purchase_root" action="contract_management_action" sequence="9" />
+    <menuitem id="contract_management_module_sale" name="Contract Management" parent="sale.sale_menu_root" action="contract_management_action" sequence="9" />
+</odoo>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree view for listing all records -->
+    <record id="collection_summary_target_tree_view" model="ir.ui.view">
+        <field name="name">collection.summary.target.tree</field>
+        <field name="model">collection.summary.target</field>
+        <field name="arch" type="xml">
+            <tree string="Collection Summary Target">
+                <field name="customer_id"/>
+                <field name="validate_from"/>
+                <field name="validate_to"/>
+                <field name="target"/>
+            </tree>
+        </field>
+</record>           
+
+    <!-- Form view for creating/editing records -->
+    <record id="collection_summary_target_form_view" model="ir.ui.view">
+        <field name="name">collection.summary.target.form</field>
+        <field name="model">collection.summary.target</field>
+        <field name="arch" type="xml">
+            <form string="Sales Segment Target">
+                <group>
+                    <group>
+                        <field name="customer_id"/>
+                        <field name="target"/>      
+                    </group>
+                    <group>
+                        <field name="validate_from"/>
+                        <field name="validate_to"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action to load both views: tree first, then form -->
+    <record id="action_collection_summary_target_customers" model="ir.actions.act_window">
+        <field name="name">Collection Target</field>
+        <field name="res_model">collection.summary.target</field>
+        <field name="view_mode">tree,form</field>
+        <!-- Remove view_id to allow both views to load dynamically -->
+         <!-- <field name="view_ids" eval="[(5, 0, 0), (0, 0, {'view_mode': 'tree', 'view_id': ref('sales_segment_target_tree_view')}), (0, 0, {'view_mode': 'form', 'view_id': ref('sales_segment_target_form_view')})]"/> -->
+    </record>
+
+    <!-- Menu item to access the list of sales segment targets -->
+    <menuitem id="menu_collection_target_customers" name="Collection Target"
+        parent="sale.menu_sale_config"
+        action="action_collection_summary_target_customers"
+        sequence="100"/>
+
+</odoo>

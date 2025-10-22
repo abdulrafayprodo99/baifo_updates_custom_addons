@@ -1,0 +1,16 @@
+<odoo>
+    <!-- Define the view for stock.picking form -->
+    <record id="view_picking_form_custom" model="ir.ui.view">
+        <field name="name">stock.picking.form.custom</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/> <!-- Inherit from the default stock picking form view -->
+        <field name="arch" type="xml">            
+            <xpath expr="/form[1]/sheet[1]/group[1]/group[1]/field[7]" position="before">
+            <field name="use_manual_rate_new"/>
+            </xpath>
+            <xpath expr="/form[1]/sheet[1]/group[1]/group[1]/field[7]" position="after">
+                <field name="manual_currency_rate_new" attrs="{'invisible': [('use_manual_rate_new', '=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

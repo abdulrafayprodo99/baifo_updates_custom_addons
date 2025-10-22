@@ -1,0 +1,54 @@
+<odoo>
+    <!-- Define the root menu for HR Reports -->
+    <menuitem id="hr_menu_hr_reports" name="HR Reports" sequence="10"/>
+
+    <!-- Create a menu item for Salary Reports under HR Reports -->
+    <menuitem id="menu_hr_salary_report_root"
+              name="Payroll Reports"
+              parent="hr_payroll.menu_hr_payroll_report"
+              sequence="20"/>
+
+    <!-- Define an action to open the Salary Report wizard -->
+    <record id="action_hr_salary_report" model="ir.actions.act_window">
+        <field name="name">Payroll Report</field>
+        <field name="res_model">payroll.report</field> <!-- Retained model name -->
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Define the form view for the wizard -->
+    <record id="salary_report_form_view" model="ir.ui.view">
+        <field name="name">payroll.report.form</field>
+        <field name="model">payroll.report</field>
+        <field name="arch" type="xml">
+            <form string="Generate Salary Report">
+                <group>
+                    <field name="date_from" required="1"/>
+                    <field name="date_to" required="1"/>
+                </group>
+                <footer>
+                    <button string="Generate PDF" type="object" name="action_generate_report_pdf" class="btn-primary"/>
+                    <button string="Generate Excel" type="object" name="action_generate_report_excel" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Add the server action to generate the salary report -->
+    <!-- <record id="action_hr_salary_report_server" model="ir.actions.server">
+        <field name="name">Payroll Report</field>
+        <field name="model_id" ref="model_payroll_report"/> 
+        <field name="state">code</field>
+        <field name="code">
+            action = model.generate_salary_report()
+        </field>
+    </record> -->
+
+    <!-- Link the action to the menu item -->
+    <menuitem id="menu_hr_salary_report"
+              name="Payroll Report (Excel)"
+              parent="menu_hr_salary_report_root"
+              action="action_hr_salary_report"
+              sequence="30"/>
+</odoo>

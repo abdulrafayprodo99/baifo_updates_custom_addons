@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="attendance_report_wizard_form" model="ir.ui.view">
+            <field name="name">attendance.report.wizard.form</field>
+            <field name="model">attendance.report.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Attendance Report">
+                    <group>
+                        <group colspan="4" >
+                            <group string="Date">
+                                <field name="date_filter" widget="radio"/>
+                                <field name="from_date" attrs="{'invisible':[('date_filter','!=','range')]}"/>
+                                <field name="to_date" attrs="{'invisible':[('date_filter','!=','range')]}"/>
+                            </group>
+                        </group>
+                        
+                        <group colspan="4">
+<!--                           
+                            <group string="Configure Report">
+                                <field name="render_type" widget="radio" />
+                            </group> -->
+                        </group>
+                      </group>
+                    <footer>
+                        <button name="action_print_excel_report" string="Excel Report" type="object"
+                                class="oe_highlight"/>
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="attendance_report_wizard_action" model="ir.actions.act_window">
+            <field name="name">Attendance Report</field>
+            <field name="res_model">attendance.report.wizard</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="attendance_custom_report_menu_item" action="attendance_report_wizard_action"
+                  parent="hr_attendance.menu_hr_attendance_root"
+                  sequence="31" />
+
+    </data>
+</odoo>

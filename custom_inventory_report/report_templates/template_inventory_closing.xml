@@ -1,0 +1,157 @@
+<odoo>
+    <template id="report_inventory_closing_template">
+        <t t-call="web.basic_layout">
+            <style>
+                * {
+                font-family: 'Times New Roman', Times, serif;
+                }
+
+                h1, h2, h5 {
+                font-family: 'Times New Roman', Times, serif;
+                }
+
+              table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+                }
+
+                th, td {
+                padding: 8px;
+                text-align: center;
+                }
+
+
+                td, tr, tbody, th, thead {
+                border: none;
+                }
+
+                th {
+                border-top: 2px solid black;
+                font-size: 11px;
+                }
+
+                td:first-child {
+                border: 1px solid black; /* top right bottom left */
+                border-left: 2px solid black; /* Thick left border */
+                }
+                /* Last column with a custom right border */
+                tbody td {
+                font-size: 10px;
+                }
+                tbody tr:last-child td {
+                font-weight: bold;
+                border-top: 2px solid black;
+                border-bottom: 2px solid black;
+                font-size: 11px;
+                text-align: "right";
+                }
+
+                th[rowspan="2"] {
+                border-top: 2px solid black;
+                border-bottom: 2px solid black;
+                }
+
+                th[colspan="3"] {
+                border: 2px solid black;
+                border-left: 1px solid black;
+                border-right: 1px solid black;
+                }
+            </style>
+            <div class="header w-100" style="min-height:20px;">
+                <!--<div
+                class="header">-->
+                <h1 class="text-center" style="font-family:Segoe UI; font-size: 16px; font-weight: bold; margin: 0px">Biafo
+                    Industries Limited</h1>
+                <h3 class="text-center" style="font-family:Segoe UI; font-size: 16px; font-weight: bold;">Inventory
+                    List</h3>
+                <h5 class="text-center" style="font-family:Segoe UI; font-size: 11px;"> (<t t-if="from_date" t-esc="'From: '+from_date +', To: '+to_date+','"/>
+                       <t t-if="from_product" t-esc="'From: '+from_product +', To: '+to_product + ','"/>
+                       <t t-if="at_locations" t-esc="at_locations"/>
+                    Rupees, Stock Items) </h5>
+                <div class="row w-100">
+                    <div class="col-6">
+                        <p style="font-family: 'Times New Roman', Times, serif; font-size: 11px;">
+                            Date: &amp;nbsp; <t t-esc="(datetime.datetime.now() + datetime.timedelta(hours=5)).strftime('%d-%b-%Y')"/>
+                        </p>
+                    </div>
+                    <div class="col-6">
+                        <p style="font-family: 'Times New Roman', Times, serif; text-align: right; font-size: 11px;">
+                            Time: &amp;nbsp; <t t-esc="(datetime.datetime.now() + datetime.timedelta(hours=5)).strftime('%I:%M %p')"/>
+                        </p>
+                    </div>
+                </div>
+                <br/>
+                <div class="row w-100 p-1" style="border-top:1px solid black;border-bottom:1px solid black;">
+                    <div t-attf-class="{{ 'col-1' if with_amount == 'amount_true' else 'col-2' }}" style="font-family:Segoe UI;margin-right: 4px;font-size:12px;font-weight: bold;text-align:left;">ProductCode</div>
+                    <div t-attf-class="{{ 'col-4' if with_amount == 'amount_true' else 'col-4' }}" style="font-family:Segoe UI;font-size:12px;font-weight: bold;text-align:left;">Description</div>
+                    <div t-attf-class="{{ 'col-1' if with_amount == 'amount_true' else 'col-2' }}" style="font-family:Segoe UI; font-size:12px;font-weight: bold;text-align:center;">Units</div>
+                    <div t-attf-class="{{ 'col-2' if with_amount == 'amount_true' else 'col-2' }}" style="font-family:Segoe UI; font-size:12px;font-weight: bold;text-align:right;">Quantity</div>
+                    <div t-if="with_amount == 'amount_true'" t-attf-class="{{ 'col-2' if with_amount == 'amount_true' else 'col-2' }}" style="font-family:Segoe UI; font-size:12px;font-weight: bold;text-align:right;">Rate</div>
+                    <div t-if="with_amount == 'amount_true'" t-attf-class="{{'col-2 ' if with_amount == 'amount_true' else 'd-none' }}" style="font-family: 'Times New Roman', Times, serif; font-size:12px;font-weight: bold;text-align:right;">Amount</div>
+                </div>
+            </div>
+            <div class="page">
+                <div class="qwerty" style="margin-top:6mm;">
+                    <t t-set="total_amount" t-value="0"/>
+                    <t t-foreach="products" t-as="pr">
+                        <div class="row w-100 p-1" style="page-break-inside:avoid;">
+                            <div t-attf-class="{{ 'col-1' if with_amount == 'amount_true' else 'col-2' }}" style="font-family:Segoe UI;font-size:12px;word-wrap:break-word;">
+                                <t t-esc="pr['product_code']"/>
+                            </div>
+                            <div t-attf-class="{{ 'col-4' if with_amount == 'amount_true' else 'col-4' }}" style="font-family:Segoe UI;font-size:12px;word-wrap:break-word;">
+                                <t t-esc="pr['name']"/>
+                            </div>
+                            <div t-attf-class="{{ 'col-1' if with_amount == 'amount_true' else 'col-2' }}" style="font-family:Segoe UI; font-size:12px;text-align:center;">
+                                <t t-esc="pr['unit']"/>
+                            </div>
+                            <div t-attf-class="{{ 'col-2' if with_amount == 'amount_true' else 'col-2' }}" style="font-family:Segoe UI;font-size:12px;text-align:right;">
+                                <t t-esc="'{:,.2f}'.format(pr['qty'])"/>
+                            </div>
+                            <t t-if="pr['product_type'] == 'product' and with_amount == 'amount_true'">
+                                <t t-if="pr['qty'] != 0">
+                                    <div t-attf-class="{{ 'col-2' if with_amount == 'amount_true' else 'col-2' }}" style="font-family:Segoe UI;font-size:12px;text-align:right;">
+                                        <t t-esc="'{:,.2f}'.format(abs(pr['rate']/pr['qty']))"/>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <div t-attf-class="{{ 'col-2' if with_amount == 'amount_true' else 'col-2' }}" style="font-family:Segoe UI;font-size:12px;text-align:right;">
+                                        <t t-esc="'0.00'"/>
+                                    </div>
+                                </t>
+                                <t t-if="pr['qty']!=0">
+                                    <div t-if="with_amount == 'amount_true'" t-attf-class="{{ 'col-2' if with_amount == 'amount_true' else 'd-none' }}" style="font-family:Segoe UI;font-size:12px;text-align:right;">
+                                        <t t-esc="'{:,.2f}'.format(float(pr['rate']))"/>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <div t-if="with_amount == 'amount_true'" t-attf-class="{{ 'col-2' if with_amount == 'amount_true' else 'd-none' }}" style="font-family:Segoe UI;font-size:12px;text-align:right;">
+                                        <t t-esc="'0.00'"/>
+                                    </div>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                <div t-attf-class="{{ 'col-2' if with_amount == 'amount_true' else 'col-2' }}" style="font-family:Segoe UI;font-size:12px;text-align:right;"/>
+                                <div t-if="with_amount == 'amount_true'" t-attf-class="{{ 'col-2' if with_amount == 'amount_true' else 'd-none' }}" style="font-family:Segoe UI;font-size:12px;text-align:right;"/>
+                            </t>
+                            
+                                <t t-set="total_amount" t-value="total_amount + pr['rate']"/>
+
+                        </div>
+                    </t>
+                    <div t-if="with_amount == 'amount_true'" class="row  p-1">
+                        <div style="font-family:Segoe UI;border: none; font-weight: bold; text-align: right;" class="offset-4 col-6 text-end">
+                            <b>Total :</b>
+                        </div>
+                        <div class=" col-2 py-1" style="font-family:Segoe UI;text-align:right;font-weight:bolder;border-top:1px solid black;border-bottom:1px solid black;">
+                            <t t-esc="'{:,.2f}'.format(total_amount)"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer" style="height:20px;">
+                <span/>
+            </div>
+        </t>
+    </template>
+</odoo>

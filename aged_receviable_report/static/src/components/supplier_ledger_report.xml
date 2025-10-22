@@ -1,0 +1,271 @@
+<?xml version='1.0' encoding='utf-8'?>
+<template xml:space='preserve'>
+    <t t-name="aged_receivable_report.owl_report" owl='1'>
+        <div class="page">
+            <!-- Heading with button in the same div -->
+            <div id="top_heading" class="d-flex align-items-center p-3" style="background-color: #efefef; box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                <!-- Button aligned to the left with padding and hover effect -->
+                <button t-on-click="() => this._printPDF()" style="padding: 10px 20px;margin-left:4px background-color: white; color: black; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-right: auto; transition: all 0.3s ease;">
+                    Print Report
+                </button>
+                <button t-on-click="() => this._printXLSX()" style="padding: 10px 20px; background-color: white; color: black; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-right: auto; transition: all 0.3s ease;">
+                    Print Excel Report
+                </button>
+
+                <style>
+                    button:hover {
+                        background-color: #45a049; 
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                        transform: translateY(-2px); 
+                    }
+                </style>
+
+                <!-- Headings aligned in the center -->
+                <div class="text-center" style="flex-grow: 1;">
+                    <h1 style="font-family: 'Times New Roman', serif; margin: 0;">Biafo Industries Limited</h1>
+                    <h2 style="font-family: 'Times New Roman', serif; margin: 0;">Partner Ledger</h2>
+                    <h4 style="font-family: 'Times New Roman', serif; margin: 0;">
+                        (<span>
+                            From date: <t t-esc="state.header_values[2]"></t> to date: <t t-esc="state.header_values[3]"></t>
+                            From Partner: <t t-esc="state.header_values[0]"></t> to Partner: <t t-esc="state.header_values[1]"></t>
+                        </span>)
+                    </h4>
+                    <h4 style="font-family: 'Times New Roman', serif; margin: 0;">(Rupees)</h4>
+                </div>
+            </div>
+            <!-- Table design with more spacing and styling -->
+            <div class="table-responsive mt-4" t-attf-style="height: {{heightOfPage()}}px; overflow-y: scroll;">
+                <table class="table table-striped">
+
+                    <thead style="position: sticky; top: 0; background-color: #efefef; z-index: 1;">
+                        <tr>
+                            <t t-set="uuid" t-value="generateUUID()"></t>
+                            <t t-foreach="state.columns || []" t-as="column" t-key="uuid">
+                                <t t-if="column == 'date'">
+                                    <th class="text-center" style="font-weight: bold;">Date</th>
+                                </t>
+                                <t t-if="column == 'doc'">
+                                    <th class="text-center" style="font-weight: bold;">Doc</th>
+                                </t>
+                                <t t-if="column == 'narration'">
+                                    <th class="text-center" style="font-weight: bold;">Narration</th>
+                                </t>
+                                <t t-if="column == 'product_code'">
+                                    <th class="text-center" style="font-weight: bold;">Product Code</th>
+                                </t>
+                                <t t-if="column == 'product_description'">
+                                    <th class="text-center" style="font-weight: bold;">Product Description</th>
+                                </t>
+                                <t t-if="column == 'unit'">
+                                    <th class="text-center" style="font-weight: bold;">Unit</th>
+                                </t>
+                                <t t-if="column == 'quantity'">
+                                    <th class="text-end" style="font-weight: bold;">Quantity</th>
+                                </t>
+                                <t t-if="column == 'rate'">
+                                    <th class="text-end" style="font-weight: bold;">Rate</th>
+                                </t>
+                                <t t-if="column == 'excluding_sale_tax'">
+                                    <th class="text-end" style="font-weight: bold;">Excluding Sale Tax</th>
+                                </t>
+                                <t t-if="column == 'sale_tax_amount'">
+                                    <th class="text-end" style="font-weight: bold;">Sale Tax Amount</th>
+                                </t>
+                                <t t-if="column == 'debit'">
+                                    <th class="text-end" style="font-weight: bold;">Debit</th>
+                                </t>
+                                <t t-if="column == 'credit'">
+                                    <th class="text-end" style="font-weight: bold;">Credit</th>
+                                </t>
+                                <t t-if="column == 'balance'">
+                                    <th class="text-end" style="font-weight: bold;">Balance</th>
+                                </t>
+                                <t t-set="uuid" t-value="generateUUID()"></t>
+                            </t>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <t t-set="uuid_state" t-value="generateUUID()"></t>
+                        
+                        <t t-foreach="Object.keys(state.values)" t-as="bill_id" t-key="uuid_state">
+                            <t t-set="uuid_state" t-value="generateUUID()"></t>
+                            <t t-if="bill_id != 'grand_total'">
+                                <tr style="font-weight: bold; background-color: #f0f0f0;">
+                                    <td colspan="2">
+                                        <t t-esc="state.values[bill_id].opening['number']"></t>
+                                    </td>
+                                    <td colspan="2">
+                                        <t t-esc="state.values[bill_id].opening['name']"></t>
+                                    </td>
+                                    <td colspan="8" class="text-end" >
+                                        Opening
+                                    </td>
+                                    <td class="text-end" >
+                                        <t t-esc="state.values[bill_id].opening['opening_balance'].toLocaleString()"></t>
+                                    </td>
+                                    
+                                </tr>
+                                <t t-set="uuid_line" t-value="generateUUID()"></t>
+                                <t t-foreach="state.values[bill_id].data" t-as="line" t-key="uuid_line">
+                                    <t t-set="uuid_line" t-value="generateUUID()"></t>
+                                    <tr>
+                                        <t t-set="uuid" t-value="generateUUID()"></t>
+                                        <t t-foreach="state.columns" t-as="column" t-key="uuid">
+                                            <td t-if="column == 'date'">
+                                                <t t-esc="line['date']"></t>
+                                            </td>
+                                            <td t-if="column == 'doc'">
+                                                <t t-esc="line['doc_id']"></t>
+                                            </td>
+                                            <td t-if="column == 'narration'">
+                                                <t t-esc="line['narration']"></t>
+                                            </td>
+                                            <td t-if="column == 'product_code'">
+                                                <t t-esc="line['product_code']"></t>
+                                            </td>
+                                            <td t-if="column == 'product_description'">
+                                                <t t-esc="line['product_description']"></t>
+                                            </td>
+                                            <td t-if="column == 'unit'">
+                                                <t t-esc="line['unit']"></t>
+                                            </td>
+                                            <td class="text-end" t-if="column == 'quantity'">
+                                                <t t-esc="line['quantity']"></t>
+                                            </td>
+                                            <td class="text-end" t-if="column == 'rate'">
+                                                <t t-esc="line['rate'].toLocaleString()"></t>
+                                            </td>
+                                            <td class="text-end" t-if="column == 'excluding_sale_tax'">
+                                                <t t-esc="line['value_excluding_sales_tax'].toLocaleString()"></t>
+                                            </td>
+                                            <td class="text-end" t-if="column == 'sale_tax_amount'">
+                                                <t t-esc="line['sales_tax_amount'].toLocaleString()"></t>
+                                            </td>
+                                            <td class="text-end" t-if="column == 'debit'">
+                                                <t t-esc="line['debit'].toLocaleString()"></t>
+                                            </td>
+                                            <td class="text-end" t-if="column == 'credit'">
+                                                <t t-esc="line['credit'].toLocaleString()"></t>
+                                            </td>
+                                            <td class="text-end" t-if="column == 'balance'">
+                                                <t t-esc="line['closing_balance'].toLocaleString()"></t>
+                                            </td>
+                                            
+                                        <t t-set="uuid" t-value="generateUUID()"></t>
+                                        </t>
+                                    </tr>
+                                </t>
+
+                                <tr style="font-weight: bold; background-color: #f0f0f0;">
+                                    <t t-set="uuid_column" t-value="generateUUID()"></t>
+                                    <t t-foreach="state.columns || []" t-as="column" t-key="uuid_column">
+                                        <t t-set="uuid_column" t-value="generateUUID()"></t>
+                                        <t t-if="column == 'date'">
+                                            <td class="text-end"></td>
+                                        </t>
+                                        <t t-if="column == 'doc'">
+                                            <td class="text-end"></td>
+                                        </t>
+                                        <t t-if="column == 'narration'">
+                                            <td class="text-end"></td>
+                                        </t>
+                                        <t t-if="column == 'product_code'">
+                                            <td class="text-end"></td>
+                                        </t>
+                                        <t t-if="column == 'product_description'">
+                                            <td class="text-end"></td>
+                                        </t>
+                                        <t t-if="column == 'unit'">
+                                            <td class="text-end">Total</td>
+                                        </t>
+                                        <t t-if="column == 'quantity'">
+                                            <td class="text-end"><t t-esc="state.values[bill_id].total.total_qty"/></td>
+                                        </t>
+                                        <t t-if="column == 'rate'">
+                                            <td class="text-end"><t t-esc="state.values[bill_id].total.total_rate.toLocaleString()"/></td>
+                                        </t>
+                                        <t t-if="column == 'excluding_sale_tax'">
+                                            <td class="text-end"><t t-esc="state.values[bill_id].total.total_exclude_tax.toLocaleString()"/></td>
+                                        </t>
+                                        <t t-if="column == 'sale_tax_amount'">
+                                            <td class="text-end"><t t-esc="state.values[bill_id].total.total_tax_amount.toLocaleString()"/></td>
+                                        </t>
+                                        <t t-if="column == 'debit'">
+                                            <td class="text-end"><t t-esc="state.values[bill_id].total.total_debit.toLocaleString()"/></td>
+                                        </t>
+                                        <t t-if="column == 'credit'">
+                                            <td class="text-end"><t t-esc="state.values[bill_id].total.total_credit.toLocaleString()"/></td>
+                                        </t>
+                                        <t t-if="column == 'balance'">
+                                            <td class="text-end">
+                                                <t t-set="closing" t-value="state.values[bill_id].total.total_balance"></t>
+                                                <t t-if="closing &lt; 0">
+                                                    (<t t-esc="state.values[bill_id].total.total_balance.toLocaleString()"/>)
+                                                </t>
+                                                <t t-else="">
+                                                    <t t-esc="state.values[bill_id].total.total_balance.toLocaleString()"/>
+                                                </t>
+                                            </td>
+                                        </t>
+                                    </t>
+                                </tr>
+                            </t>
+                        </t>
+                        <t t-set="uuid_total" t-value="generateUUID()"></t>
+                        <t t-foreach="Object.keys(state.values)" t-as="grand_total" t-key="uuid_total">
+                            <t t-if="grand_total == 'grand_total'">
+                                <tr style="font-weight: bold; background-color: #f0f0f0;">
+                                    <t t-set="uuid_grand" t-value="generateUUID()"></t>
+                                    <t t-foreach="state.columns" t-as="col" t-key="uuid_grand">
+                                        <t t-set="uuid_grand" t-value="generateUUID()"></t>
+                                        <t t-if="col == 'date'">
+                                            <td class="text-end"></td>
+                                        </t>
+                                        <t t-if="col == 'doc'">
+                                            <td class="text-end"></td>
+                                        </t>
+                                        <t t-if="col == 'narration'">
+                                            <td class="text-end"></td>
+                                        </t>
+                                        <t t-if="col == 'product_code'">
+                                            <td class="text-end"></td>
+                                        </t>
+                                        <t t-if="col == 'product_description'">
+                                            <td class="text-end"></td>
+                                        </t>
+                                        <t t-if="col == 'unit'">
+                                            <td class="text-end">Grand Total</td>
+                                        </t>
+                                        <t t-if="col == 'quantity'">
+                                            <td class="text-end"><t t-esc="state.values.grand_total.grand_total_qty2.toLocaleString()"/></td>
+                                        </t>
+                                        <t t-if="col == 'rate'">
+                                            <td class="text-end"><t t-esc="state.values.grand_total.grand_total_rate2.toLocaleString()"/></td>
+                                        </t>
+                                        <t t-if="col == 'excluding_sale_tax'">
+                                            <td class="text-end"><t t-esc="state.values.grand_total.grand_total_exclude_tax2.toLocaleString()"/></td>
+                                        </t>
+                                        <t t-if="col == 'sale_tax_amount'">
+                                            <td class="text-end"><t t-esc="state.values.grand_total.grand_total_tax_amount2.toLocaleString()"/></td>
+                                        </t>
+                                        <t t-if="col == 'debit'">
+                                            <td class="text-end"><t t-esc="state.values.grand_total.grand_total_debit2.toLocaleString()"/></td>
+                                        </t>
+                                        <t t-if="col == 'credit'">
+                                            <td class="text-end"><t t-esc="state.values.grand_total.grand_total_credit2.toLocaleString()"/></td>
+                                        </t>
+                                        <t t-if="col == 'balance'">
+                                            <td class="text-end"><t t-esc="state.values.grand_total.grand_total_balance2.toLocaleString()"/></td>
+                                        </t>
+                                    </t>
+                                </tr>
+                            </t>
+                            <t t-set="uuid_total" t-value="generateUUID()"></t>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </t>
+</template>

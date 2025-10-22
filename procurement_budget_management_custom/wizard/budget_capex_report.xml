@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>   <!-- Rao Abdul Rehman-->
+<odoo>
+    <!-- Reuse existing paperformat or define a new one -->
+    <record id="paperformat_capex_report" model="report.paperformat">
+        <field name="name">Capex Report Format</field>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_spacing">35</field>
+        <field name="dpi">90</field>
+        <field name="header_line">False</field>
+        <field name="disable_shrinking">False</field>
+    </record>
+
+    <!-- Report Action -->
+    <record id="action_report_capex" model="ir.actions.report">
+        <field name="name">Capex Report</field>
+        <field name="model">procurement.budget.management</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">procurement_budget_management_custom.report_capex_template</field>
+        <field name="report_file">procurement_budget_management_custom.report_capex_template</field>
+        <field name="binding_model_id" eval="False"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_capex_report"/>
+        <field name="print_report_name">'Capex Report'</field>
+    </record>
+
+    <!-- QWeb Template -->
+    <template id="report_capex_template">
+        <t t-name="procurement_budget_management_custom.report_capex_template">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <!-- Footer Section -->
+                    <div class="footer o_standard_footer">
+                        <div class="text-center">
+                            <ul class="list-inline mb4">
+                                <!-- Footer content here -->
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="page">
+                        <h2>Capex Report</h2>
+
+                        <!-- Procurement Details Table -->
+                        <table class="table table-bordered" style="margin-bottom: 0; padding-bottom: 0;">
+                            <tr>
+                                <td style="width: 25%;"><strong>Procurement:</strong> <span t-esc="report_data['budget_name']"/></td>
+                                    <td style="width: 25%;"><strong>Type:</strong> <span t-esc="report_data['budget_type']"/></td>
+                            </tr>
+                        </table>
+
+                        <!-- Budget Summary Table -->
+                        <table class="table table-bordered" style="margin-top: 0; padding-top: 0;">
+                            <tr>
+                                <td style="width: 33%;"><strong>Total Budget Approved:</strong> 
+                                    <span t-esc="'{:,.2f}'.format(report_data['total_approved'])"/>
+                                </td>
+                                <td style="width: 33%;"><strong>Total Cumulative Budget:</strong> 
+                                    <span t-esc="'{:,.2f}'.format(report_data['total_cumulative'])"/>
+                                </td>
+                                <td style="width: 33%;"><strong>Variance:</strong> 
+                                    <span t-esc="'{:,.2f}'.format(report_data['total_variance'])"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Loop over Plan Groups -->
+                        <t t-foreach="report_data['plan_groups']" t-as="plan_block">
+                            <h3 style="text-align: left; color: #C00;">
+                                <t t-esc="plan_block['plan']"/>
+                            </h3>
+
+                            <!-- Loop over Accounts within each Plan -->
+                            <t t-foreach="plan_block['accounts']" t-as="account">
+                                <h4 style="text-align: left; color: #900;">
+                                    <t t-esc="account['account_name']"/>
+                                </h4>
+
+                                <table class="table table-bordered" style="border-style: hidden;">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align: left; width: 25%;">Budget Position</th>
+                                            <th style="text-align: right; width: 25%;">Budget Approved</th>
+                                            <th style="text-align: right; width: 25%;">Cumulative Budget</th>
+                                            <th style="text-align: right; width: 25%;">Variance</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-set="account_total_approved" t-value="0.0"/>
+                                        <t t-set="account_total_cumulative" t-value="0.0"/>
+                                        <t t-set="account_total_variance" t-value="0.0"/>
+                                        
+                                        <!-- Loop over the lines in the account -->
+                                        <t t-foreach="account['lines']" t-as="line">
+                                            <tr>
+                                                <td><t t-esc="line['budget_position']"/></td>
+                                                <td style="text-align: right;">
+                                                    <t t-esc="'{:,.2f}'.format(line['approved'])"/>
+                                                </td>
+                                                <td style="text-align: right;">
+                                                    <t t-esc="'{:,.2f}'.format(line['cumulative'])"/>
+                                                </td>
+                                                <td style="text-align: right;">
+                                                    <t t-esc="'{:,.2f}'.format(line['variance'])"/>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Accumulate totals for the account -->
+                                            <t t-set="account_total_approved" t-value="account_total_approved + line['approved']"/>
+                                            <t t-set="account_total_cumulative" t-value="account_total_cumulative + line['cumulative']"/>
+                                            <t t-set="account_total_variance" t-value="account_total_variance + line['variance']"/>
+                                        </t>
+
+                                        <!-- Subtotal for the account -->
+                                        <tr style="border-top: 2px solid black;">
+                                            <td style="text-align: left; font-weight: bold;">Total for <t t-esc="account['account_name']"/></td>
+                                            <td style="text-align: right; font-weight: bold;">
+                                                <t t-esc="'{:,.2f}'.format(account_total_approved)"/>
+                                            </td>
+                                            <td style="text-align: right; font-weight: bold;">
+                                                <t t-esc="'{:,.2f}'.format(account_total_cumulative)"/>
+                                            </td>
+                                            <td style="text-align: right; font-weight: bold;">
+                                                <t t-esc="'{:,.2f}'.format(account_total_variance)"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </t>
+                        </t>
+
+                        <!-- Grand Total -->
+                        <h3 style="text-align: left; font-weight: bold;">Grand Total</h3>
+                        <table class="table table-bordered" style="border-style: hidden;">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: left; width: 25%;">Category</th>
+                                    <th style="text-align: right; width: 25%;">Budget Approved</th>
+                                    <th style="text-align: right; width: 25%;">Cumulative Budget</th>
+                                    <th style="text-align: right; width: 25%;">Variance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-top: 2px solid black;">
+                                    <td style="text-align: left; font-weight: bold;">Grand Total</td>
+                                    <td style="text-align: right; font-weight: bold;">
+                                        <t t-esc="'{:,.2f}'.format(report_data['grand_total']['approved'])"/>
+                                    </td>
+                                    <td style="text-align: right; font-weight: bold;">
+                                        <t t-esc="'{:,.2f}'.format(report_data['grand_total']['cumulative'])"/>
+                                    </td>
+                                    <td style="text-align: right; font-weight: bold;">
+                                        <t t-esc="'{:,.2f}'.format(report_data['grand_total']['variance'])"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

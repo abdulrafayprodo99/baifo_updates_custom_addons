@@ -1,0 +1,44 @@
+<odoo>
+    <record id="view_email_button_ol_gatepass" model="ir.ui.view">
+        <field name="name">email.button.ol.gatepass</field>
+        <field name="model">trial.balance.report.wizard</field>
+        <field name="inherit_id" ref="account_financial_report.trial_balance_wizard"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='account_filter']" position="replace">
+            <div class="row" colspan="8">
+                        <div class="col">
+                          <label for="receivable_accounts_only" string="Receivable Accounts Only"/>
+                          <field name="receivable_accounts_only"/>
+                          
+                        </div>
+                    </div>
+                    <div class="row">
+                    <div class="col-6 d-flex flex-column">
+                        <div>
+                        <label for="analytic_account_ids"/>
+                        <field name="analytic_account_ids" widget="many2many_tags"/>
+                        </div>
+                          <div>
+                            <label for="payable_accounts_only" string="Payable Accounts Only"/>
+                            <field name="payable_accounts_only"/>
+                          </div>
+                      </div>
+                      <div class="row col-6">
+                        <div class="col-6 d-flex">
+                        <label for="account_code_from"/> <field string="From" name="account_code_from" class="oe_inline" options="{'no_create': True}"/>
+                        </div>
+                        <div class="col-6 d-flex">
+                          <label for="account_code_to"/>
+                          <field name="account_code_to" string="To" class="oe_inline" options="{'no_create': True}"/>
+                        </div>
+                      </div>
+                      <div class="col-4 d-flex">
+                        <label for="account_ids" colspan="4"/>
+                        <field name="account_ids" nolabel="1" widget="many2many_tags" options="{'no_create': True}" colspan="4"/>
+                      </div>
+                    </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

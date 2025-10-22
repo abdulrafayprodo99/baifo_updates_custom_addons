@@ -1,0 +1,1684 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- <odoo> -->
+    <data>
+        <record id="Product_template_inherited_form" model="ir.ui.view">
+            <field name="name">Product.template.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form[@name='Product Template']/sheet[@name='product_form']/notebook[1]"
+                       position="inside">
+                    <page string="Product Hierarchy" name="product_hierarchy">
+                        <group name="studio_group_tFnr6">
+                            <group name="studio_group_tFnr6_left">
+                                <field name="level_1_cat"/>
+                                <field name="level_3_cat"/>
+                                <field name="level_5_cat"/>
+                            </group>
+                            <group name="studio_group_tFnr6_right">
+                                <field name="level_2_cat"/>
+                                <field name="level_4_cat"/>
+                                <field name="level_6_cat"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+
+                <field name="product_tag_ids" position="after">
+                    <field name="is_a_resource"/>
+                    <field name="division" options="{'format': 0}"/>
+                    <field name="class_" options="{'format': 0}"/>
+                </field>
+
+                <!-- Asir working for product specificatoins -->
+                <xpath expr="//form[@name='Product Template']/sheet[@name='product_form']/notebook[1]"
+                       position="inside">
+                    <page string="Specification" name="product_specs">
+                        <group name="product_specs_group">
+                            <field name="product_specification" string="Product Specifications"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Asir working for product specificatoins -->
+        <record id="quality_point_product_spec_inherit_form" model="ir.ui.view">
+            <field name="name">quality.point.product.spec.inherit.form</field>
+            <field name="model">quality.point</field>
+            <field name="inherit_id" ref="quality.quality_point_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
+                    <page string="Product Specification" name="product_specs">
+                        <group name="product_specs_group">
+                            <field name="product_specification" string="Product Specification"/>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="Product_categ_inherited_form" model="ir.ui.view">
+            <field name="name">product.Product.categ.inherited.form</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <field name="parent_id" position="after">
+                    <field name="cat_level"/>
+
+                </field>
+            </field>
+        </record>
+
+        <!-- Purchase Request Model -->
+        <record id="purchase_request_inherited_tree" model="ir.ui.view">
+            <field name="name">purchase.request.inherited.tree</field>
+            <field name="model">purchase.request</field>
+            <field name="inherit_id" ref="purchase_request.view_purchase_request_tree"/>
+            <field name="arch" type="xml">
+
+                <field name="state" position="after">
+                    <field name="pr_type" invisible="1"/>
+                    <field name="opex_type" invisible="1"/>
+                    <field name="capex_type" invisible="1"/>
+                    <field name="opex_sub_type" invisible="1"/>
+
+                    <field name="main_state"/>
+                    <field name="approval_state" invisible="1"/>
+                    <field name="plant_state" invisible="1"/>
+                    <field name="headoffice_state" invisible="1"/>
+
+                    <!--latest-->
+                    <!-- <field name="approval_state" attrs="{'invisible': ['|', ('pr_type', '!=', 'opex'),('opex_type', '!=', 'production')]}"/>
+                    <field name="headoffice_state" attrs="{'invisible': ['|','|',('opex_type', '!=', 'consumable'),('opex_sub_type','!=', 'head_office'),('opex_sub_type','=', False)]}"/>
+                    <field name="plant_state" attrs="{'invisible': ['|','|',('opex_type', '!=', 'consumable'),('opex_sub_type','!=', 'plant'),('opex_sub_type','=', False)]}"/>
+ -->
+
+
+                    <!-- <field name="headoffice_state" attrs="{'invisible': ['|','|',('pr_type', '!=', 'capex'),('capex_type','!=', 'head_office'),('capex_type','=', False)]}"/>
+                    <field name="plant_state" attrs="{'invisible': ['|','|',('pr_type', '!=', 'capex'),('capex_type','!=', 'plant'),('capex_type','=', False)]}"/> -->
+                </field>
+            </field>
+        </record>
+        <record id="purchase_request_inherited_form" model="ir.ui.view">
+            <field name="name">purchase.request.inherited.form</field>
+            <field name="model">purchase.request</field>
+            <field name="inherit_id" ref="purchase_request.view_purchase_request_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/header" position="replace">
+                    <header attrs="{'invisible': ['|', ('pr_type', '!=', 'opex'),('opex_type', '!=', 'production')]}">
+                        <button name="action_prepared" attrs="{'invisible': [('approval_state', '!=', 'initiated')]}"
+                                string="Prepared" type="object" class="oe_highlight"/>
+                        <!-- <button name="action_verify" groups="__export__.res_groups_95_61485810" attrs="{'invisible': [('approval_state', '!=', 'store_supervisors')]}" string="verified" type="object" class="oe_highlight"/> -->
+                        <button name="action_verify" groups="__export__.res_groups_95_61485810"
+                                attrs="{'invisible': [('approval_state', '!=', 'store_supervisors')]}" string="Verify"
+                                type="object" class="oe_highlight"/>
+
+                        <button name="action_approve" groups="__export__.res_groups_94_a0be2b11"
+                                attrs="{'invisible': [('approval_state', '!=', 'verify')]}" string="Approve"
+                                type="object" class="oe_highlight"/>
+                        <button name="action_reject" groups="__export__.res_groups_94_a0be2b11"
+                                attrs="{'invisible': [('approval_state', 'not in', ['store_supervisors','verify'])]}"
+                                string="Reject" type="object" class="oe_highlight"/>
+                        <button name="action_close_pr" attrs="{'invisible': [('approval_state', '!=', 'approve')]}"
+                                string="Close PR" type="object" class="oe_highlight"/>
+                        <button name="open_cancel_wizard" attrs="{'invisible': [('approval_state', 'in', 'cancel')]}"
+                                string="Cancel" type="object" class="oe_highlight"/>
+
+                        <button name="704" attrs="{'invisible': [('approval_state', '!=', 'approve')]}"
+                                string="Create RFQ" type="action"/>
+                        <field name="approval_state" widget="statusbar"
+                               statusbar_visible="store_supervisors,verify,approve,cancel"/>
+                    </header>
+
+                    <header attrs="{'invisible': ['|','|',('opex_type', '!=', 'consumable'),('opex_sub_type','!=', 'head_office'),('opex_sub_type','=', False)]}">
+                        <button name="action_prepared" attrs="{'invisible': [('headoffice_state', '!=', 'initiated')]}"
+                                string="Prepared" type="object" class="oe_highlight"/>
+
+
+                        <button name="action_checked"
+                                attrs="{'invisible': [('headoffice_state', '!=', 'store_supervisors')]}"
+                                string="Checked" type="object" class="oe_highlight"/>
+
+                        <button name="action_verify" attrs="{'invisible': [('headoffice_state', '!=', 'checked')]}"
+                                string="Verify" type="object" class="oe_highlight"/>
+
+
+                        <button name="action_reviewed" attrs="{'invisible': [('headoffice_state', '!=', 'verify')]}"
+                                string="Reviewed" type="object" class="oe_highlight"/>
+
+
+                        <button name="action_approve" attrs="{'invisible': [('headoffice_state', '!=', 'reviewed')]}"
+                                string="Approve" type="object" class="oe_highlight"/>
+
+                        <button name="action_reject" groups="__export__.res_groups_94_a0be2b11"
+                                attrs="{'invisible': [('headoffice_state', 'not in', ['store_supervisors','checked','verify','reviewed'])]}"
+                                string="Reject" type="object" class="oe_highlight"/>
+                        <button name="action_close_pr" attrs="{'invisible': [('approval_state', '!=', 'approve')]}"
+                                string="Close PR" type="object" class="oe_highlight"/>
+                        <button name="open_cancel_wizard" attrs="{'invisible': [('headoffice_state', 'in', 'cancel')]}"
+                                string="Cancel" type="object" class="oe_highlight"/>
+
+                        <button name="704" attrs="{'invisible': [('headoffice_state', '!=', 'approve')]}"
+                                string="Create RFQ" type="action"/>
+                        <field name="headoffice_state" widget="statusbar"
+                               statusbar_visible="store_supervisors,checked,verify,reviewed,approve,cancel"/>
+                    </header>
+                    <header attrs="{'invisible': ['|','|',('opex_type', '!=', 'consumable'),('opex_sub_type','!=', 'plant'),('opex_sub_type','=', False)]}">
+                        <button name="action_prepared" attrs="{'invisible': [('plant_state', '!=', 'initiated')]}"
+                                string="Prepared" type="object" class="oe_highlight"/>
+
+                        <button name="action_recommended"
+                                attrs="{'invisible': [('plant_state', '!=', 'store_supervisors')]}" string="Recommended"
+                                type="object" class="oe_highlight"/>
+
+
+                        <button name="action_checked" attrs="{'invisible': [('plant_state', '!=', 'recommended_by')]}"
+                                string="Checked" type="object" class="oe_highlight"/>
+
+                        <button name="action_verify" attrs="{'invisible': [('plant_state', '!=', 'checked')]}"
+                                string="Verify" type="object" class="oe_highlight"/>
+
+
+                        <button name="action_reviewed" attrs="{'invisible': [('plant_state', '!=', 'verify')]}"
+                                string="Reviewed" type="object" class="oe_highlight"/>
+
+
+                        <button name="action_approve" attrs="{'invisible': [('plant_state', '!=', 'reviewed')]}"
+                                string="Approve" type="object" class="oe_highlight"/>
+
+                        <button name="action_reject" groups="__export__.res_groups_94_a0be2b11"
+                                attrs="{'invisible': [('plant_state', 'not in',['store_supervisors','recommended_by','checked','verify','reviewed'])]}"
+                                string="Reject" type="object" class="oe_highlight"/>
+                        <button name="action_close_pr" attrs="{'invisible': [('approval_state', '!=', 'approve')]}"
+                                string="Close PR" type="object" class="oe_highlight"/>
+                        <button name="open_cancel_wizard" attrs="{'invisible': [('plant_state', 'in', 'cancel')]}"
+                                string="Cancel" type="object" class="oe_highlight"/>
+
+                        <button name="704" attrs="{'invisible': [('plant_state', '!=', 'approve')]}" string="Create RFQ"
+                                type="action"/>
+                        <field name="plant_state" widget="statusbar"
+                               statusbar_visible="store_supervisors,recommended_by,checked,verify,reviewed,approve,cancel"/>
+                    </header>
+
+
+                    <header attrs="{'invisible': ['|','|',('pr_type', '!=', 'capex'),('capex_type','!=', 'head_office'),('capex_type','=', False)]}">
+                        <button name="action_prepared" attrs="{'invisible': [('headoffice_state', '!=', 'initiated')]}"
+                                string="Prepared" type="object" class="oe_highlight"/>
+
+
+                        <button name="action_checked"
+                                attrs="{'invisible': [('headoffice_state', '!=', 'store_supervisors')]}"
+                                string="Checked" type="object" class="oe_highlight"/>
+
+                        <button name="action_verify" attrs="{'invisible': [('headoffice_state', '!=', 'checked')]}"
+                                string="Verify" type="object" class="oe_highlight"/>
+
+
+                        <button name="action_reviewed" attrs="{'invisible': [('headoffice_state', '!=', 'verify')]}"
+                                string="Reviewed" type="object" class="oe_highlight"/>
+
+
+                        <button name="action_approve" attrs="{'invisible': [('headoffice_state', '!=', 'reviewed')]}"
+                                string="Approve" type="object" class="oe_highlight"/>
+
+                        <button name="action_reject" groups="__export__.res_groups_94_a0be2b11"
+                                attrs="{'invisible': [('headoffice_state', 'not in', ['store_supervisors','checked','verify','reviewed'])]}"
+                                string="Reject" type="object" class="oe_highlight"/>
+                        <button name="action_close_pr" attrs="{'invisible': [('approval_state', '!=', 'approve')]}"
+                                string="Close PR" type="object" class="oe_highlight"/>
+                        <button name="open_cancel_wizard" attrs="{'invisible': [('headoffice_state', 'in', 'cancel')]}"
+                                string="Cancel" type="object" class="oe_highlight"/>
+
+                        <button name="704" attrs="{'invisible': [('headoffice_state', '!=', 'approve')]}"
+                                string="Create RFQ" type="action"/>
+                        <field name="headoffice_state" widget="statusbar"
+                               statusbar_visible="store_supervisors,checked,verify,reviewed,approve,cancel"/>
+                    </header>
+                    <header attrs="{'invisible': ['|','|',('pr_type', '!=', 'capex'),('capex_type','!=', 'plant'),('capex_type','=', False)]}">
+                        <button name="action_prepared" attrs="{'invisible': [('plant_state', '!=', 'initiated')]}"
+                                string="Prepared" type="object" class="oe_highlight"/>
+
+                        <button name="action_recommended"
+                                attrs="{'invisible': [('plant_state', '!=', 'store_supervisors')]}" string="Recommended"
+                                type="object" class="oe_highlight"/>
+
+
+                        <button name="action_checked" attrs="{'invisible': [('plant_state', '!=', 'recommended_by')]}"
+                                string="Checked" type="object" class="oe_highlight"/>
+
+                        <button name="action_verify" attrs="{'invisible': [('plant_state', '!=', 'checked')]}"
+                                string="Verify" type="object" class="oe_highlight"/>
+
+
+                        <button name="action_reviewed" attrs="{'invisible': [('plant_state', '!=', 'verify')]}"
+                                string="Reviewed" type="object" class="oe_highlight"/>
+
+
+                        <button name="action_approve" attrs="{'invisible': [('plant_state', '!=', 'reviewed')]}"
+                                string="Approve" type="object" class="oe_highlight"/>
+
+                        <button name="action_reject" groups="__export__.res_groups_94_a0be2b11"
+                                attrs="{'invisible': [('plant_state', 'not in',['store_supervisors','recommended_by','checked','verify','reviewed'])]}"
+                                string="Reject" type="object" class="oe_highlight"/>
+                        <button name="action_close_pr" attrs="{'invisible': [('approval_state', '!=', 'approve')]}"
+                                string="Close PR" type="object" class="oe_highlight"/>
+                        <button name="open_cancel_wizard" attrs="{'invisible': [('plant_state', 'in', 'cancel')]}"
+                                string="Cancel" type="object" class="oe_highlight"/>
+
+                        <button name="704" attrs="{'invisible': [('plant_state', '!=', 'approve')]}" string="Create RFQ"
+                                type="action"/>
+                        <field name="plant_state" widget="statusbar"
+                               statusbar_visible="store_supervisors,recommended_by,checked,verify,reviewed,approve,cancel"/>
+                    </header>
+
+
+                </xpath>
+                <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
+
+                    <field name="scope_of_workboq"/>
+
+                </xpath>
+
+                <field name="origin" position="after">
+                    <!-- Asir Start-->
+                    <field name="pr_type" required="1"/>
+                    <field name="opex_type"
+                           attrs="{'invisible': [('pr_type','!=', 'opex')], 'required': [('pr_type','=', 'opex')]}"/>
+                    <field name="capex_type"
+                           attrs="{'invisible': [('pr_type','!=', 'capex')], 'required': [('pr_type','=', 'capex')]}"/>
+                    <field name="opex_sub_type"
+                           attrs="{'invisible': [('opex_type','!=', 'consumable')], 'required': [('opex_type','=', 'consumable')]}"/>
+                    <!-- Asir End -->
+                    <field name="main_state"/>
+
+                </field>
+                <xpath expr="//sheet/notebook" position="inside">
+                    <page string="Custom Info">
+
+
+                        <group attrs="{'invisible': ['|', ('pr_type', '!=', 'opex'),('opex_type', '!=', 'production')]}">
+                            <group>
+
+                                <field name="prepared_by" readonly="1"/>
+                                <!-- <field name="checked_by" readonly="1"/> -->
+                                <field name="verify_by" readonly="1"/>
+                                <!-- <field name="recommended_by" readonly="1"/> -->
+                                <!-- <field name="reviewed_by" readonly="1" /> -->
+                                <field name="approve_by" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="prepared_timestamp" readonly="1"/>
+                                <!-- <field name="checked_by_timestamp" readonly="1"/> -->
+                                <field name="verify_timestamp" readonly="1"/>
+                                <!-- <field name="recommended_by_timestamp" readonly="1"/> -->
+                                <!-- <field name="reviewed_by_timestamp" readonly="1"/> -->
+                                <field name="approve_timestamp" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <group attrs="{'invisible': ['|','|',('opex_type', '!=', 'consumable'),('opex_sub_type','!=', 'head_office'),('opex_sub_type','=', False)]}">
+                            <group>
+
+                                <field name="prepared_by" readonly="1"/>
+                                <field name="checked_by" readonly="1"/>
+                                <field name="verify_by" readonly="1"/>
+                                <!-- <field name="recommended_by" readonly="1"/> -->
+                                <field name="reviewed_by" readonly="1"/>
+                                <field name="approve_by" readonly="1"/>
+
+
+                            </group>
+                            <group>
+                                <field name="prepared_timestamp" readonly="1"/>
+                                <field name="checked_by_timestamp" readonly="1"/>
+                                <field name="verify_timestamp" readonly="1"/>
+                                <!-- <field name="recommended_by_timestamp" readonly="1"/> -->
+                                <field name="reviewed_by_timestamp" readonly="1"/>
+                                <field name="approve_timestamp" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <group attrs="{'invisible': ['|','|',('opex_type', '!=', 'consumable'),('opex_sub_type','!=', 'plant'),('opex_sub_type','=', False)]}">
+                            <group>
+
+                                <field name="prepared_by" readonly="1"/>
+                                <field name="checked_by" readonly="1"/>
+                                <field name="verify_by" readonly="1"/>
+                                <field name="recommended_by" readonly="1"/>
+                                <field name="reviewed_by" readonly="1"/>
+                                <field name="approve_by" readonly="1"/>
+
+
+                            </group>
+                            <group>
+                                <field name="prepared_timestamp" readonly="1"/>
+                                <field name="checked_by_timestamp" readonly="1"/>
+                                <field name="verify_timestamp" readonly="1"/>
+                                <field name="recommended_by_timestamp" readonly="1"/>
+                                <field name="reviewed_by_timestamp" readonly="1"/>
+                                <field name="approve_timestamp" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <group attrs="{'invisible': ['|','|',('pr_type', '!=', 'capex'),('capex_type','!=', 'head_office'),('capex_type','=', False)]}">
+                            <group>
+
+                                <field name="prepared_by" readonly="1"/>
+                                <field name="checked_by" readonly="1"/>
+                                <field name="verify_by" readonly="1"/>
+                                <!-- <field name="recommended_by" readonly="1"/> -->
+                                <field name="reviewed_by" readonly="1"/>
+                                <field name="approve_by" readonly="1"/>
+
+
+                            </group>
+                            <group>
+                                <field name="prepared_timestamp" readonly="1"/>
+                                <field name="checked_by_timestamp" readonly="1"/>
+                                <field name="verify_timestamp" readonly="1"/>
+                                <!-- <field name="recommended_by_timestamp" readonly="1"/> -->
+                                <field name="reviewed_by_timestamp" readonly="1"/>
+                                <field name="approve_timestamp" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <group attrs="{'invisible': ['|','|',('pr_type', '!=', 'capex'),('capex_type','!=', 'plant'),('capex_type','=', False)]}">
+                            <group>
+
+                                <field name="prepared_by" readonly="1"/>
+                                <field name="checked_by" readonly="1"/>
+                                <field name="verify_by" readonly="1"/>
+                                <field name="recommended_by" readonly="1"/>
+                                <field name="reviewed_by" readonly="1"/>
+                                <field name="approve_by" readonly="1"/>
+
+                                <field name="budget_"/>
+                                <field name="reject_note" readonly="1"/>
+                                <field name="old_reference"/>
+                            </group>
+                            <group>
+                                <field name="prepared_timestamp" readonly="1"/>
+                                <field name="checked_by_timestamp" readonly="1"/>
+                                <field name="verify_timestamp" readonly="1"/>
+                                <field name="recommended_by_timestamp" readonly="1"/>
+                                <field name="reviewed_by_timestamp" readonly="1"/>
+                                <field name="approve_timestamp" readonly="1"/>
+                            </group>
+                        </group>
+
+                    </page>
+                    <page name="Info" string="Info">
+                        <group>
+                            <group>
+                                <field name="budget_"/>
+                                <field name="reject_note" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="old_reference"/>
+                                <field name="cancel_note"/>
+                            </group>
+
+                        </group>
+                    </page>
+                </xpath>
+
+
+                <xpath expr="//form[1]/sheet[1]/notebook[1]/page[1]/field[@name='line_ids']/tree[1]/field[@name='estimated_cost']"
+                       position="after">
+                    <field name="remarks"/>
+                </xpath>
+                <xpath expr="//form[1]/sheet[1]/notebook[1]/page[1]/field[@name='line_ids']/tree[1]/field[@name='product_id']"
+                       position="after">
+                    <field name="opex" optional="hide"/>
+                    <field name="pr_type" optional="hide"/>
+                    <field name="product_type" optional="hide"/>
+                    <!-- 'invisible': ['|',('opex','!=', 'consumable'),('pr_type','=','capex')], -->
+                    <field name="account_id" optional="show" attrs="{ 'readonly': [('product_type','!=', 'consu')]}"/>
+                </xpath>
+
+
+            </field>
+        </record>
+
+        <!-- Purchase Order Model -->
+        <record id="purchase_order_inherited_form" model="ir.ui.view">
+            <field name="name">purchase.order.inherited.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <!-- For RFQ  -->
+                <xpath expr="/form/header" position="after">
+                    <header attrs="{'invisible': [('state', '!=', 'draft')]}">
+                        <button name="action_approve" string="Approved" type="object" class="oe_highlight"/>
+                        <field name="approval_state" widget="statusbar" statusbar_visible="approve"/>
+                    </header>
+                </xpath>
+
+
+                <xpath expr="/form/header" position="replace">
+                    <header>
+                        <button name="action_rfq_send" states="draft" string="Send by Email" type="object"
+                                context="{'send_rfq':True}" class="oe_highlight" data-hotkey="g"/>
+                        <button name="print_quotation" string="Print RFQ" type="object" states="draft"
+                                class="oe_highlight" groups="base.group_user" data-hotkey="k"/>
+                        <button name="button_confirm" type="object" states="sent" string="Confirm Order"
+                                context="{'validate_analytic': True}" class="oe_highlight" id="bid_confirm"
+                                data-hotkey="v"/>
+                        <button name="button_approve" type="object" states="to approve" string="Approve Order"
+                                class="oe_highlight" groups="purchase.group_purchase_manager" data-hotkey="z"/>
+                        <button name="action_create_invoice" string="Create Bill" type="object" class="oe_highlight"
+                                context="{'create_bill':True}"
+                                attrs="{'invisible': ['|', ('state', 'not in', ('purchase', 'done')), ('invoice_status', 'in', ('no', 'invoiced'))]}"
+                                data-hotkey="w"/>
+                        <button name="action_rfq_send" states="sent" string="Re-Send by Email" type="object"
+                                context="{'send_rfq':True}" data-hotkey="g"/>
+                        <button name="print_quotation" string="Print RFQ" type="object" states="sent"
+                                groups="base.group_user" data-hotkey="k"/>
+                        <button name="button_confirm" type="object" states="draft,compartive"
+                                context="{'validate_analytic': True}" string="Confirm Order" id="draft_confirm"/>
+                        <button name="action_rfq_send" states="purchase" string="Send PO by Email" type="object"
+                                context="{'send_rfq':False}" data-hotkey="g"/>
+                        <button name="confirm_reminder_mail" string="Confirm Receipt Date" type="object"
+                                attrs="{'invisible': ['|','|', ('state', 'not in', ('purchase', 'done')), ('mail_reminder_confirmed', '=', True), ('date_planned', '=', False)]}"
+                                groups="base.group_no_one" data-hotkey="o"/>
+                        <button name="action_create_invoice" string="Create Bill" type="object"
+                                context="{'create_bill':True}"
+                                attrs="{'invisible': ['|', '|', ('state', 'not in', ('purchase', 'done')), ('invoice_status', 'not in', ('no', 'invoiced')), ('order_line', '=', [])]}"
+                                data-hotkey="w"/>
+                        <button name="button_draft" states="cancel" string="Set to Draft" type="object"
+                                data-hotkey="o"/>
+                        <button name="button_cancel" states="draft,compartive,to approve,sent,purchase" string="Cancel"
+                                type="object" data-hotkey="x"/>
+                        <button name="button_done" type="object" string="Lock" states="purchase" data-hotkey="l"/>
+                        <button name="button_unlock" type="object" string="Unlock" states="done"
+                                groups="purchase.group_purchase_manager" data-hotkey="l"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,sent,compartive,comparative done,closed,purchase" readonly="1"/>
+                    </header>
+                </xpath>
+                <xpath expr="//sheet/notebook" position="inside">
+                    <page string="Custom Info">
+                        <group col='2'>
+                            <group>
+                                <field name="prepared_by" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                                <field name="approve_by" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                                <field name="old_reference"/>
+                            </group>
+                            <group>
+                                <field name="prepared_timestamp"/>
+                                <field name="approve_timestamp"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+
+
+                <!-- For Purchase Order -->
+
+                <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='products']/field[@name='order_line']/tree[1]/field[@name='name']"
+                       position="after">
+                    <field name="hs_code" optional="show"/>
+                    <field name="specification" optional="show"/>
+                    <field name="product_specification" optional="show"/>
+                    <field name="remaining_quantity"/>
+                </xpath>
+                <field name="partner_id" position="after">
+
+                    <!-- Asir adding rfq sequence field here to retain previous sequence number -->
+                    <field name="rfq_sequence"/>
+                    <field name="purchase_request_id"/>
+                    <field name="pr_type"/>
+                    <field name="opex_type"/>
+                    <field name="opex_sub_type"/>
+                    <field name="capex_type"/>
+                </field>
+                <field name="incoterm_location" position="after">
+                    <field name="port_location"/>
+                </field>
+                <field name="fiscal_position_id" position="after">
+                    <field name="country_origin"/>
+                </field>
+                <field name="origin" position="after">
+                    <field name="contract_id" readonly='0'/>
+                </field>
+                <!-- Bilal  -->
+                <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
+                    <page string="Attachments Section" name="attachment_section">
+                        <field name="po_attachment_ids" mode="tree">
+                            <tree string="Attachments" editable="bottom">
+                                <field name="attachment_comments"/>
+                                <field filename="attachment_filename" name="attachment" string="Attachment File"/>
+                                <field invisible="1" name="attachment_filename"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+
+        <!-- Bill Model -->
+        <record id="account_move_inherited_form" model="ir.ui.view">
+            <field name="name">account.move.inherited.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <!-- For Form Readonly  -->
+                <!-- <xpath expr="//form" position="attributes">
+                    <attribute name="js_class">view_form_disable</attribute>
+                </xpath> -->
+
+                <xpath expr="/form/header" position="after">
+
+                    <header attrs="{'invisible': [('move_type', 'not in', ['in_invoice','out_refund','out_invoice','in_refund'])]}">
+                        <button name="action_prepared" attrs="{'invisible': [('approval_state', '!=', False)]}"
+                                string="Prepared" type="object" class="oe_highlight"/>
+                        <button name="action_verify" attrs="{'invisible': [('approval_state', '!=', 'prepared')]}"
+                                string="verified" type="object" class="oe_highlight"/>
+                        <button name="action_approve" attrs="{'invisible': [('approval_state', '!=', 'verified')]}"
+                                string="Approved" type="object" class="oe_highlight"/>
+                        <button name="action_reject"
+                                attrs="{'invisible': [('approval_state', 'not in', ['prepared','verified'])]}"
+                                string="Reject" type="object" class="oe_highlight"/>
+                        <field name="approval_state" widget="statusbar" statusbar_visible="prepared,verified,approve"/>
+                    </header>
+                </xpath>
+
+                <field name="partner_id" position="after">
+                    <!-- <field name="analytic_distribution" widget="analytic_distribution" optional="show"/> -->
+                    <!-- <field name="prepared_by" readonly="1" attrs="{'invisible': [('move_type', 'not in', ['in_invoice','out_refund'])]}"/>
+                    <field name="verified_by" readonly="1" attrs="{'invisible': [('move_type', 'not in', ['in_invoice','out_refund'])]}"/>
+                    <field name="approve_by" readonly="1" attrs="{'invisible': [('move_type', 'not in', ['in_invoice','out_refund'])]}"/> -->
+                    <field name="reject_note"/>
+                    <field name="old_reference"/>
+                    <field name="remaining_budget"/>
+                    <field name="total_knockoff"/>
+
+                </field>
+                <xpath expr="//form[1]/sheet[1]/notebook[1]/page[@name='invoice_tab']/field[@name='invoice_line_ids']/tree[1]/field[@name='discount']"
+                       position="after">
+                    <field name="analytic_required" invisible="1"/>
+                    <field name="analytic_check"/>
+                </xpath>
+                <xpath expr="//sheet/notebook" position="inside">
+                    <page string="Custom Info">
+                        <group col='2'>
+                            <group>
+                                <field name="prepared_by" readonly="1"
+                                       attrs="{'invisible': [('move_type', 'not in', ['in_invoice','out_refund','out_invoice','in_refund'])]}"/>
+                                <field name="verified_by" readonly="1"
+                                       attrs="{'invisible': [('move_type', 'not in', ['in_invoice','out_refund','out_invoice','in_refund'])]}"/>
+                                <field name="approve_by" readonly="1"
+                                       attrs="{'invisible': [('move_type', 'not in', ['in_invoice','out_refund','out_invoice','in_refund'])]}"/>
+                                <field name="reject_note"/>
+                                <field name="old_reference"/>
+                            </group>
+                            <group>
+                                <field name="prepared_timestamp"/>
+                                <field name="verify_timestamp"/>
+                                <field name="approve_timestamp"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page name="Export Info" string="Export Info">
+                        <group>
+                            <field name="e_form_no"/>
+                            <field name="contrect_no"/>
+                            <field name="contrect_date"/>
+
+                        </group>
+                    </page>
+                </xpath>
+
+            </field>
+        </record>
+        <record id="account_payment_rigister_inherit_tax_view" model="ir.ui.view">
+            <field name="name">account.payment.rigisted.inherit.tax.view</field>
+            <field name="model">account.payment.register</field>
+            <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_bank_id" position="after">
+                    <field name="cheque_date"/>
+                    <field name="cheque_number"/>
+                </field>
+            </field>
+        </record>
+        <!-- Payment -->
+        <record id="account_payment_inherited_form" model="ir.ui.view">
+            <field name="name">account.payment.inherited.form</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <!-- For Form Readonly  -->
+                <!-- <xpath expr="//form" position="attributes">
+                    <attribute name="js_class">view_form_disable</attribute>
+                </xpath> -->
+                <xpath expr="/form/header" position="after">
+                    <header attrs="{'invisible': [('payment_type', '!=', 'outbound')]}">
+                        <button name="action_prepared" attrs="{'invisible': [('approval_state', '!=', False)]}"
+                                string="prepared" type="object" class="oe_highlight"/>
+                        <!-- <button name="action_checked" attrs="{'invisible': [('approval_state', '!=', 'prepared')]}" string="Checked" type="object" class="oe_highlight"/>
+                        <button name="action_verify" attrs="{'invisible': [('approval_state', '!=', 'check')]}" string="verified" type="object" class="oe_highlight"/> -->
+                        <button name="action_verify" attrs="{'invisible': [('approval_state', '!=', 'prepared')]}"
+                                string="verified" type="object" class="oe_highlight"/>
+                        <!-- <button name="action_audit"  attrs="{'invisible': [('approval_state', '!=', 'verify')]}" string="Audited" type="object" class="oe_highlight"/> -->
+                        <!-- <button name="action_approve"  attrs="{'invisible': [('approval_state', '!=', 'audit')]}" string="Approved" type="object" class="oe_highlight"/> -->
+                        <button name="action_approve" attrs="{'invisible': [('approval_state', '!=', 'verify')]}"
+                                string="Approved" type="object" class="oe_highlight"/>
+                        <button name="action_reject"
+                                attrs="{'invisible': [('approval_state', 'not in', ['prepared','verify'])]}"
+                                string="Reject" type="object" class="oe_highlight"/>
+
+                        <field name="approval_state" widget="statusbar"
+                               statusbar_visible="store_supervisors,verify,approve,cancel,close_pr"/>
+                    </header>
+                    <header attrs="{'invisible': [('payment_type', '=', 'outbound')]}">
+                        <button name="action_prepared_customer_payment"
+                                attrs="{'invisible': [('approval_state_customer_payment', '!=', False)]}"
+                                string="Prepared" type="object" class="oe_highlight"/>
+                        <button name="action_verify_customer_payment"
+                                attrs="{'invisible': [('approval_state_customer_payment', '!=', 'prepared')]}"
+                                string="verified" type="object" class="oe_highlight"/>
+                        <button name="action_approve_customer_payment"
+                                attrs="{'invisible': [('approval_state_customer_payment', '!=', 'verify')]}"
+                                string="Approved" type="object" class="oe_highlight"/>
+                        <button name="action_reject"
+                                attrs="{'invisible': [('approval_state_customer_payment', 'not in', ['prepared','verify',])]}"
+                                string="Reject" type="object" class="oe_highlight"/>
+                        <field name="approval_state_customer_payment" widget="statusbar"
+                               statusbar_visible="prepared,verify,approve"/>
+                    </header>
+                </xpath>
+
+                <!-- sher ahmed -->
+                <!--                <xpath expr="//div[hasclass('oe_title')]" position="replace">-->
+                <!--                    <h1><field name="name" readonly="1" nolable="1"/></h1>-->
+                <!--                </xpath>-->
+                <!--                -->
+
+
+                <field name="ref" position="after">
+                    <field name="draft_no"/>
+                    <field name="net_amount"/>
+                    <field name="cheque_date"/>
+                    <field name="cheque_number"/>
+                </field>
+
+                <!-- <field name="partner_id" position="after">
+                    <field name="prepared_by" readonly="1"/>
+                    <field name="prepared_timestamp"/>
+                    <field name="checked_by" readonly="1"/>
+                    <field name="checked_timestamp"/>
+                    <field name="verify_by" readonly="1" />
+                    <field name="verify_timestamp"/>
+                    <field name="audit_by" readonly="1"/>
+                    <field name="audit_timestamp"/>
+                    <field name="Approve_by" readonly="1"/>
+                    <field name="approve_timestamp"/>
+                    <field name="Approve_by" readonly="1"/>
+                    <field name="reject_note"/>
+                    <field name="old_reference"/>
+                </field> -->
+                <xpath expr="//sheet" position="inside">
+                    <notebook>
+                        <page string="Custom Info">
+                            <group col='2' name="Bank Payment" string="Bank Payment"
+                                   attrs="{'invisible': [('payment_type', '!=', 'outbound')]}">
+                                <group>
+                                    <field name="prepared_by" readonly="1"/>
+                                    <!-- <field name="checked_by" readonly="1"/> -->
+                                    <field name="verify_by" readonly="1"/>
+                                    <!-- <field name="audit_by" readonly="1"/> -->
+                                    <field name="Approve_by" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="prepared_timestamp"/>
+                                    <!-- <field name="checked_timestamp"/> -->
+                                    <field name="verify_timestamp"/>
+                                    <!-- <field name="audit_timestamp"/> -->
+                                    <field name="approve_timestamp"/>
+                                </group>
+                            </group>
+                            <group name="Bank Receipt" string="Bank Receipt"
+                                   attrs="{'invisible': [('payment_type', '=', 'inbound')]}">
+                                <group>
+                                    <field name="prepare_customer_payment" readonly="1"/>
+                                    <field name="verified_customer_payment" readonly="1"/>
+                                    <field name="approve_customer_payment" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="prepare_customer_payment_timestamp" readonly="1"/>
+                                    <field name="verified_customer_payment_timestamp" readonly="1"/>
+                                    <field name="approve_customer_payment_timestamp" readonly="1"/>
+                                </group>
+                            </group>
+
+                            <group>
+                                <field name="reject_note"/>
+                                <field name="old_reference"/>
+                            </group>
+                        </page>
+                    </notebook>
+                    <notebook>
+                        <page name="Payment Advice" string="Payment Advice">
+                            <group>
+                                <field name="invoice_number"></field>
+                                <field name="invoice_date"></field>
+                            </group>
+                        </page>
+                    </notebook>
+                </xpath>
+
+
+            </field>
+        </record>
+
+
+        <record id="stock_landed_cost_inherited_form_new" model="ir.ui.view">
+            <field name="name">stock.landed.cost.inherited.form.new</field>
+            <field name="model">stock.landed.cost</field>
+            <field name="inherit_id" ref="stock_landed_costs.view_stock_landed_cost_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/header" position="after">
+                    <header>
+                        <button name="action_checked" attrs="{'invisible': [('approval_state', '!=', False)]}"
+                                string="Checked" type="object" class="oe_highlight"/>
+                        <button name="action_verify" attrs="{'invisible': [('approval_state', '!=', 'check')]}"
+                                string="verified" type="object" class="oe_highlight"/>
+                        <button name="action_approve" attrs="{'invisible': [('approval_state', '!=', 'verify')]}"
+                                string="Approved" type="object" class="oe_highlight"/>
+                        <field name="approval_state" widget="statusbar" statusbar_visible="check,verify,approve"/>
+                    </header>
+                </xpath>
+                <!-- <field name="picking_ids" position="after">
+                    <field name="prepared_by" />
+                    <field name="checked_by" />
+                    <field name="verify_by" />
+                    <field name="Approve_by" />
+                </field> -->
+                <xpath expr="//sheet/notebook" position="inside">
+                    <page string="Custom Info">
+                        <group col='2'>
+                            <group>
+                                <field name="prepared_by"/>
+                                <field name="checked_by"/>
+                                <field name="verify_by"/>
+                                <field name="Approve_by"/>
+                            </group>
+                            <group>
+                                <!-- <field name ="prepared_timestamp"/>
+                                <field name ="approve_timestamp"/> -->
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+
+
+            </field>
+        </record>
+
+
+        <record id="production_demand_plan_inherited_form" model="ir.ui.view">
+            <field name="name">production.demand.plan.inherited.form</field>
+            <field name="model">production.demand.plan</field>
+            <field name="inherit_id" ref="production_demand_plan.view_production_demand_order"/>
+            <field name="arch" type="xml">
+                <!-- For Form Readonly  -->
+                <!-- <xpath expr="//form" position="attributes">
+                    <attribute name="js_class">view_form_disable</attribute>
+                </xpath> -->
+
+                <xpath expr="/form/header[1]" position="after">
+                    <header>
+                        <button name="action_prepared" attrs="{'invisible': [('approval_state', '!=', False)]}"
+                                string="Prepared" type="object" class="oe_highlight"/>
+                        <button name="action_verify" attrs="{'invisible': [('approval_state', '!=', 'prepared')]}"
+                                string="verified" type="object" class="oe_highlight"/>
+                        <button name="action_approve" attrs="{'invisible': [('approval_state', '!=', 'verify')]}"
+                                string="Approved" type="object" class="oe_highlight"/>
+                        <button name="action_reject"
+                                attrs="{'invisible': [('approval_state', 'not in', ['prepared','verify'])]}"
+                                string="Reject" type="object" class="oe_highlight"/>
+                        <field name="approval_state" widget="statusbar" statusbar_visible="prepared,verify,approve"/>
+
+                    </header>
+                </xpath>
+                <!-- <field name="customer_po_no" position="after">
+                    <field name="prepare" readonly="1"/>
+                    <field name="prepare_timestamp" readonly="1"/>
+                    <field name="verified" readonly="1" />
+                    <field name="verified_timestamp" readonly="1" />
+                    <field name="approve" readonly="1" />
+                    <field name="approve_timestamp" readonly="1" />
+                    <field name="reject_note_sale" />
+                </field> -->
+                <xpath expr="//sheet" position="inside">
+                    <notebook>
+                        <page string="General Information">
+                            <group col="2">
+                                <group>
+                                    <field name="remarks"/>
+                                </group>
+                                <group>
+
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Custom Info">
+                            <group col='2'>
+                                <group>
+                                    <field name="prepare" readonly="1"/>
+
+                                    <field name="verified" readonly="1"/>
+
+                                    <field name="approve" readonly="1"/>
+
+                                    <field name="reject_note_sale"/>
+                                </group>
+                                <group>
+                                    <field name="prepare_timestamp" readonly="1"/>
+                                    <field name="verified_timestamp" readonly="1"/>
+                                    <field name="approve_timestamp" readonly="1"/>
+                                    <!-- <field name ="prepared_timestamp"/>
+                                    <field name ="approve_timestamp"/> -->
+                                </group>
+                            </group>
+                        </page>
+
+                    </notebook>
+                </xpath>
+
+            </field>
+        </record>
+
+
+        <record id="landed_cost_apporoval_inherited_form" model="ir.ui.view">
+            <field name="name">landed.cost.apporoval.inherited.form</field>
+            <field name="model">landed.cost.apporoval</field>
+            <field name="inherit_id" ref="landed_cost_approval.view_landed_cost_apporoval_from"/>
+            <field name="arch" type="xml">
+                <!-- <xpath expr="//form" position="attributes">
+                    <attribute name="js_class">view_form_disable</attribute>
+                </xpath> -->
+                <xpath expr="/form/sheet" position="before">
+                    <header>
+                        <button name="action_prepared" attrs="{'invisible': [('approval_state', '!=', False)]}"
+                                string="Prepared" type="object" class="oe_highlight"/>
+                        <button name="action_verify" attrs="{'invisible': [('approval_state', '!=', 'prepared')]}"
+                                string="verified" type="object" class="oe_highlight"/>
+                        <button name="action_approve" attrs="{'invisible': [('approval_state', '!=', 'verify')]}"
+                                string="Approved" type="object" class="oe_highlight"/>
+                        <button name="action_reject"
+                                attrs="{'invisible': [('approval_state', 'not in', ['prepared','verify'])]}"
+                                string="Reject" type="object" class="oe_highlight"/>
+                        <field name="approval_state" widget="statusbar" statusbar_visible="prepared,verify,approve"/>
+                    </header>
+                </xpath>
+                <!-- <field name="landed_cost_approval" position="after">
+                    <field name="prepare" readonly="1"/>
+                    <field name="prepare_timestamp" readonly="1"/>
+                    <field name="verified" readonly="1" />
+                    <field name="verified_timestamp" readonly="1" />
+                    <field name="approve" readonly="1" />
+                    <field name="approve_timestamp" readonly="1" />
+                    <field name="reject_note_sale" />
+                </field> -->
+
+                <xpath expr="//sheet" position="inside">
+                    <notebook>
+                        <page string="Custom Info">
+                            <group col='2'>
+                                <group>
+                                    <field name="prepare" readonly="1"/>
+
+                                    <field name="verified" readonly="1"/>
+
+                                    <field name="approve" readonly="1"/>
+
+                                    <field name="reject_note_sale"/>
+                                </group>
+                                <group>
+                                    <field name="prepare_timestamp" readonly="1"/>
+                                    <field name="verified_timestamp" readonly="1"/>
+                                    <field name="approve_timestamp" readonly="1"/>
+                                    <!-- <field name ="prepared_timestamp"/>
+                                    <field name ="approve_timestamp"/> -->
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </xpath>
+            </field>
+        </record>
+
+
+<!--        &lt;!&ndash; Partner &ndash;&gt;-->
+<!--        <record id="res_partner_inherited_form" model="ir.ui.view">-->
+<!--            <field name="name">res.partner.inherited.form</field>-->
+<!--            <field name="model">res.partner</field>-->
+<!--            <field name="inherit_id" ref="base.view_partner_form"/>-->
+<!--            <field name="arch" type="xml">-->
+<!--                &lt;!&ndash;                <xpath expr="//header" position="inside">&ndash;&gt;-->
+<!--                <xpath expr="/form" position="inside">-->
+<!--                    <header>-->
+<!--                        <button name="action_verify" attrs="{'invisible': [('approval_state', '!=', False)]}"-->
+<!--                                string="verified" type="object" class="oe_highlight"/>-->
+<!--                        <button name="action_approve" attrs="{'invisible': [('approval_state', '!=', 'verify')]}"-->
+<!--                                string="Approved" type="object" class="oe_highlight"/>-->
+<!--                        <button name="action_reject"-->
+<!--                                attrs="{'invisible': [('approval_state', 'not in', ['verify', 'approve'])]}"-->
+<!--                                string="Reject" type="object" class="oe_highlight"/>-->
+<!--                        <field name="approval_state" widget="statusbar" statusbar_visible="verify,approve"/>-->
+<!--                    </header>-->
+<!--                </xpath>-->
+<!--                <xpath expr="//sheet/notebook" position="inside">-->
+<!--                    <page string="Custom Info">-->
+<!--                        <group col='2'>-->
+<!--                            <group>-->
+<!--                                <field name="prepared_by"/>-->
+<!--                                <field name="verify_by"/>-->
+<!--                                <field name="Approve_by"/>-->
+<!--                            </group>-->
+<!--                            <group>-->
+<!--                                <field name="reject_note" readonly="1"/>-->
+<!--                                <field name="readonly_check" readonly="1"/>-->
+
+<!--                            </group>-->
+<!--                        </group>-->
+<!--                    </page>-->
+<!--                    <page string="Intimation">-->
+<!--                        <group>-->
+<!--                            <field name="intimation_id"/>-->
+<!--                        </group>-->
+<!--                    </page>-->
+<!--                </xpath>-->
+<!--&lt;!&ndash;                <xpath expr="//page[@name='contact_addresses']" position="before">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <page string="Attestations" name="attestation_page">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <group name="attestation_details_page">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <group name="attestation_details_page_left">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <field name="attestation_rfq_id"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <field name="attestation_po_id"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <field name="attestation_so_id"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <field name="attestation_sq_id"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <field name="attestation_si_id"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </group>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <group name="attestation_details_page_right"/>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </group>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </page>&ndash;&gt;-->
+<!--&lt;!&ndash;                </xpath>&ndash;&gt;-->
+<!--            </field>-->
+<!--        </record>-->
+
+        <!-- Partner -->
+        <record id="sale_order_inherited_form" model="ir.ui.view">
+            <field name="name">sale.order.inherited.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <!-- For Form Readonly  -->
+                <!-- <xpath expr="//form" position="attributes">
+                    <attribute name="js_class">view_form_disable</attribute>
+                </xpath> -->
+                <xpath expr="/form/header[1]" position="after">
+                    <header attrs="{'invisible': [('state', '!=', 'draft')]}">
+                        <button name="action_prepared" attrs="{'invisible': [('approval_state', '!=', False)]}"
+                                string="Prepared" type="object" class="oe_highlight"/>
+                        <button name="action_verify" attrs="{'invisible': [('approval_state', '!=', 'prepared')]}"
+                                string="verified" type="object" class="oe_highlight"/>
+                        <button name="action_approve_coo"
+                                attrs="{'invisible': [('approval_state', 'not in', ['verify'])]}"
+                                string="Approved By HOD" type="object" class="oe_highlight"/>
+                        <button name="send_to_cfo" attrs="{'invisible': [('approval_state', '!=', 'verify')]}"
+                                string="Send To CFO" type="object" class="oe_highlight"/>
+                        <button name="send_to_ceo" attrs="{'invisible': [('approval_state', '!=', 'verify')]}"
+                                string="Send To CEO" type="object" class="oe_highlight"/>
+
+                        <button name="action_approve_cfo"
+                                attrs="{'invisible': [('approval_state', 'not in', ['waiting'])]}"
+                                string="Approved By CFO" type="object" class="oe_highlight"/>
+
+
+                        <button name="action_approve_ceo"
+                                attrs="{'invisible': [('approval_state', 'not in', ['approve_cfo','approve_coo'])]}"
+                                string="Approved By CEO" type="object" class="oe_highlight"/>
+                        <button name="action_reject"
+                                attrs="{'invisible': [('approval_state', 'not in', ['prepared','verify','approve_coo','waiting','approve_cfo','approve_ceo'])]}"
+                                string="Reject" type="object" class="oe_highlight"/>
+                        <field name="approval_state" widget="statusbar"
+                               statusbar_visible="prepared,verify,waiting,approve_coo,approve_cfo,approve_ceo"/>
+                    </header>
+                    <header attrs="{'invisible': [('state', '=', 'draft')]}">
+                        <button name="action_prepared_sale"
+                                attrs="{'invisible': [('approval_state_sale', '!=', False)]}" string="Prepared"
+                                type="object" class="oe_highlight"/>
+                        <button name="action_verify_sale"
+                                attrs="{'invisible': [('approval_state_sale', '!=', 'prepared')]}" string="verified"
+                                type="object" class="oe_highlight"/>
+                        <button name="action_approve_sale"
+                                attrs="{'invisible': [('approval_state_sale', '!=', 'verify')]}" string="Approved"
+                                type="object" class="oe_highlight"/>
+                        <button name="action_reject_sale"
+                                attrs="{'invisible': [('approval_state_sale', 'not in', ['prepared','verify',])]}"
+                                string="Reject" type="object" class="oe_highlight"/>
+                        <field name="approval_state_sale" widget="statusbar"
+                               statusbar_visible="prepared,verify,approve"/>
+                    </header>
+                </xpath>
+                <!-- <button id='action_confirm' position="attributes">
+                    <attribute name="attrs">
+                        {'invisible': ['|','|',('state', 'not in', ['sent']),('approval_state_sale', '!=', "approve"),('approval_state', '!=', "approve_ceo")]} 
+                    </attribute>
+                </button>   
+                <button name='action_confirm' position="attributes">
+                    <attribute name="attrs">
+                        {'invisible': ['|','|',('state', 'not in', ['draft']),('approval_state_sale', '!=', "approve"),('approval_state', '!=', "approve_ceo")]} 
+                    </attribute>
+                </button>    -->
+                <field name="partner_id" position="before">
+                    <field name="sale_order_type"/>
+                    <field name="rfq_sale_seq"/>
+                </field>
+                <field name="payment_term_id" position="after">
+                    <field name="subject"/>
+                </field>
+                <field name="partner_id" position="after">
+                    <!-- Fields For Quotaion -->
+                    <field name="ntn"/>
+                    <field name="nic"/>
+                    <field name="stn"/>
+                    <field name="code"/>
+                    <field name="old_reference" readonly="1"/>
+                    <field name="delivery_address"/>
+                    <field name="transportation"/>
+                    <field name="customer_po_no" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                    <field name="customer_po_date" attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                    <!-- <field name="delivery_schedule"/> -->
+
+                    <!-- <field name="customer_license_id"/> -->
+                    <!-- <field name="delivery" domain="[('partner_id.parent_id', '=', parent_id)]"/> -->
+
+
+                    <!-- Fields For Sale -->
+
+
+                </field>
+                <field name="team_id" position="after">
+                    <field name="contract_id" readonly="0"/>
+                </field>
+
+                <xpath expr="/form/sheet/notebook/page[1]" position="after">
+                    <page string="Rejection Note" name="Rejection_note">
+                        <group>
+                            <field name="reject_note"/>
+                            <field name="reject_note_sale"/>
+
+                        </group>
+                    </page>
+                    <page string="Approvals Log" name="Rejection_note">
+                        <group>
+                            <group>
+                                <field name="prepared_by" readonly="1"/>
+                                <field name="prepared_timestamp" readonly="1"/>
+                                <field name="verify_by" readonly="1"/>
+                                <field name="verify_by_timestamp" readonly="1"/>
+                                <field name="Approve_by" readonly="1"/>
+                                <field name="approve_by_timestamp" readonly="1"/>
+                                <field name="Approve_by_cfo" readonly="1"/>
+                                <field name="approve_by_cfo_timestamp" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="Approve_by_ceo" readonly="1"/>
+                                <field name="approve_by_ceo_timestamp" readonly="1"/>
+                                <field name="Approve_by_coo" readonly="1"/>
+                                <field name="approve_by_coo_timestamp" readonly="1"/>
+
+
+                                <field name="old_reference" readonly="1"/>
+                                <!-- Fields For Sale -->
+                                <field name="prepare_sale" readonly="1"
+                                       attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                <field name="prepare_sale_timestamp" readonly="1"
+                                       attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                <field name="verified_sale" readonly="1"
+                                       attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                <field name="verified_sale_timestamp" readonly="1"
+                                       attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                <field name="approve_sale" readonly="1"
+                                       attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                                <field name="approve_sale_timestamp" readonly="1"
+                                       attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                            </group>
+                        </group>
+
+                    </page>
+                    <page string="Attestation" name="attestation">
+                        <group>
+                            <group>
+                                <field name="attestation"/>
+                            </group>
+                            <group>
+
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Delivery Schedule" name="delivery.schedule">
+                        <field name="delivery_schedule" widget="section_and_note_one2many" editable="bottom" mode="tree"
+                               attrs="{'readonly': [('state', 'in', ('done','cancel'))]}">
+                            <form>
+                                <field name="product_id"/>
+
+                            </form>
+                        </field>
+                    </page>
+                </xpath>
+
+
+                <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
+                    <page string="Attachments Section" name="attachment_section">
+                        <field name="so_attachment_ids" mode="tree">
+                            <tree string="Attachments" editable="bottom">
+                                <field name="attachment_comments"/>
+                                <field filename="attachment_filename" name="attachment" string="Attachment File"/>
+                                <field invisible="1" name="attachment_filename"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+
+            </field>
+        </record>
+
+        <!-- Account Asset View  -->
+
+        <record id="account_asset_inherited_form" model="ir.ui.view">
+            <field name="name">account.asset.inherited.form</field>
+            <field name="model">account.asset</field>
+            <field name="inherit_id" ref="account_asset.view_account_asset_form"/>
+            <field name="arch" type="xml">
+
+                <field name="original_value" position="before">
+                    <field name="asset_tag"/>
+                    <!-- <field name="employee_id" /> -->
+
+                </field>
+                <field name="model_id" position="after">
+                    <field name="asset_location_id"/>
+                    <field name="employee_id"/>
+
+                </field>
+            </field>
+        </record>
+
+        <!-- Faraz Start -->
+        <record id="port_location_model_view_form" model="ir.ui.view">
+            <field name="name">port.location.view.form</field>
+            <field name="model">port.location</field>
+            <field name="arch" type="xml">
+                <form string="Type Form">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="country_origin_model_view_form" model="ir.ui.view">
+            <field name="name">country.origin.view.form</field>
+            <field name="model">country.origin</field>
+            <field name="arch" type="xml">
+                <form string="Type Form">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="port_location_action" model="ir.actions.act_window">
+            <field name="name">Port Location</field>
+            <field name="res_model">port.location</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <record id="country_origin_action" model="ir.actions.act_window">
+            <field name="name">Country Origin</field>
+            <field name="res_model">country.origin</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="partner_bank_view_inherit_form" model="ir.ui.view">
+            <field name="name">res_partner_bank_view_inherit_form</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="base.view_partner_bank_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position='after'>
+                    <field name="branch_name"/>
+                </field>
+            </field>
+        </record>
+
+
+        <record id="stock_picking_inherited_form_" model="ir.ui.view">
+            <field name="name">stock.picking.form.inherit</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form[1]/sheet[1]/group[1]/group[1]/field[@name='location_dest_id'][2]" position="after">
+                    <field attrs="{'invisible': [('picking_type_id', 'not in',  [1,10,11,23,24,22,6,37,14])]}"
+                           name="gate_in_id"/>
+                    <!-- <field attrs="{'invisible': [('is_grn_approval', '!=', True)]}" name="gate_in_id"/> -->
+                    <field name="gate_in_return_id"
+                           attrs="{'invisible': [('picking_type_id', '!=', 17)],'required':[('picking_type_id', '=', 17)]}"/>
+
+                    <field name="current_user_group_ids" attrs="{}" invisible="1"/>
+
+
+                </xpath>
+
+                <xpath expr="/form/header[1]" position="after">
+
+                    <header attrs="{'invisible': [('picking_type_id', 'not in', [2,36])]}">
+                        <button name="action_prepare1" attrs="{'invisible': [('dispatch_approval', '!=', False)]}"
+                                string="Prepared" type="object" class="oe_highlight"/>
+                        <button name="action_checked1" attrs="{'invisible': [('dispatch_approval', '!=', 'prepared')]}"
+                                string="Checked" type="object" class="oe_highlight"/>
+                        <button name="action_verify1"
+                                attrs="{'invisible': ['|', ('dispatch_approval', '!=', 'checked'), '&amp;',('dispatch_approval', 'in', ['checked']), ('current_user_group_ids', 'in', [154])]}"
+                                string="Verified" type="object" class="oe_highlight"/>
+
+                        <button name="action_approve1"
+                                attrs="{'invisible': ['|', ('dispatch_approval', '!=', 'verify'), '&amp;',('dispatch_approval', 'in', ['verify']), ('current_user_group_ids', 'in', [153])]}"
+                                string="Approved" type="object" class="oe_highlight"/>
+
+
+                        <button name="action_reject"
+                                attrs="{'invisible': ['|', '|', '|', '|', '|', '|', ('dispatch_approval', 'in', ['approved']), '&amp;',('dispatch_approval', 'in', ['verify']), ('current_user_group_ids', 'in', [154])  , '&amp;',('dispatch_approval', 'not in', ['prepared', 'checked','verify']), ('current_user_group_ids', 'in', [156]) , '&amp;',('dispatch_approval', 'in', ['prepared']), ('current_user_group_ids', 'in', [157]),  '&amp;',('dispatch_approval', 'in', ['checked']), ('current_user_group_ids', 'in', [156]), '&amp;',('dispatch_approval', 'in', ['checked']), ('current_user_group_ids', 'in', [154]), '&amp;',('dispatch_approval', 'in', ['verify']), ('current_user_group_ids', 'in', [153])]}"
+                                string="Reject" type="object" class="oe_highlight"/>
+
+
+                        <field name="dispatch_approval" widget="statusbar"
+                               statusbar_visible="prepared,checked,verify,approved"/>
+                    </header>
+
+                    <header attrs="{'invisible': ['|','|', ('is_grn_approval', '=', False), ('picking_type_id', 'not in', [2,36]), ('dispatch_approval', '!=', 'approved')]}">
+                        <button name="action_prepare2" attrs="{'invisible': [('approval_state', '!=', False)]}"
+                                string="Prepared" type="object" class="oe_highlight"/>
+                        <button name="action_verify" attrs="{'invisible': [('approval_state', '!=', 'prepared')]}"
+                                string="Verified" type="object" class="oe_highlight"/>
+                        <button name="action_approve"
+                                attrs="{'invisible': [ '|', ('approval_state', '!=', 'verify'), '&amp;',('approval_state', 'in', ['verify']), ('current_user_group_ids', 'not in', [153, 155]) ]}"
+                                string="Approved" type="object" class="oe_highlight"/>
+
+
+                        <button name="action_reject"
+                                attrs="{'invisible': ['|', '|', ('approval_state', 'in', ['approved']), '&amp;',('approval_state', 'in', ['verify']), ('current_user_group_ids', 'not in', [153, 155]) , ('current_user_group_ids', 'not in', [153 , 154, 155])]}"
+                                string="Reject" type="object" class="oe_highlight"/>
+
+
+                        <field name="approval_state" widget="statusbar" statusbar_visible="prepared,verify,approved"/>
+                    </header>
+
+                </xpath>
+                <xpath expr="/form/header[1]" position="after">
+
+
+                    <!-- <header  attrs="{'invisible': [('picking_type_id', 'not in',  [1,10,11,23,24,22,6,37,14])]}"> -->
+
+
+                    <header attrs="{'invisible': ['|',('is_grn_approval', '!=', True), ('picking_type_id', 'in', [2,36])]}">
+                        <button name="action_prepare2" attrs="{'invisible': [('approval_state', '!=', False)]}"
+                                string="Prepared" type="object" class="oe_highlight"/>
+                        <button name="action_verify" attrs="{'invisible': [('approval_state', '!=', 'prepared')]}"
+                                string="Verified" type="object" class="oe_highlight"/>
+                        <button name="action_approve" attrs="{'invisible': [('approval_state', '!=', 'verify')]}"
+                                string="Approved" type="object" class="oe_highlight"/>
+                        <button name="action_reject"
+                                attrs="{'invisible': [('approval_state', '!=', ['prepared','verify'])]}" string="Reject"
+                                type="object" class="oe_highlight"/>
+                        <field name="approval_state" widget="statusbar" statusbar_visible="prepared,verify,approved"/>
+                    </header>
+                    <header attrs="{'invisible': [('is_rtn_approval', '!=', True)]}">
+                        <button name="action_prepare" attrs="{'invisible': [('approval_state_return', '!=', False)]}"
+                                string="Prepared" type="object" class="oe_highlight"/>
+                        <!-- <button name="action_verify" attrs="{'invisible': [('approval_state_return', '!=', 'prepared')]}" string="Verified" type="object" class="oe_highlight"/> -->
+                        <button name="action_approve"
+                                attrs="{'invisible': [('approval_state_return', '!=', 'prepared')]}" string="Approved"
+                                type="object" class="oe_highlight"/>
+                        <button name="action_reject"
+                                attrs="{'invisible': [('approval_state_return', 'not in', ['prepared','verified'])]}"
+                                string="Reject" type="object" class="oe_highlight"/>
+                        <field name="approval_state_return" widget="statusbar"/>
+                    </header>
+
+
+                </xpath>
+                <field name="date_deadline" position="after">
+                    <!-- <field name="intimation_id_domain" invisible="1"/> -->
+                    <field name="intimation_id" attrs="{'invisible': [('picking_type_id', '=', 5)]}"/>
+                    <field name="customer_license_id_domain" invisible="1"/>
+
+
+                    <field name="customer_license_id" attrs="{'invisible': [('picking_type_id', '=', 5)]}"
+                           domain="customer_license_id_domain"/>
+
+
+                </field>
+
+                <xpath expr="//sheet/notebook" position="inside">
+                    <page string="Approval Log">
+
+                        <group col="2" string="Delivery Approvals">
+                            <group>
+                                <field name="prepared_by1" attrs="{'invisible': [('picking_type_id', '!=', 2)]}"/>
+                                <field name="checked_by1" attrs="{'invisible': [('picking_type_id', '!=', 2)]}"/>
+                                <field name="verify_by1" attrs="{'invisible': [('picking_type_id', '!=', 2)]}"/>
+                                <field name="approve_by1" attrs="{'invisible': [('picking_type_id', '!=', 2)]}"/>
+                            </group>
+                            <group>
+                                <field name="prepared_timestamp1" string="Dispatch Prepared Timestamp"
+                                       attrs="{'invisible': [('picking_type_id', '!=', 2)]}"/>
+                                <field name="checked_timestamp1" string="Dispatch Checked Timestamp"
+                                       attrs="{'invisible': [('picking_type_id', '!=', 2)]}"/>
+                                <field name="verify_timestamp1" string="Dispatch Verify Timestamp"
+                                       attrs="{'invisible': [('picking_type_id', '!=', 2)]}"/>
+                                <field name="approve_timestamp1" string="Dispatch Approved Timestamp"
+                                       attrs="{'invisible': [('picking_type_id', '!=', 2)]}"/>
+
+                            </group>
+                        </group>
+                        <group col="2" string="Dispatch Approvals">
+                            <group>
+                                <field name="prepared_by_2"/>
+                                <field name="verify_by"/>
+                                <field name="Approve_by"/>
+                            </group>
+                            <group>
+                                <field name="prepared_timestamp"/>
+                                <field name="verify_timestamp"/>
+                                <field name="approve_timestamp"/>
+                            </group>
+                        </group>
+                        <group name="Approval Remarks" string="Approval Remarks">
+                            <field name="reject_note"/>
+                            <field name="cancel_note"/>
+                        </group>
+                    </page>
+                </xpath>
+
+                <xpath expr="//sheet/notebook" position="inside">
+                    <page string="Marketing" attrs="{'invisible': [('picking_type_id', 'not in', [1,6,10])]}">
+                        <group col='2'>
+                            <group>
+                                <field name="date"/>
+                                <field name="returned_by"/>
+                                <field name="vehicle_no"/>
+                                <field name="lic_no"/>
+                                <field name="old_reference"/>
+                            </group>
+                            <group>
+                                <field name="rework"/>
+                                <field name="sale"/>
+                                <field name="remarks"/>
+                            </group>
+                        </group>
+                    </page>
+
+                    <page string="Customer acknowledgment">
+                        <group col='2'>
+                            <group>
+
+                                <field name="name_1"/>
+                                <field name="designation"/>
+
+                            </group>
+                            <group>
+                                <field name="cnic"/>
+                                <field name="date_1"/>
+                            </group>
+
+                        </group>
+                    </page>
+                    <page string="Transport Info" name="studio_page_I9vqk"
+                          attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}">
+                        <group name="studio_page_I9vqk">
+                            <group name="studio_page_I9vqk_left">
+                                <field name="vehicle_transport_lic_no"/>
+                                <field name="explosive_carrier_no"/>
+                                <field name="holder_of_transport_lic_no"/>
+                                <field name="no_of_packags"/>
+                                <field name="date"/>
+                                <field name="date_of_dispatched"/>
+
+                            </group>
+                            <group name="studio_page_I9vqk_right">
+                                <field name="driver_name"/>
+                                <field name="mobile_no_driver"/>
+                                <field name="CNIC"/>
+                                <field name="date_of_expected_arival_at_site"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+
+                <field name="CNIC" position="after">
+                    <field name="customer_license_id" domain="customer_license_id_domain"/>
+                    <field name="seal_no"/>
+                </field>
+
+                <field name="partner_id" position="after">
+                    <field name="customer_id"/>
+                    <field name="customer_code"/>
+                    <field name="is_rtn_approval"/>
+                    <field name="is_grn_approval"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="stock_picking_inherited_form" model="ir.ui.view">
+            <field name="name">stock.picking.form.inherit</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/notebook" position="inside">
+                    <page string="QCD" attrs="{'invisible': [('picking_type_id', '!=', 6)]}">
+                        <group col='2'>
+                            <group>
+                                <field name="date"/>
+                                <field name="returned_by"/>
+                                <field name="vehicle_no"/>
+                                <field name="lic_no"/>
+                                <group>
+                                    <field name="rework"/>
+                                    <field name="sale"/>
+                                    <field name="remarks"/>
+                                    <!--   <field name ="prepared_timestamp"/>
+                                      <field name ="verify_timestamp"/>
+                                      <field name ="approve_timestamp"/> -->
+                                </group>
+                            </group>
+                        </group>
+
+                    </page>
+
+
+                </xpath>
+            </field>
+        </record>
+
+        <record id="stock_landed_cost_inherited_form" model="ir.ui.view">
+            <field name="name">mrp.production.form.view</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+                <!-- <xpath expr="//form" position="attributes">
+                    <attribute name="js_class">view_form_disable</attribute>
+                </xpath> -->
+                <xpath expr="/form/header" position="after">
+                    <header attrs="{'invisible': [('state', '=', 'draft')]}">
+                        <button name="action_checked" attrs="{'invisible': [('approval_state', '!=', False)]}"
+                                string="Prepared" type="object" class="oe_highlight"/>
+                        <button name="action_verify" attrs="{'invisible': [('approval_state', '!=', 'check')]}"
+                                string="verified" type="object" class="oe_highlight"/>
+                        <button name="action_approve" attrs="{'invisible': [('approval_state', '!=', 'verify')]}"
+                                string="Approved" type="object" class="oe_highlight"/>
+                        <button name="action_reject"
+                                attrs="{'invisible': [('approval_state', 'not in', ['check','verify'])]}"
+                                string="Reject" type="object" class="oe_highlight"/>
+                        <field name="approval_state" widget="statusbar" statusbar_visible="check,verify,approve"/>
+                    </header>
+                </xpath>
+                <field name="user_id" position="after">
+                    <field name="je_posted"/>
+                </field>
+                <field name="product_id" position="after">
+                    <field name="pdo_id"/>
+                </field>
+                <xpath expr="//sheet/notebook" position="inside">
+                    <page string="Custom Info">
+                        <group col='2'>
+                            <group>
+                                <field name="prepared_by"/>
+                                <field name="prepared_timestamp"/>
+                                <field name="verify_by"/>
+                                <field name="verify_timestamp"/>
+                                <field name="Approve_by"/>
+                                <field name="approve_timestamp"/>
+                            </group>
+                            <group>
+                                <field name="reject_note" readonly="1"/>
+                                <!-- <field name ="prepared_timestamp"/>
+                                <field name ="approve_timestamp"/> -->
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+
+
+            </field>
+        </record>
+
+
+        <!-- Chart OF Account  -->
+        <record id="account_account_inherited_list" model="ir.ui.view">
+            <field name="name">account.account.list.view</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_list"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="editable"/>
+                    <attribute name="multi_edit">0</attribute>
+                </xpath>
+            </field>
+        </record>
+        <record id="account_account_inherited_form" model="ir.ui.view">
+            <field name="name">account.account.form.view</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_form"/>
+            <field name="arch" type="xml">
+                <!-- <xpath expr="//form" position="attributes">
+                    <attribute name="js_class">view_form_disable</attribute>
+                </xpath> -->
+                <xpath expr="/form/sheet" position="before">
+                    <header>
+                        <button name="action_prepared" attrs="{'invisible': [('approval_state', '!=', False)]}"
+                                string="Prepared" type="object" class="oe_highlight"/>
+                        <button name="action_approve" attrs="{'invisible': [('approval_state', '!=', 'prepared')]}"
+                                string="Approved" type="object" class="oe_highlight"/>
+                        <button name="action_reject"
+                                attrs="{'invisible': [('approval_state', 'not in', ['prepared','approve'])]}"
+                                string="Reject" type="object" class="oe_highlight"/>
+                        <field name="approval_state" widget="statusbar" statusbar_visible="prepared,approve"/>
+                    </header>
+                </xpath>
+                <field name="account_type" position="after">
+                    <field name="is_analytic_required"/>
+                </field>
+                <field name="account_type" position="after">
+                    <field name="iban"/>
+                    <field name="address"/>
+                </field>
+                <xpath expr="//sheet/notebook" position="inside">
+                    <page string="Approval Logs">
+                        <group col='2'>
+                            <group>
+                                <field name="prepared_by"/>
+                                <field name="prepared_timestamp"/>
+                                <field name="Approve_by"/>
+                                <field name="approve_timestamp"/>
+                            </group>
+                            <group>
+                                <field name="reject_note" readonly="1"/>
+                                <field name="readonly_check" readonly="1"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+
+
+            </field>
+        </record>
+        <!-- Product template -->
+
+        <record id="product_templated_approval_inherited_form" model="ir.ui.view">
+            <field name="name">product.templated.approval.form.view</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <!-- <xpath expr="//form" position="attributes">
+                    <attribute name="js_class">view_form_disable</attribute>
+                </xpath> -->
+                <xpath expr="/form/header" position="after">
+                    <header>
+                        <button name="action_prepared" attrs="{'invisible': [('approval_state', '!=', False)]}"
+                                string="Prepared" type="object" class="oe_highlight"/>
+                        <button name="action_approve" attrs="{'invisible': [('approval_state', '!=', 'prepared')]}"
+                                string="Approved" type="object" class="oe_highlight"/>
+                        <button name="action_reject"
+                                attrs="{'invisible': [('approval_state', 'not in', ['prepared','approve'])]}"
+                                string="Reject" type="object" class="oe_highlight"/>
+                        <field name="approval_state" widget="statusbar" statusbar_visible="prepared,approve"/>
+                    </header>
+                </xpath>
+
+                <xpath expr="//sheet/notebook" position="inside">
+                    <page string="Approval Logs">
+                        <group col='2'>
+                            <group>
+                                <field name="prepared_by"/>
+                                <field name="prepared_timestamp"/>
+                                <field name="Approve_by"/>
+                                <field name="approve_timestamp"/>
+                            </group>
+                            <group>
+                                <field name="reject_note" readonly="1"/>
+                                <field name="readonly_check" readonly="1"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+
+    <!-- <menuitem id="port_location_menu_action" action="port_location_action"/> -->
+    <menuitem id="port_location_menu_action" name="Port Location" parent="purchase.menu_procurement_management"
+              action="port_location_action" sequence="79"/>
+    <menuitem id="country_origin_menu_action" name="Country Origin" parent="purchase.menu_procurement_management"
+              action="country_origin_action" sequence="80"/>
+    <!-- <menuitem id="country_origin_menu_action" action="country_origin_action"/> -->
+
+</odoo>

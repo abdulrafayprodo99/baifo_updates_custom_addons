@@ -1,0 +1,21 @@
+<odoo>
+    <data>
+        <record id="view_account_payment_form_inherited" model="ir.ui.view">
+            <field name="name">view.account.payment.form.inherited</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                
+                <xpath expr="/form/header" position="inside">
+                    <button name="action_draft" string="Edit Prepared Entry" attrs="{'invisible': [('approval_state', '!=', 'prepared')]}" type="object" class="oe_highlight"/>
+                    <button name="action_draft" string="Edit Prepared Entry" attrs="{'invisible': [('approval_state_customer_payment', 'not in', ['prepared'])]}" type="object" class="oe_highlight"/>
+                </xpath>
+                
+                <xpath expr="//field[@name='amount']" position="attributes">
+                    <attribute name="attrs">{'readonly': ['|',('state','not in',['draft']),('approval_state_customer_payment','in',['prepared','verify','approve'])]}</attribute>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,64 @@
+<odoo>
+    <record id="sales_summary_report_wizard" model="ir.ui.view">
+        <field name="name">Sales summary report wizard</field>
+        <field name="model">sales.summary.report</field>
+        <field name="arch" type="xml">
+            <form string="Sales Summary Report">
+                <group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="currency_id" widget="many2many_tags"/>
+                    </group>
+                    <group>
+                        <field name="cust_sel"/>
+                        <field name="prod_sel"/>
+                        <!-- <field name="invocie_type"/> -->
+                    </group>
+                </group>
+
+                <group>
+                    <field name="customer_id" widget="many2many_tags" 
+                           attrs="{'invisible': [('cust_sel', '!=', 'customer wise')]}"/>
+                    <field name="customer_code_from" 
+                           widget="selection" 
+                           attrs="{'invisible': [('cust_sel', '!=', 'range wise')]}"/>
+                    <field name="customer_code_to" 
+                           widget="selection" 
+                           attrs="{'invisible': [('cust_sel', '!=', 'range wise')]}"/>
+                    <field name="product_id" widget="many2many_tags" 
+                           attrs="{'invisible': [('prod_sel', '!=', 'product wise')]}"/>
+                    <field name="product_code_from" 
+                           widget="selection" 
+                           attrs="{'invisible': [('prod_sel', '!=', 'range wise')]}"/>
+                    <field name="product_code_to" 
+                           widget="selection" 
+                           attrs="{'invisible': [('prod_sel', '!=', 'range wise')]}"/>
+                    <field name="category_id" widget="many2many_tags" 
+                           attrs="{'invisible': [('prod_sel', '!=', 'category wise')]}"/>
+                </group>
+
+                <group>
+                    <field name="group_by" widget="radio"/>
+                </group>
+
+                <footer>
+                    <button name="print_report" type="object" string="Print" class="oe_highlight"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="sales_summary_report_wizard_action" model="ir.actions.act_window">
+        <field name="name">Sales Summary Report Wizard</field>
+        <field name="res_model">sales.summary.report</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    
+    <menuitem id="menu_sales_summary_report" 
+              name="Sales Summary Report Wizard" 
+              parent="account.menu_finance_reports" 
+              action="sales_summary_report_wizard_action"/>
+</odoo>

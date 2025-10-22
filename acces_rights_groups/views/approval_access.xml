@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="approval_access_form_view_ah" model="ir.ui.view">
+            <field name="name">approval_access_form_view_ah</field>
+            <field name="model">approval.access</field>
+            <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name" default_focus="1" required='1'/>
+                        <field name="model_id" options="{'no_create': True}"  />
+                    </group>
+                    <notebook>
+                        
+                        <page string='Approvals'>
+                            <field name='line_ids'>
+                                <tree editable="bottom">
+                                    <field name="model_id" options="{'no_create': True}"  />
+                                    <field name="model_name" invisible="1" />
+                                    <field name="btn_store_model_nodes_ids"  domain="[('model_id','=',model_id),('node_option','=','button')]" options="{'no_create': True}" />
+                                    <field name="group_id"/>
+                                    <field name="user_ids" widget='many2many_tags' options="{'no_create': True}" domain="[('share','=',False)]"/>
+
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+            </field>
+        </record>
+        <record id="action_access_approval_groups" model="ir.actions.act_window">
+            <field name="name">Approval Access Groups</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">approval.access</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_all': 1}</field>
+        </record>
+
+
+        <menuitem id="main_menu_approval_access_groups" name="Approval Access Groups" action="action_access_approval_groups" />
+    </data>
+</odoo>
+
+
+
+
+    

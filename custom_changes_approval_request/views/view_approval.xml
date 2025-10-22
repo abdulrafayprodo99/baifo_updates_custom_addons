@@ -1,0 +1,29 @@
+<odoo>
+    <record id="custom_approval_request_view_form" model="ir.ui.view">
+        <field name="name">custom.approval.request.view.form</field>
+        <field name="model">approval.request</field>
+        <field name="inherit_id" ref="approvals.approval_request_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Example: Adding a new field after the 'name' field -->
+            <xpath expr="//field[@name='location']" position="before">
+                <field name="subject"/>
+            </xpath>
+            <xpath expr="//button[@name='action_confirm']" position="replace">
+                <button name="action_confirm" string="Prepare" type="object" attrs="{'invisible': ['|', ('approver_ids', '=', []), ('request_status','!=','new')]}" class="btn-primary" data-hotkey="v"/>
+            </xpath>
+
+            <xpath expr="//header[1]/button[@name='action_withdraw']" position="attributes">
+                <attribute name="string">REJECT</attribute>
+            </xpath>
+            <xpath expr="//header[1]/button[@name='action_refuse']" position="attributes">
+                <attribute name="string">REJECT</attribute>
+            </xpath>
+            <xpath expr="//header[2]/button[@name='action_withdraw']" position="attributes">
+                <attribute name="string">REJECT</attribute>
+            </xpath>
+            <xpath expr="//header[2]/button[@name='action_refuse']" position="attributes">
+                <attribute name="string">REJECT</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

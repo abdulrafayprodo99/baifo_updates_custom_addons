@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="purchase_request_form_inherit_for_budget_estimation" model="ir.ui.view">
+        <field name="name">purchase.request.form.inherit.for.budget.estimation</field>
+        <field name="model">purchase.request</field>
+        <field name="inherit_id" ref="purchase_request.view_purchase_request_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook[1]" position="inside">
+                <page string="Budget Estimation">
+                    <field name="budget_estimation_lines" context="{'default_purchase_request_id': id}">
+                        <tree editable="bottom">
+                            <field name="budgetary_position_id" readonly="1" />
+                            <field name="analytic_account_id" readonly="1" />
+                            <field name="budget_approved"  readonly="1" />
+                            <field name="budget_consumed"  readonly="1" />
+                            <field name="budget_remaining" readonly="1" />
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

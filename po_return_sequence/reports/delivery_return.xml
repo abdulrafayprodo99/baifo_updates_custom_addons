@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="delivery_return">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-size:13px; font-family:Segoe UI">
+                        <div class="header">
+                          
+                          <t t-set="product_dict" t-value="doc.report_filter()"/>
+                            <div class="header_working">
+                                <div class="row">
+                                    <div class="col-1">
+                                        <span t-field="doc.company_id.logo" t-options-widget="&quot;image&quot;" style="display:inline-block;width:40px;display:inline-block;width:50px"/>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="row">
+                                            <center>
+                                                <b>
+                                                    <span style="font-size:20px">Biafo Industries Limited</span>
+                                                </b>
+                                            </center>
+                                        </div>
+                                        <div class="row">
+                                            <b>
+                                                <center>
+                                                    <span style="font-size:18px">Delivery Return</span>
+                                                </center>
+                                            </b>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="row">
+                                <center>
+                                    <b>
+                                        <span style="font-size:20px">Biafo Industries Limited</span>
+                                    </b>
+                                </center>
+                            </div>
+                            <div class="row">
+                                <b>
+                                    <center>
+                                        <span style="font-size:18px">Delivery Return</span>
+                                    </center>
+                                </b>
+                            </div>
+                        </div>
+                         <div class="details">
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="row">
+                                        <span style="font-size:13px">Head Office</span>
+                                    </div>
+                                    <div class="row" style="font-size:13px">
+                                        <span t-field="doc.company_id.street"/>, <span t-field="doc.company_id.country_id.name"/>
+                                    </div>
+                                </div>
+                                <div class="col-4"/>
+                                <div class="col-4">
+                                    <div class="row">
+                                        <span style="font-size:13px">Factory</span>
+                                    </div>
+                                    <div class="row" style="font-size:13px">
+                                        <span t-field="doc.company_id.street2"/>, <span t-field="doc.company_id.country_id.name"/>
+                                    </div>
+                                  
+                                </div>
+                            </div>
+                            <br/>
+                            <br/>
+                            <div class="row">
+                                <div class="col-5">
+                                    <div class="row" style="font-size:13px">
+                                        <span>Phone No. +92-51 2353450-53</span>
+                                        <span>Fax No. +92-51 2353450-58</span>
+                                    </div>
+                                    <div class="row" style="font-size:13px">
+                                        <span>Email: </span>
+                                        <span t-field="doc.company_id.email"/>
+                                    </div>
+                                    <div class="row" style="font-size:13px">
+                                        <span>Website: </span>
+                                        <span>www.biafo.com</span>
+                                    </div>
+                                </div>
+                                <div class="col-3"/>
+                                <div class="col-4">
+                                    <div class="row" style="font-size:13px">
+                                        <span>Phone No. +92-995 617312</span>
+                                        <span>Fax No. 92 995 617497</span>
+                                    </div>
+                                    <div class="row" style="font-size:13px">
+                                        <span>Email: </span>
+                                        <span>plant@biafo.com</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="border:1px solid"/>
+                        <t t-set="sale" t-value="env['sale.order'].search([('name','=',doc.origin)])"/>
+                        <div class="po_details" style="font-size:13px">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <span>Customer:</span>
+                                        </div>
+                                        <div class="col-7">
+                                            <b>
+                                                <span t-field="doc.customer_id.name"/>
+                                            </b>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <span>Customer Code:</span>
+                                        </div>
+                                        <div class="col-7">
+                                            <span t-field="doc.customer_id.x_studio_new_code"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <span>Order Type:</span>
+                                        </div>
+                                        <div class="col-7">
+                                            <span t-field="sale.sale_order_type"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <span>Customer Order No:</span>
+                                        </div>
+                                        <div class="col-7">
+                                            <span t-esc="sale.customer_po_no"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <span>Customer Order Date:</span>
+                                        </div>
+                                        <div class="col-7">
+                                            <span t-esc="sale.customer_po_date"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <span>License No:</span>
+                                        </div>
+                                        <div class="col-7">
+                                            <span t-field="doc.customer_license_id.name"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <span>NTN No:</span>
+                                        </div>
+                                        <div class="col-7">
+                                            <span t-field="doc.partner_id.vat"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <span>S. Tax Reg No:</span>
+                                        </div>
+                                        <div class="col-7">
+                                            <span t-field="doc.partner_id.x_studio_sales_tax"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <span>Address:</span>
+                                        </div>
+                                        <div class="col-7">
+                                            <span t-field="doc.customer_id.street"/>,
+                                            <span t-field="doc.customer_id.country_id.name"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <span>Delivery Address:</span>
+                                        </div>
+                                        <div class="col-7">
+                                            <span t-field="doc.partner_id"/>,
+                                            <span t-field="sale.x_studio_delivery_address.name"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <span>Phone:</span>
+                                        </div>
+                                        <div class="col-7">
+                                            <span t-field="doc.partner_id.phone"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <span>Email:</span>
+                                        </div>
+                                        <div class="col-7">
+                                            <span t-field="doc.partner_id.email"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1"/>
+                                <div class="col-5">
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <span>Delivery Order No:</span>
+                                        </div>
+                                        <div class="col-7">
+                                            <span t-field="doc.name"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <span>Date:</span>
+                                        </div>
+                                            <div class="col-7">
+                                            <t t-esc="doc.create_date.strftime('%d-%b-%Y')"/>
+                                        </div>
+                
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <span>Exp. Delivery Date:</span>
+                                        </div>
+                                        <div class="col-7">
+                                            <span t-esc="sale.commitment_date"/>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    
+                                </div>
+                            </div>
+                            <br/>
+                            <br/>
+                            
+                        </div>
+                        <!--<div class="row" style="border:1px solid"/>-->
+                        <div class="qwerty" style="font-size:13px;">
+                            <table style="border-collapse:collapse" class="table-borderless">
+                                <t t-set="s_no" t-value="0"/>
+                                <thead>
+                                    <th style="text-align:center;border-top:1px solid black;border-bottom:1px solid black;padding:4px;width:80px">
+                                        <b>S No.</b>
+                                    </th>
+                                    <th style="text-align:left;border-top:1px solid black;border-bottom:1px solid black;padding:4px;width:100px">
+                                        <b>Product Code</b>
+                                    </th>
+                                    
+                                    <th style="text-align:left;border-top:1px solid black;border-bottom:1px solid black;padding:4px;width:250px">
+                                        <b>Product Name</b>
+                                    </th>
+                                    <th style="text-align:left;border-top:1px solid black;border-bottom:1px solid black;padding:4px;width:250px">
+                                        <b>Product Description</b>
+                                    </th>
+                                    <th style="text-align:left;border-top:1px solid black;border-bottom:1px solid black;padding:4px;width:200px">
+                                        <b>Specification</b>
+                                    </th>
+                                    <th style="text-align:center;border-top:1px solid black;border-bottom:1px solid black;padding:4px;width:100px">
+                                        <b>Unit</b>
+                                    </th>
+                                    <th style="text-align:center;border-top:1px solid black;border-bottom:1px solid black;padding:4px;width:100px">
+                                        <b>Quantity</b>
+                                    </th>
+                                    <th style="text-align:center;border-top:1px solid black;border-bottom:1px solid black;padding:4px;width:200px">
+                                        <b>No Of Package</b>
+                                    </th>
+                                </thead>
+                                
+                                <!--Aneeq Akhtar 43,052-->
+                                <tr t-foreach="product_dict.items()" t-as="product">
+                                  <td style="text-align:center">
+                                      <t t-set="s_no" t-value="s_no + 1"/>
+                                      <t t-esc="s_no"/>
+                                  </td>
+                                  <td style="text-align:left; padding:2px;">
+                                      <t t-esc="product[1]['prod_code']"/>
+                                  </td>
+                                  <td style="text-align:left; padding:2px;">
+                                      <t t-esc="product[1]['prod_name']"/>
+                                  </td>
+                                  <td style="text-align:left; padding:2px;">
+                                      <t t-esc="product[1]['prod_desc']"/>
+                                  </td>
+                                  <td style="text-align:left; padding:2px;">
+                                      <t t-esc="product[1]['prod_specification']"/>
+                                  </td>
+                                  <td style="text-align:center; padding:2px;">
+                                      <t t-esc="product[1]['unit']"/>
+                                  </td>
+                                  <td style="text-align:center; padding:2px;">
+                                      <t t-esc="product[1]['quant']"/>
+                                  </td>
+                                  <td style="text-align:center; padding:2px;">
+                                      <t t-esc="product[1]['no_of_packages']"/>
+                                  </td>
+                                </tr>
+                                <!--Aneeq Akhtar 43,052-->
+                                <tr>
+                                    <td style="text-align:center;border-bottom:2px solid black">
+                                        <!--<t t-set="s_no" t-value="s_no + 1"/>-->
+                                        <!--<t t-esc="s_no"/>-->
+                                    </td>
+                                    <td style="text-align:left;border-bottom:2px solid black; padding:2px;">
+                                        <!--<span t-field="line.product_id.default_code"/>-->
+                                    </td>
+                                    <td style="text-align:left;border-bottom:2px solid black; padding:2px;">
+                                        <!--<span t-field="line.name"/>-->
+                                    </td>
+                                    <td style="text-align:left; padding:2px;border-bottom:2px solid black">
+                                        <!--<span t-field="line.product_id.product_tmpl_id.product_specification"/>-->
+                                    </td>
+                                    <td style="text-align:left; padding:2px;border-bottom:2px solid black">
+                                        <!--<span t-field="line.product_id.product_tmpl_id.product_specification"/>-->
+                                    </td>
+                                    <td style="text-align:center;border-bottom:2px solid black;padding:2px;">
+                                        <!--<span t-field="line.product_uom_id.name"/>-->
+                                    </td>
+                                    <td style="text-align:center;border-bottom:2px solid black;padding:2px;">
+                                        <!--<span t-field="line.product_uom_id.name"/>-->
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                       
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        
+                        
+                        <div class="approved_prepared_request" style="font-size:13px;">
+                            <div class="row">
+                                <div class="col-1"/>
+                                <div class="col-2" style="text-align:center">
+                                    <span t-field="doc.prepared_by_2"/>
+                                </div>
+                                <div class="col-2"/>
+                                <div class="col-2" style="text-align:center">
+                                    <span t-field="doc.verify_by"/>
+                                </div>
+                                <div class="col-2"/>
+                                <div class="col-2" style="text-align:center">
+                                    <span t-field="doc.Approve_by"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-1"/>
+                                <div class="col-2" style="text-align:center;border-top:1px solid black">
+                                    <b>
+                                        <span>Prepared By</span>
+                                    </b>
+                                </div>
+                                <div class="col-2"/>
+                                <div class="col-2" style="text-align:center;border-top:1px solid black">
+                                    <b>
+                                        <span>Verify By</span>
+                                    </b>
+                                </div>
+                                <div class="col-2"/>
+                                <div class="col-2" style="text-align:center;border-top:1px solid black">
+                                    <b>
+                                        <span>Approved By</span>
+                                    </b>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-1"/>
+                                <div class="col-2" style="text-align:center">
+                                    <span t-field="doc.prepared_timestamp"/>
+                                </div>
+                                <div class="col-2"/>
+                                <div class="col-2" style="text-align:center">
+                                    <span t-field="doc.verify_timestamp"/>
+                                </div>
+                                <div class="col-2"/>
+                                <div class="col-2" style="text-align:center">
+                                    <span t-field="doc.approve_timestamp"/>
+                                </div>
+                            </div>
+                        </div>
+                       <br/>
+                       <br/>
+                       <br/>
+                       
+                        
+                        
+                        <div class="footer" style="font-family:Segoe UI">
+                            <div class="row" style="border:1px solid black"/>
+                            <div class="row mt-1">
+                                <div class="col-1">
+                                    <img class="img-fluid" src="/web/image/373-9fced58c/unnamed.jpg"/>
+                                </div>
+                                 <div class="col-5" style="text-align:center">
+                
+                                  <span>Printed by </span>
+                                  <span t-esc="env.user.name or 'Unknown User'"/>
+                
+                           
+                              </div>
+                                            <div class="col-4" style="text-align:right">
+                                  <t t-set="current_time" t-value="time.strftime('%d/%m/%Y %H:%M:%S')"/>
+                                  <span t-esc="current_time"/>
+                                  <t t-if="report_type == 'pdf'">
+                                      <span style="margin-left: 15px;">Page: <span class="page"/> / <span class="topage"/></span>
+                                  </t>
+                              </div>
+                                <!--<div class="col-1"/>-->
+                                <!--<div class="col-4" style="text-align:left">-->
+                                <!--    <span/>-->
+                                <!--</div>-->
+                                <div class="col-2" style="text-align:right">
+                                    <div t-if="report_type == 'pdf'" class="text-muted">
+                                    Page: 
+                                
+                                
+                                    
+                                        
+                                        
+                                        
+                                        <span class="page"/> / 
+                                
+                                
+                                    
+                                        
+                                        
+                                        
+                                        <span class="topage"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_delivery_return_note" model="ir.actions.report">
+        <field name="name">Delivery Return</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">po_return_sequence.delivery_return</field>
+        <field name="report_file">po_return_sequence.delivery_return</field>
+        <field name="print_report_name">'Delivery Return - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking" />
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

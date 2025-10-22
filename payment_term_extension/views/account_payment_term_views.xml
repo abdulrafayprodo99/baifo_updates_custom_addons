@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_account_payment_term_form_inherit" model="ir.ui.view">
+        <field name="name">account.payment.term.form.inherit.order.type</field>
+        <field name="model">account.payment.term</field>
+        <field name="inherit_id" ref="account.view_payment_term_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='note']" position="after">
+                <field name="order_type" required="1"/>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record id="view_partner_form_payment_term_custom" model="ir.ui.view">
+        <field name="name">res.partner.form.payment.term.custom</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Place after existing fields like payment terms -->
+            <xpath expr="//field[@name='property_payment_term_id']" position="replace">
+                <field name="property_payment_term_id"
+                       attrs="{'required': [('is_payment_term_set', '=', False)]}" />
+            </xpath>
+
+            <xpath expr="//field[@name='property_supplier_payment_term_id']" position="replace">
+                <field name="property_supplier_payment_term_id"
+                       attrs="{'required': [('is_payment_term_set', '=', False)]}" />
+            </xpath>
+
+            <xpath expr="//sheet" position="inside">
+                <field name="is_payment_term_set" readonly="1"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

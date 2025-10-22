@@ -1,0 +1,45 @@
+<odoo>
+    <record id="view_cprm_update_wizard_form" model="ir.ui.view">
+        <field name="name">cprm.update.wizard.form</field>
+        <field name="model">cprm.update.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Update CPRM No">
+                <group>
+                    <field name="cprm_no"/>
+                </group>
+                <footer>
+                    <button name="apply_cprm_update" type="object" string="Apply" class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_cprm_update_wizard" model="ir.actions.act_window">
+        <field name="name">Update CPRM No</field>
+        <field name="res_model">cprm.update.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{}</field>
+    </record>
+
+
+    <record id="view_payment_wht_line_tree_header" model="ir.ui.view">
+        <field name="name">payment.wht.line.tree.header</field>
+        <field name="model">payment.wht.line</field>
+        <field name="inherit_id" ref="wht_extension.view_payment_wht_receipt_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <header>
+                    <button name="%(wht_extension.action_cprm_update_wizard)d"
+                        type="action"
+                        string="Update CPRM No"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('id', '=', False)]}" />
+                </header>
+            </xpath>
+        </field>
+    </record>
+    
+
+</odoo>

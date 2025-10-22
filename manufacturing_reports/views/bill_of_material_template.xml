@@ -1,0 +1,254 @@
+<odoo>
+    <!-- Define Paper Format First -->
+    <!-- <record id="paperformat_bill_of_material" model="report.paperformat">
+        <field name="name">Bill of Material Report Format</field>
+        <field name="format">A4</field>
+        <field name="orientation">Potrait</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_spacing">35</field>
+        <field name="dpi">90</field>
+        <field name="header_line">False</field>
+    </record> -->
+
+    <!-- Define Report Action -->
+    <record id="action_bill_of_material_pdf" model="ir.actions.report">
+        <field name="name">Bill of Material Report</field>
+        <field name="model">bill.of.material.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">manufacturing_reports.report_bill_of_material_pdf</field>
+        <field name="report_file">manufacturing_reports.report_bill_of_material_pdf</field>
+        <!-- <field name="paperformat_id" ref="manufacturing_reports.paperformat_bill_of_material"/> -->
+        <field name="print_report_name">'Bill of Material Report'</field>
+    </record>
+
+    <template id="report_bill_of_material_pdf">
+        <t t-name="manufacturing_reports.report_bill_of_material_pdf">
+            <t t-call="web.html_container">
+                <!-- <t t-call="web.external_layout"> -->
+                            <div class="page" style="font-family:Segoe UI;">
+                    <!-- Report Header -->
+                    <!--<div>-->
+                    <!--    <h3 style="text-align: center; font-size: 25px; margin-bottom: 5px;">Biafo-->
+                    <!--        Industries Limited</h3>-->
+                    <!--    <h1 style="text-align: center; font-size: 20px; margin-top: 0;">Bill of-->
+                    <!--        Materials </h1>-->
+                    <!--    <p style="text-align: center; font-size: 14px;">-->
+                    <!--        <strong>Product Range:</strong>-->
+                    <!--        <t t-esc="report_data['header']['product_details']"/>-->
+                    <!--    </p>-->
+
+                    <!--    <div style="border-top: 1px solid black; padding: 5px 0; margin-top: 10px;"/>-->
+                    <!--</div>-->
+
+                    <!-- Loop through BOM Records -->
+                    <t t-foreach="report_data['rows']" t-as="bom">
+                                 <div>
+                        <h3 style="text-align: center; font-size: 25px; margin-bottom: 5px;">Biafo
+                            Industries Limited</h3>
+                        <h1 style="text-align: center; font-size: 20px; margin-top: 0;">Bill of
+                            Materials </h1>
+                        <p style="text-align: center; font-size: 14px;">
+                            <strong>Product Range:</strong>
+                            <t t-esc="report_data['header']['product_details']"/>
+                        </p>
+
+                        <div style="border-top: 1px solid black; padding: 5px 0; margin-top: 10px;"/>
+                    </div>
+                        <div style=" font-size: 14px;">
+                            <!-- BOM Information -->
+                            <div style="display: flex; display: -webkit-box; -webkit-box-pack: center; justify-content: space-between;margin-left:10px">
+                                <div style="width:75%;">
+                                    <p>
+                                        <strong>Sequence: </strong>
+                                        <t t-esc="bom['sequence']"/>
+                                    </p>
+                                    <p>
+                                        <strong>Fiscal Year: </strong>
+                                        <t t-esc="bom['batch_no']"/>
+                                    </p>
+                                    <p>
+                                        <strong>Product: </strong>
+                                        <t t-esc="bom['product']"/>
+                                    </p>
+                                    <p>
+                                        <strong>Quantity: </strong>
+                                        <t t-esc="bom['product_qty']"/>  <span><t t-esc="bom['unit']"/></span>
+                                    </p>
+                                    <p><strong>Standard Rate: </strong>PKR <t t-esc="round(bom['standard_rate'],2)"/></p>
+
+                                </div>
+                                <div style="width:25%; text-align:left">
+
+                                    <p>
+                                        <strong>Bom Version ID: </strong>
+                                        <t t-esc="bom['bom_version_id']"/>
+                                    </p>
+                                    <p>
+                                        <strong>Bom Version: </strong>
+                                        <t t-esc="bom['bom_version']"/>
+                                    </p>
+                                    <!--<p><strong>Effective
+                                    Date:   </strong> <t t-esc="bom['effective_date']"/></p>-->
+                                    <!--<p><strong>End
+                                    Date:   </strong> <t t-esc="bom['end_date']"/></p>-->
+                                    <p>
+                                        <strong>Effective Date:</strong>
+                                        <t t-if="bom['effective_date']">
+                                            <t t-esc="bom['effective_date'].split(' ')[0].replace('-', '/')"/>
+                                        </t>
+                                    </p>
+                                    <p>
+                                        <strong>End Date:</strong>
+                                        <t t-if="bom['end_date']">
+                                            <t t-esc="bom['end_date'].split(' ')[0].replace('-', '/')"/>
+                                        </t>
+                                    </p>
+                                    <p>
+                                        <strong>Status: </strong>
+                                        <t t-esc="bom['status']"/>
+                                    </p>
+
+                                </div>
+                            </div>
+
+                            <!-- Table for Components -->
+                            <table class="table" style="width: 100%; margin-bottom: 20px; border-collapse: collapse;margin-top:10px;">
+                                <thead style="border-top: 1px solid #000; border-bottom: 1px solid #000;">
+                                    <tr>
+                                        <th style="text-align: left; padding: 8px; width: 15%;font-size: 14px;">Product
+                                            Code</th>
+                                        <th style="text-align: left; padding: 8px; width: 55%;font-size: 14px;">
+                                            Description</th>
+                                        <th style="text-align: left; padding: 8px; width: 5%;font-size: 14px;">Unit</th>
+                                        <th style="text-align: right; padding: 8px; width: 10%;font-size: 14px;">Std.
+                                            Qty</th>
+                                        <th style="text-align: right; padding: 8px; width: 10%;font-size: 14px;">
+                                            Rate</th>
+                                        <th style="text-align: right; padding: 8px; width: 15%;font-size: 14px;">
+                                            Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="total_bom_amount" t-value="0"/>
+                                    <!-- Loop through Categories -->
+                                    <t t-foreach="bom['components']" t-as="category">
+                                        <tr style="font-weight: bold;">
+                                            <td colspan="6" style="padding: 8px; text-align: left; font-size: 14px;">
+                                                <t t-esc="category['category']"/>
+                                            </td>
+                                        </tr>
+
+                                        <t t-set="category_total" t-value="0"/>
+
+                                        <!-- Loop through Components in Each Category -->
+                                        <t t-foreach="category['components']" t-as="component">
+                                            <t t-set="line_total" t-value="component['product_qty'] * component['standard_rate']"/>
+                                            <t t-set="category_total" t-value="category_total + line_total"/>
+                                            <t t-set="total_bom_amount" t-value="total_bom_amount + line_total"/>
+
+                                            <tr>
+                                                <td style="padding: 8px; text-align: left;font-size: 14px;">
+                                                    <t t-esc="component['product']"/>
+                                                </td>
+                                                <td style="padding: 8px; text-align: left;font-size: 14px;">
+                                                    <t t-esc="component['description']"/>
+                                                </td>
+                                                <td style="padding: 8px; text-align: left;font-size: 14px;">
+                                                    <t t-esc="component['unit']"/>
+                                                </td>
+                                                <td style="padding: 8px; text-align: right;font-size: 14px;">
+                                                    <t t-esc="'{:,.2f}'.format(round(component['product_qty'],2))"/>
+                                                </td>
+                                                <!--<td
+                                                style="padding: 8px; text-align: right;"><t
+                                                t-esc="'{:,.2f}'.format(component['standard_rate'])"/></td>-->
+                                                <td style="padding: 8px; text-align: right;font-size: 14px;">
+                                                    <t t-esc="'{:,.2f}'.format(round(component['standard_rate'],2))"/>
+                                                </td>
+                                                <td style="padding: 8px; text-align: right;font-size: 14px;">
+                                                    <t t-esc="'{:,.2f}'.format(line_total)"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+
+                                        <!-- Category Total Row -->
+                                        <tr style="font-weight: bold;font-size: 14px;">
+                                             
+                                            <td colspan="5" style="padding: 8px; text-align: right; ">
+                                                  
+                                                Total Cost of  
+                                                
+                                                <t t-esc="category['category']"/> </td>
+                                                
+                                                
+                                            <td style="padding: 8px; text-align: right; border-top: 1px solid #000; border-bottom: 1px solid #000;">
+                                                <t t-esc="'{:,.2f}'.format(category_total)"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+
+                                    <!-- Total BOM Amount -->
+                                    <tr style="font-weight: bold;font-size: 14px;">
+                                        <td colspan="5" style="padding: 8px; text-align: right; ">Total
+                                            Cost of Product </td>
+                                        <td style="padding: 8px; text-align: right; border-top: 1px solid #000; border-bottom: 1px solid #000;">
+                                            <t t-esc="'{:,.2f}'.format(total_bom_amount)"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                        <!-- Page Break After Each BOM Record -->
+                        <!--<div
+                        style="page-break-after: always;"/>-->
+                                        <div style="page-break-before: always;"/>
+
+                    </t>
+
+
+                    <!-- Total BOM Amount at the End -->
+                    <!--<div
+                    style="border-top: 2px solid black; font-weight: bold; background-color:
+                    #f2f2f2; padding: 10px 0;">-->
+                    <!--    <span style="float: right; padding-right: 30px;">-->
+                    <!--        <p><strong>Total for BOM:</strong> <t
+                    t-esc="'{:,.2f}'.format(total_bom_amount)"/></p>-->
+                    <!--    </span>-->
+                    <!--</div>-->
+                </div>
+
+                <div class="footer" style="font-family:Segoe UI">
+                    <div class="row" style="border:1px solid black"/>
+                    <div class="row mt-1">
+                        <div class="col-1">
+                            <img class="img-fluid" src="/web/image/373-9fced58c/unnamed.jpg"/>
+                        </div>
+                        <div class="col-1" style="text-align:left">
+                            <!-- Add margin-right for spacing between logo and Powered by Odolution -->
+                        </div>
+                        <div class="col-3" style="text-align:left">
+                            <span>Powered by Odolution</span>
+                        </div>
+                        <div class="col-7" style="text-align:right">
+                            <t t-set="current_time" t-value="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M:%S')"/>
+                            <span t-esc="current_time"/>
+                            <t t-if="report_type == 'pdf'">
+                                <span style="margin-left: 15px;">Page: <span class="page"/> / <span class="topage"/></span>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                
+
+                <!-- </t> -->
+            </t>
+        </t>
+    </template>
+
+
+</odoo>

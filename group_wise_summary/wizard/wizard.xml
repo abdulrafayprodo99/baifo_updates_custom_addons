@@ -1,0 +1,53 @@
+<odoo>
+    <record id="sales_group_wise_summary_report_wizard" model="ir.ui.view">
+        <field name="name">Product Group Wise Sales Summary Report</field>
+        <field name="model">sales.group.summary.report</field>
+        <field name="arch" type="xml">
+            <form string="Sales Summary - Product Group Wise">
+                <group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group>
+                        <field name="currency_id" widget="many2many_tags"/>
+                    </group>
+                </group>
+
+                <group>
+                    <group>
+                        <field name="prod_sel" string="Product Selection"/>
+                    </group>
+                </group>
+
+                <!-- Conditional display of fields based on 'prod_sel' -->
+                <group>
+                    <group attrs="{'invisible': [('prod_sel', '!=', 'product wise')]}">
+                        <field name="product_id" widget="many2many_tags" string="Product"/>
+                    </group>
+                    <group attrs="{'invisible': [('prod_sel', '!=', 'range wise')]}">
+                        <field name="product_code_from" string="Product Code From"/>
+                        <field name="product_code_to" string="Product Code To"/>
+                    </group>
+                </group>
+
+                <footer>
+                    <button name="print_report" type="object" string="Print" class="oe_highlight"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="sales_group_wise_summary_wizard_action" model="ir.actions.act_window">
+        <field name="name">Group Wise Sales Summary Wizard</field>
+        <field name="res_model">sales.group.summary.report</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    
+    <menuitem id="menu_sales_group_wise_summary_report" 
+              name="Product Group Wise Sales Summary Report" 
+              parent="account.menu_finance_reports" 
+              action="sales_group_wise_summary_wizard_action"/>
+</odoo>

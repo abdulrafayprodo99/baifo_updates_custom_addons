@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="ol_inventory_overview_stock_picking_form_inherit" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook/page[6]" position="inside">
+               <field name="picking_code" invisible="1"/>
+            </xpath>
+            <!-- <xpath expr="//sheet/notebook/page[6]" position="attributes">
+                <attribute name="attrs">{'invisible': [('picking_code', '=', True)]}</attribute>
+            </xpath> -->
+            <!-- <xpath expr="//form[1]/sheet[1]/notebook[1]/page[not(@name)][2]" position="attributes">
+                <attribute name="attrs">{'invisible': [('picking_code', '=', True)]}</attribute>
+            </xpath>
+          -->
+        </field>
+    </record>
+    <!-- M Azeem started Task 43380 -->
+    <record id="stock_picking_inherited_form_fields_required" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.required</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/> <!-- Assuming the correct form view ID -->
+        <field name="arch" type="xml">
+            <!-- Left group replacement -->
+            <xpath expr="//group[@name='studio_page_I9vqk_left']" position="replace">
+                <group name="studio_page_I9vqk_left">
+                    <field name="vehicle_transport_lic_no" attrs="{'required': [('approval_state', '=', 'verify'), ('picking_type_id', 'in', [2, 36])]}"/>
+                    <field name="explosive_carrier_no" attrs="{'required': [('approval_state', '=', 'verify'), ('picking_type_id', 'in', [2, 36])]}"/>
+                    <field name="holder_of_transport_lic_no" attrs="{'required': [('approval_state', '=', 'verify'), ('picking_type_id', 'in', [2, 36])]}"/>
+                    <field name="no_of_packags" attrs="{'required': [('approval_state', '=', 'verify'), ('picking_type_id', 'in', [2, 36])]}"/>
+                    <field name="date" attrs="{'required': [('approval_state', '=', 'verify'), ('picking_type_id', 'in', [2, 36])]}"/>
+                    <field name="date_of_dispatched" attrs="{'required': [('approval_state', '=', 'verify'), ('picking_type_id', 'in', [2, 36])]}"/>
+                </group>
+            </xpath>
+
+            <!-- Right group replacement -->
+            <xpath expr="//group[@name='studio_page_I9vqk_right']" position="replace">
+                <group name="studio_page_I9vqk_right">
+                    <field name="driver_name" attrs="{'required': [('approval_state', '=', 'verify'), ('picking_type_id', 'in', [2, 36])]}"/>
+                    <field name="mobile_no_driver" attrs="{'required': [('approval_state', '=', 'verify'), ('picking_type_id', 'in', [2, 36])]}"/>
+                    <field name="CNIC" attrs="{'required': [('approval_state', '=', 'verify'), ('picking_type_id', 'in', [2, 36])]}"/>
+                    <field name="date_of_expected_arival_at_site" attrs="{'required': [('approval_state', '=', 'verify'), ('picking_type_id', 'in', [2, 36])]}"/>
+                    <field name="customer_license_id" domain="customer_license_id_domain" attrs="{'required': [('approval_state', '=', 'verify'), ('picking_type_id', 'in', [2, 36])]}"/>
+                    <field name="seal_no" attrs="{'required': [('approval_state', '=', 'verify'), ('picking_type_id', 'in', [2, 36])]}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

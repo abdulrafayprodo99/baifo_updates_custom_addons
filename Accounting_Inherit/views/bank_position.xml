@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="view_bank_position_tree" model="ir.ui.view">
+            <field name="name">bank.position.tree</field>
+            <field name="model">bank.position</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="date"/>
+                    <field name="bank_id"/>
+                    <field name="bank_name"/>
+                    <field name="account_no"/>
+                    <field name="available_balance"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_bank_position_form" model="ir.ui.view">
+            <field name="name">bank.position.form</field>
+            <field name="model">bank.position</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="date"/>
+                            <field name="bank_id"/>
+                            <field name="bank_name" />
+                            <field name="account_no"/>
+                            <field name="available_balance"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_bank_position" model="ir.actions.act_window">
+            <field name="name">Bank Positions</field>
+            <field name="res_model">bank.position</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Menu Item -->
+        <menuitem id="menu_bank_position" 
+                  name="Bank Positions" 
+                  parent="account.menu_finance_configuration"
+                  action="action_bank_position"
+                  sequence="20"/>
+    </data>
+</odoo>

@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="aged_receivable_wizard" model="ir.ui.view">
+        <field name="name">aged.receivable.wizard</field>
+        <field name="model">aged.receivable.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Supplier Analysis">
+                <group name="name">
+                    <group name="name">
+                        <field name="partner_ids" widget="many2many_tags"/>
+                        <field name="from_customer_new_code_id" 
+                            attrs="{'required': [('to_customer_new_code_id','!=',False)], 'invisible': [('filter_type','=','all_customer')]}"
+                        />
+                        <field name="to_customer_new_code_id" 
+                            attrs="{'required': [('from_customer_new_code_id','!=',False)], 'invisible': [('filter_type','=','all_customer')]}"
+                        />
+                    </group>
+                    <group name="name">
+                        <field name="filter_type" />
+                        <field name="from_new_code" 
+                        attrs="{ 'invisible': True }"/>
+                        <field name="to_new_code" 
+                        attrs="{ 'invisible': True }"/>
+                        <field name="date_filter" />
+                    </group>
+                </group>
+                <footer>
+                    <button string="Print" type="object" name="get_report" class="btn-primary"/>
+                    <button string="Export Excel" type="object" name="export_xlsx" class="btn-secondary"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="report_action_aged_receivable" model="ir.actions.act_window">
+        <field name="name">Aged Receviable Analysis</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">aged.receivable.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="aged_receivable_wizard"/>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_aged_receivable" model="ir.actions.report">
+        <field name="name">Aged Receivable xlsx Report</field>
+        <field name="model">aged.receivable.wizard</field>
+        <field name="type">ir.actions.report</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">aged_receviable_report.action_aged_receivable</field>
+        <field name="binding_type">report</field>
+    </record>
+    <menuitem
+        id="aged_receivable_analysis_menu_id"
+        name="Receviable Analysis"
+        parent="account.menu_finance_reports"
+        action="report_action_aged_receivable"
+        sequence="91"/>
+</odoo>

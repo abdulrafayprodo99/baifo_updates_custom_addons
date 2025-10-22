@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<record id="purchase_request_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.request.form.inherit</field>
+        <field name="model">purchase.request</field>
+        <field name="inherit_id" ref="purchase_request.view_purchase_request_form"/>
+        <field name="arch" type="xml">
+        <xpath expr="//field[@name='group_id']" position="after">
+            <field name="purchase_order_created"/>
+        </xpath>
+        </field>
+    </record>
+
+
+    <record id="purchace_order_line_inherit_new" model="ir.ui.view">
+        <field name="name">purchace.order.line.inherit.new</field>
+        <field name="model">purchase.order.line</field>
+        <field name="inherit_id" ref="purchase.purchase_history_tree"/>
+        <field name="arch" type="xml">
+        <xpath expr="//field[@name='price_unit']" position="after">
+            <field name="qty_balance"/>
+        </xpath>
+        </field>
+    </record>
+</odoo>

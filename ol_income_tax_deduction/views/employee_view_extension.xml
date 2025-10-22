@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="employee_form_view_extension" model="ir.ui.view">
+        <field name="name">employee.form.view.extension</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='has_work_permit']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//separator[@name='has_work_permit']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='visa_no']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='permit_no']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='visa_expire']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='work_permit_expiration_date']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+
+            <xpath expr="//field[@name='work_permit_name']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//div[@name='div_km_home_work']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+
+            <xpath expr="//page[@name='personal_information']/group/group[3]" position="after">
+                <group name="other_education" string="Other Education">
+                            <field name="certificate"/>
+                            <field name="study_field"/>
+                            <field name="study_school"/>         
+                </group>
+            </xpath>
+
+
+            <xpath expr="//page[@name='personal_information']/group/group[5]/field[@name='identification_id']" position="after">
+                        <field name="cnic_exp_date"/> 
+            </xpath>
+
+
+            <xpath expr="//field[@name='employee_id']" position="after">
+                <field name="contract_type"/>
+            </xpath>
+
+            <xpath expr="//field[@name='employee_type']" position="attributes">
+                                <attribute name="invisible">1</attribute>
+
+            </xpath>
+
+        </field>
+    </record>
+
+
+    <record id="view_hr_contract_form_inherit" model="ir.ui.view">
+        <field name="name">hr.contract.form.inherit</field>
+        <field name="model">hr.contract</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='wage']" position="after">
+                <field name="increment" invisible="1"/>  
+                
+            </xpath>
+
+
+            <xpath expr="//group[@name='salary_info']" position="after">
+                <group name="tax" string="TAX">
+                    <field name="taxable_income"/>
+                    <field name="zakat"/>
+                    <field name="computed_taxable_income"/>
+                    <field name="tax_liability"/>
+                    <field name="total_deduction_tax"/>
+                    <field name="income_tax_payable"/>
+                    <field name="previous_tax_paid"/>
+                    <field name="tax_months"/>
+                    <field name="final_tax_liability" readonly="1"/>
+                    <field name="monthly_tax_deduction"/>   <!-- Make it readonly if you don't want it to be edited -->
+                </group>
+            </xpath>
+
+            <xpath expr="//group[@name='tax']" position="after">
+                <group name="social_security_minimum_wage" string="Social Security">
+                    <field name="fiscal_year"/>
+                    <field name="minimum_wage"/>
+                    <field name="minimum_wage_eobi"/> 
+                </group>
+            </xpath>
+            
+            <xpath expr="//field[@name='hr_responsible_id']" position="before">
+                <field name="start_probation" attrs="{'invisible': [('contract_type_id', '!=', 4)]}" />
+                <field name="end_probation" attrs="{'invisible': [('contract_type_id', '!=', 4)]}" />
+            </xpath>
+
+
+            <xpath expr="//group[@name='tax']" position="after">
+                    <group name="tax_adjusment" string="Tax Adjustment" invisible="0">
+                        <field name="zakat"/>
+                        <field name="total_deduction_tax"/>
+                    </group>
+            </xpath>
+
+            <xpath expr="//group[@name='tax']" position="after">
+                <group name="allowances_and_deductions" string="Allowances and Deductions">
+                    <field name="manual_eobi"></field>
+                    <field name="pf_employee_contribution"/>
+                    <field name="pf_employer_contribution"/>
+                    <field name="food_employee_contribution"/>
+                    <field name="food_employer_contribution"/>
+                    <field name="other_allowance"/>
+                    <field name="other_deduction"/>
+                    <field name="professional_tax"/>
+                    <field name="advance_from_employer"/>
+                    <field name="provident_fund_loan"/>
+                    <field name="overtime"/>
+                    <field name="excessive_leaves"/>
+                    <field name="arrears"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

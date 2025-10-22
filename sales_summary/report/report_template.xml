@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="sales_summary_reports">
+        <t t-call="web.basic_layout">
+            <link href="https://fonts.googleapis.com/css2?family=Roboto" rel="stylesheet" />
+
+            <style>
+                * {
+                    padding-top: 0;
+                    padding-bottom: 0;
+                }
+                body {
+                    margin: 0;
+                }
+            </style>
+        <t t-if="other['sorted_by'] == 'product'">
+            <div class="header" style="font-size: 0.9rem !important; font-family: 'Roboto', serif !important;">
+                <div class="row">
+                    <div class="col-12 text-left">
+                        <h3>Biafo Industries Limited</h3>
+                        <h3>Sales Summary - Product Wise / Customer Wise</h3>
+                        <t t-if="other['from_date']">
+                            <b>From :</b>
+                            <t t-esc="other['from_date']" t-options="{&quot;widget&quot;: &quot;date&quot;,&quot;format&quot;: &quot;dd-MM-yyyy&quot;}"/>
+                        </t>
+                        <br/>
+                        <t t-if="other['to_date']">
+                            <b>To :</b>
+                            <t t-esc="other['to_date']" t-options="{&quot;widget&quot;: &quot;date&quot;,&quot;format&quot;: &quot;dd-MM-yyyy&quot;}"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+                          
+            <div class="page">
+                <div class="row">
+                    <div class="col-12">
+                        <table style="font-size: 0.9rem !important; font-family: 'Roboto', serif !important; border-collapse:collapse; width: 100%; font-family: Arial, sans-serif;" class="table-borderless">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:left;border-bottom:1px solid black;padding:0px;width:250px;font-weight:bold;">
+                                        <b>Customer</b>
+                                    </th>
+                                    <th style="text-align:left;border-bottom:1px solid black;padding:0px;width:120px;font-weight:bold;">
+                                        <b>Description</b>
+                                    </th>
+                                    <th style="text-align:left;border-bottom:1px solid black;padding:0px;width:50px;font-weight:bold;">
+                                        <b>Unit</b>
+                                    </th>
+                                    <th style="text-align:right;border-bottom:1px solid black;padding:0px;width:50px;font-weight:bold;">
+                                        <b>Quantity</b>
+                                    </th>
+                                    <th style="text-align:right;border-bottom:1px solid black;padding:0px;width:80px;font-weight:bold;">
+                                        <b>Sales Excluding Sales Tax</b>
+                                    </th>
+                                    <th style="text-align:right;border-bottom:1px solid black;padding:0px;width:80px;font-weight:bold;">
+                                        <b>Sales Tax Amount</b>
+                                    </th>
+                                    <th style="text-align:right;border-bottom:1px solid black;padding:0px;width:60px;font-weight:bold;">
+                                        <b>Total Amount</b>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Initialize variables for grouping by product -->
+                                <t t-set="current_product" t-value="None"/>
+                                <t t-set="product_quantity_total" t-value="0.0"/>
+                                <t t-set="product_value_excl_total" t-value="0.0"/>
+                                <t t-set="product_sales_tax_total" t-value="0.0"/>
+                                <t t-set="product_total_amount_total" t-value="0.0"/>
+                                
+                                <!-- Initialize variables for customer-wise totals within each product -->
+                                <t t-set="customer_quantity_total" t-value="0.0"/>
+                                <t t-set="customer_value_excl_total" t-value="0.0"/>
+                                <t t-set="customer_sales_tax_total" t-value="0.0"/>
+                                <t t-set="customer_total_amount_total" t-value="0.0"/>
+                                
+                                <t t-foreach="data" t-as="value">
+                                    <!-- Check if the product has changed -->
+                                    <t t-if="current_product != value['product_default_code']">
+                                        <!-- Display totals for the previous product, if any -->
+                                        <t t-if="current_product != 'None'">
+                                            <tr style="font-size: 0.8rem !important;">
+                                                <td colspan="3" style="text-align:right; font-weight:bold; padding-right:30px;">
+                                                    Subtotal
+                                                </td>
+                                                <td style="text-align:right; font-weight:bold; padding:0px; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0;">
+                                                    <span t-esc="product_quantity_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                     
+                                                </td>
+                                                <td style="text-align:right; font-weight:bold; padding:0px; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0;">
+                                                    <span t-esc="product_value_excl_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                           
+                                                </td>
+                                                <td style="text-align:right; font-weight:bold; padding:0px; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0;">
+                                                    <span t-esc="product_sales_tax_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                               
+                                                </td>
+                                                <td style="text-align:right; font-weight:bold; padding:0px; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0;">
+                                                    <span t-esc="product_total_amount_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                              
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        <!-- Update product and reset totals -->
+                                        <t t-set="current_product" t-value="value['product_default_code']"/>
+                                        <t t-set="product_quantity_total" t-value="0.0"/>
+                                        <t t-set="product_value_excl_total" t-value="0.0"/>
+                                        <t t-set="product_sales_tax_total" t-value="0.0"/>
+                                        <t t-set="product_total_amount_total" t-value="0.0"/>
+                                        
+                                        <tr>
+                                            <td colspan="7" style="text-align:left; padding:0px; font-weight: bold;">
+                                                <b><t t-esc="value['product_default_code']"/> - <t t-esc="value['product_name']"/></b>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    
+                                    <!-- Update product totals -->
+                                    <t t-set="product_quantity_total" t-value="product_quantity_total + value['quantity']"/>
+                                    <t t-set="product_value_excl_total" t-value="product_value_excl_total + value['value_excl']"/>
+                                    <t t-set="product_sales_tax_total" t-value="product_sales_tax_total + value['sales_tax_amount']"/>
+                                    <t t-set="product_total_amount_total" t-value="product_total_amount_total + value['total_amount']"/>
+                                    
+                                    <!-- Display customer details for the product -->
+                                    <tr style="font-size: 0.8rem !important;">
+                                        <td style="text-align:left; padding:0px; font-weight: normal;">
+                                            <span>
+                                                <t t-esc="value['customer_name']"/>
+                                            </span>
+                                        </td>
+                                        <td style="text-align:left; padding:0px; font-weight: normal;">
+                                            <span>
+                                                <t t-esc="value['code']"/>
+                                            </span>
+                                        </td>
+                                        <td style="text-align:left; padding:0px; font-weight: normal;">
+                                            <span>
+                                                <t t-esc="value['unit']"/>
+                                            </span>
+                                        </td>
+                                        <td style="text-align:right; padding:0px; font-weight: normal;">
+                                            <span t-esc="value['quantity']" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                        </td>
+                                        <td style="text-align:right; padding:0px; font-weight: normal;">
+                                            <span t-esc="value['value_excl']" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                        </td>
+                                        <td style="text-align:right; padding:0px; font-weight: normal;">
+                                            <span t-esc="value['sales_tax_amount']" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                        </td>
+                                        <td style="text-align:right; padding:0px; font-weight: normal;">
+                                            <span t-esc="value['total_amount']" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                
+                                <!-- Display totals for the last product -->
+                                <tr style="font-size: 0.8rem !important;">
+                                    <td colspan="3" style="text-align:right; font-weight:bold; padding-right:30px;">
+                                        Subtotal
+                                    </td>
+                                    <td style="text-align:right; font-weight:bold; padding:0px; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0;">
+                                        <span t-esc="product_quantity_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                               
+                                    </td>
+                                    <td style="text-align:right; font-weight:bold; padding:0px; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0;">
+                                        <span t-esc="product_value_excl_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                           
+                                    </td>
+                                    <td style="text-align:right; font-weight:bold; padding:0px; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0;">
+                                        <span t-esc="product_sales_tax_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                  
+                                    </td>
+                                    <td style="text-align:right; font-weight:bold; padding:0px; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0;">
+                                        <span t-esc="product_total_amount_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                
+                                    </td>
+                                </tr>
+
+                                <tr style="font-size: 0.8rem !important;">
+                                    <td colspan="3" style="text-align:right; font-weight:bold; padding-right:30px;">
+                                        <b>Total</b>
+                                    </td>
+                                    <td style="text-align:right; font-weight:bold; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0;">
+                                        <span t-esc="sum(value['quantity'] for value in data)" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                    </td>
+                                    <td style="text-align:right; font-weight:bold; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0;">
+                                        <span t-esc="sum(value['value_excl'] for value in data)" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                    </td>
+                                    <td style="text-align:right; font-weight:bold; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0;">
+                                        <span t-esc="sum(value['sales_tax_amount'] for value in data)" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                    </td>
+                                    <td style="text-align:right; font-weight:bold;border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0; ">
+                                        <span t-esc="sum(value['total_amount'] for value in data)" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+          
+        </t>
+        <t t-if="other['sorted_by'] == 'customer'">
+              <div class="header" style="font-size: 0.9rem !important; font-family: 'Roboto', serif !important;">
+                      <div class="row">
+                          <div class="col-12 text-left">
+                              <h3>Biafo Industries Limited</h3>
+                              <h3>Sales Summary - Customer Wise / Product wise</h3>
+                              <t t-if="other['from_date']">
+                                      <b>From :</b>
+                                      <t t-esc="other['from_date']" t-options="{&quot;widget&quot;: &quot;date&quot;,&quot;format&quot;: &quot;dd-MM-yyyy&quot;}"/>
+                              </t>
+                              <br/>
+                              <t t-if="other['to_date']">
+                                  <b>To :</b>
+      
+                                  <t t-esc="other['to_date']" t-options="{&quot;widget&quot;: &quot;date&quot;,&quot;format&quot;: &quot;dd-MM-yyyy&quot;}"/>
+                              </t>
+                          </div>
+                      </div>
+                  </div>
+                                  
+                  <div class="page">
+                      <div class="row">
+                          <div class="col-12">
+                              <table style="font-size: 0.9rem !important; font-family: 'Roboto', serif !important;   border-collapse:collapse; width: 100%; font-family: Arial, sans-serif;" class="table-borderless">
+                                  <thead>
+                                      <tr>
+                                          <th style="text-align:left;border-bottom:1px solid black;padding:0px;width:90px;font-weight:bold;">
+                                              <b>Product</b>
+                                          </th>
+                                          <th style="text-align:left;border-bottom:1px solid black;padding:0px;width:150px;font-weight:bold;">
+                                              <b>Description</b>
+                                          </th>
+                                          <th style="text-align:left;border-bottom:1px solid black;padding:0px;width:50px;font-weight:bold;">
+                                              <b>Unit</b>
+                                          
+                                          </th>
+                                          <th style="text-align:right;border-bottom:1px solid black;padding:0px;width:50px;font-weight:bold;">
+                                              <b>Quantity</b>
+                                          </th>
+                                          <th style="text-align:right;border-bottom:1px solid black;padding:0px;width:80px;font-weight:bold;">
+                                              <b>Sales Excluding Sales Tax</b>
+                                          </th>
+                                          <th style="text-align:right;border-bottom:1px solid black;padding:0px;width:80px;font-weight:bold;">
+                                              <b>Sales Tax Amount</b>
+                                          </th>
+                                          <th style="text-align:right;border-bottom:1px solid black;padding:0px;width:60px;font-weight:bold;">
+                                              <b>Total Amount</b>
+                                          </th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <t t-set="customer_name" t-value="None"/>
+                                      <t t-set="customer_code" t-value="None"/>
+                                      <!-- Initialize variables to store customer-wise totals -->
+                                      <t t-set="customer_quantity_total" t-value="0.0"/>
+                                      <t t-set="customer_gross_amount_total" t-value="0.0"/>
+                                      <t t-set="customer_value_excl_total" t-value="0.0"/>
+                                      <t t-set="customer_sales_tax_total" t-value="0.0"/>
+                                      <t t-set="customer_total_amount_total" t-value="0.0"/>
+                                      <!-- Initialize variable to track the first customer -->
+                                      <t t-set="is_first_customer" t-value="True"/>
+                                      <t t-foreach="data" t-as="value">
+                                          <!-- Check if the customer name has changed -->
+                                          <t t-if="customer_name != value['customer_name']">
+                                              <!-- Display totals for the previous customer, if any -->
+                                              <t t-if="customer_name != 'None' and not is_first_customer">
+                                                  <!--<tr>-->
+                                                  <!--    <td colspan="7">-->
+                                                  <!--        <hr/>-->
+                                                  <!--    </td>-->
+                                                  <!--</tr>-->
+                                                  <tr style="font-size: 0.8rem !important;">
+                                                      <td colspan="3" style="text-align:right; font-weight:bold; padding-right:30px;">
+                                                          Subtotal
+                                                      </td>
+                                                      <td style="text-align:right; font-weight:bold; padding:0px; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0;">
+                                                          <span t-esc="customer_quantity_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                                      </td>
+                                                      <td style="text-align:right; font-weight:bold; padding:0px; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0;">
+                                                          <span t-esc="customer_value_excl_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                                      </td>
+                                                      <td style="text-align:right; font-weight:bold; padding:0px; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0; ">
+                                                          <span t-esc="customer_sales_tax_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                                      </td>
+                                                      <td style="text-align:right; font-weight:bold; padding:0px; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0; ">
+                                                          <span t-esc="customer_total_amount_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                                      </td>
+                                                  </tr>
+                                                  <!-- Line after subtotal -->
+                                                  <!--<tr>-->
+                                                  <!--    <td colspan="7">-->
+                                                  <!--        <hr/>-->
+                                                  <!--    </td>-->
+                                                  <!--</tr>-->
+                                                  <!-- Reset customer totals -->
+                                                  <t t-set="customer_quantity_total" t-value="0.0"/>
+                                                  <t t-set="customer_gross_amount_total" t-value="0.0"/>
+                                                  <t t-set="customer_value_excl_total" t-value="0.0"/>
+                                                  <t t-set="customer_sales_tax_total" t-value="0.0"/>
+                                                  <t t-set="customer_total_amount_total" t-value="0.0"/>
+                                              </t>
+                                              <!-- Update customer name and code -->
+                                              <t t-set="customer_name" t-value="value['customer_name']"/>
+                                              <t t-set="customer_code" t-value="value['code']"/>
+                                              <t t-set="is_first_customer" t-value="False"/>
+                                              <tr>
+                                                  <td style="text-align:left; padding:0px; font-weight: bold;" colspan="1">
+                                                      <b><t t-esc="customer_code"/></b>
+                                                  </td>
+                                                  <td style="text-align:left; padding:0px; font-weight: bold;" colspan="1">
+                                                      <b><t t-esc="customer_name"/></b>
+                                                  </td>
+                                                  <!--<td colspan="6"/>-->
+                                              </tr>
+                                          </t>
+                                          <!-- Update customer totals -->
+                                          <t t-set="customer_quantity_total" t-value="customer_quantity_total + value['quantity']"/>
+                                          <t t-set="customer_gross_amount_total" t-value="customer_gross_amount_total + value['gross_amount']"/>
+                                          <t t-set="customer_value_excl_total" t-value="customer_value_excl_total + value['value_excl']"/>
+                                          <t t-set="customer_sales_tax_total" t-value="customer_sales_tax_total + value['sales_tax_amount']"/>
+                                          <t t-set="customer_total_amount_total" t-value="customer_total_amount_total + value['total_amount']"/>
+                                          <tr style="font-size: 0.8rem !important;">
+                                              <td style="text-align:left; padding:0px; font-weight: normal;">
+                                                  <span>
+                                                      <t t-esc="value['product_default_code']"/>
+                                                  </span>
+                                              </td>
+                                              <td style="text-align:left; padding:0px; font-weight: normal;">
+                                                  <span t-esc="value['product_name']"/>
+                                              </td>
+                                              <td style="text-align:left; padding:0px; font-weight: normal;">
+                                                  <span t-esc="value['unit']"/>
+                                              </td>
+                                              <td style="text-align:right; padding:0px; font-weight: normal;">
+                                                  <span t-esc="value['quantity']" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                              </td>
+                                              <td style="text-align:right; padding:0px; font-weight: normal;">
+                                                  <span t-esc="value['value_excl']" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                              </td>
+                                              <td style="text-align:right; padding:0px; font-weight: normal;">
+                                                  <span t-esc="value['sales_tax_amount']" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                              </td>
+                                              <td style="text-align:right; padding:0px; font-weight: normal;">
+                                                  <span t-esc="value['total_amount']" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                              </td>
+                                          </tr>
+                                      </t>
+                                      <!-- Display totals for the last customer -->
+                                      <t t-if="customer_name != 'None'">
+                                          <!--<tr>-->
+                                          <!--    <td colspan="7">-->
+                                          <!--        <hr/>-->
+                                          <!--    </td>-->
+                                          <!--</tr>-->
+                                          <tr style="font-size: 0.8rem !important;">
+                                              <td colspan="3" style="text-align:right; font-weight:bold; padding-right:30px; ">
+                                                          Subtotal
+                                                      </td>
+                                              <td style="text-align:right; font-weight:bold; padding:0px; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0;">
+                                                  <span t-esc="customer_quantity_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                              </td>
+                                              <td style="text-align:right; font-weight:bold; padding:0px; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0;">
+                                                  <span t-esc="customer_value_excl_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                              </td>
+                                              <td style="text-align:right; font-weight:bold; padding:0px; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0;">
+                                                  <span t-esc="customer_sales_tax_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                              </td>
+                                              <td style="text-align:right; font-weight:bold; padding:0px; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0;">
+                                                  <span t-esc="customer_total_amount_total" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                              </td>
+                                          </tr>
+                                          <!-- Line after subtotal -->
+                                          <!--<tr>-->
+                                          <!--    <td colspan="7">-->
+                                          <!--        <hr/>-->
+                                          <!--    </td>-->
+                                          <!--</tr>-->
+                                      </t>
+                                      <tr style="font-size: 0.8rem !important;">
+                                          <td colspan="3" style="text-align:right; font-weight:bold; padding-right:30px; ">
+                                                        Total
+                                                      </td>
+                                          <td style="text-align:right; font-weight:bold; padding:0px; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0;">
+                                              <span t-esc="totals['quantity']" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                          </td>
+                                          <td style="text-align:right; font-weight:bold; padding:0px; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0; ">
+                                              <span t-esc="totals['value_excl']" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                          </td>
+                                          <td style="text-align:right; font-weight:bold; padding:0px; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0;">
+                                              <span t-esc="totals['sales_tax_amount']" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                          </td>
+                                          <td style="text-align:right; font-weight:bold; padding:0px; border-top:0.07rem solid #e0e0e0; border-bottom:0.07rem solid #e0e0e0;">
+                                              <span t-esc="totals['total_amount']" t-options="{&quot;widget&quot;: &quot;float&quot;, &quot;precision&quot;: 2, &quot;thousands_sep&quot;: &quot;,&quot;}"/>
+                                          </td>
+                                      </tr>
+                                      <!--<tr>-->
+                                      <!--    <td colspan="7">-->
+                                      <!--        <hr/>-->
+                                      <!--    </td>-->
+                                      <!--</tr>-->
+                                  </tbody>
+      
+                              </table>
+                          </div>
+                      </div>
+                  </div>
+        </t>
+        </t>
+    </template>
+</odoo>

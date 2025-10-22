@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<record id="view_operation_type_inherit" model="ir.ui.view">
+    <field name="name">operation.type.form.inherit</field>
+    <field name="model">stock.picking.type</field>
+    <field name="inherit_id" ref="stock.view_picking_type_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//group[@name='second']" position="after">    
+            <notebook>
+                <page string='Transfer Fields' name='field'>
+                    <group>
+                        <field name="field_custom" widget='many2many_tags' string="Fields"/>
+                    </group>
+                </page>
+            </notebook>
+        </xpath>
+        <xpath expr="//field[@name='show_operations']" position="after">
+            <field name="fields_comma_separated" invisible="1" string ="coma"/>
+        </xpath>
+    </field>
+</record>
+
+<record id="view_picking_type_inherit" model="ir.ui.view">
+    <field name="name">picking.type.form.inherit</field>
+    <field name="model">stock.picking</field>
+    <field name="inherit_id" ref="prodo_x_biafo_ext.stock_picking_inherited_form_"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='picking_type_id']" position="after">    
+            <field name="fields_separated" invisible="1"  string="Fields"/>  
+        </xpath>
+        <xpath expr="//field[@name='date_done']" position="attributes">
+            <attribute name="attrs">
+            {'invisible': [('fields_separated', 'ilike', 'date_done')]}
+            </attribute>
+        </xpath>
+        <xpath expr="//field[@name='origin']" position="attributes">
+                <attribute name="attrs">
+                {'invisible': [('fields_separated', 'ilike', 'origin')]}
+                </attribute>
+        </xpath>
+        <xpath expr="//field[@name='date_deadline']" position="attributes">
+                <attribute name="attrs">
+                {'invisible': [('fields_separated', 'ilike', 'date_deadline')]}
+                </attribute>
+        </xpath>
+        <xpath expr="//form[1]/sheet[1]/group[1]/group[1]/field[@name='partner_id']" position="attributes">
+            <attribute name="attrs">{"readonly": [["state","in",["done","cancel"]]],'invisible': [('fields_separated', 'ilike', 'partner_id')]}</attribute>
+        </xpath>
+
+        <xpath expr="//div[@class='o_td_label']" position="replace">
+            <div class="o_td_label" attrs="{'invisible': [('fields_separated', 'ilike', 'partner_id')]}">
+            <label for="partner_id" string="Delivery Address" style="font-weight:bold;" attrs="{'invisible': [('picking_type_code', '!=', 'outgoing')]}"/>
+            <label for="partner_id" string="Receive From" style="font-weight:bold;" attrs="{'invisible': [('picking_type_code', '!=', 'incoming')]}"/>
+            <label for="partner_id" string="Contact" style="font-weight:bold;" attrs="{'invisible': [('picking_type_code', 'in', ['incoming', 'outgoing'])]}"/>
+            </div>
+        </xpath> 
+        
+        <xpath expr="//form[1]/sheet[1]/group[1]/group[2]/label[1]" position="attributes">
+            <attribute name="attrs">{'invisible': [('fields_separated', 'ilike', 'scheduled_date')]}</attribute>
+        </xpath>
+        <xpath expr="//div[@class='o_row']" position="replace">
+            <div class="o_row" attrs="{'invisible': [('fields_separated', 'ilike', 'scheduled_date')]}">
+            <field name="scheduled_date" attrs="{'required': [('id', '!=', False)]}" decoration-warning="state not in ('done', 'cancel') and scheduled_date &lt; now" decoration-danger="state not in ('done', 'cancel') and scheduled_date &lt; current_date" decoration-bf="state not in ('done', 'cancel') and (scheduled_date &lt; current_date or scheduled_date &lt; now)"/>
+            <field name="json_popover" nolabel="1" widget="stock_rescheduling_popover" attrs="{'invisible': [('json_popover', '=', False)]}"/>
+            </div>
+        </xpath>
+        <xpath expr="//field[@name='products_availability']" position="replace">
+            <field name="products_availability" attrs="{'invisible': ['|','|', ('picking_type_code', '!=', 'outgoing'), ('state', 'not in', ['confirmed', 'waiting', 'assigned']),('fields_separated', 'ilike', 'products_availability')]}" decoration-success="state == 'assigned' or products_availability_state == 'available'" decoration-warning="state != 'assigned' and products_availability_state in ('expected', 'available')" decoration-danger="state != 'assigned' and products_availability_state == 'late'"/>
+        </xpath>
+        <xpath expr="//field[@name='backorder_id']" position="replace">
+          <field name="backorder_id" attrs="{'invisible': ['|',('backorder_id','=',False),('fields_separated', 'ilike', 'backorder_id')]}"/>
+        </xpath>
+        <xpath expr="//field[@name='move_type']" position="replace">
+            <field name="move_type" attrs="{'invisible': ['|',('picking_type_code', '=', 'incoming'),('fields_separated', 'ilike', 'move_type')]}"/>
+            <field name="gate_in_id_required" string="Gate In Required" invisible="1" />
+        </xpath>
+        
+        <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="attrs">
+                {'invisible': [('fields_separated', 'ilike', 'user_id')]}
+                </attribute>
+        </xpath>
+        
+        <xpath expr="//field[@name='group_id']" position="attributes">
+                <attribute name="attrs">
+                {'invisible': [('fields_separated', 'ilike', 'group_id')]}
+                </attribute>
+        </xpath>
+        
+        <xpath expr="//group[@name='other_infos']/field[@name='company_id']" position="attributes">
+                <attribute name="attrs">
+                {'invisible': [('fields_separated', 'ilike', 'company_id')]}
+                </attribute>
+        </xpath>
+        <xpath expr="//field[@name='customer_id']" position="attributes">
+                <attribute name="attrs">
+                {'invisible': [('fields_separated', 'ilike', 'customer_id')]}
+                </attribute>
+        </xpath>
+        
+        <xpath expr="//field[@name='customer_code']" position="attributes">
+                <attribute name="attrs">
+                {'invisible': [('fields_separated', 'ilike', 'customer_code')]}
+                </attribute>
+        </xpath>
+        
+        <xpath expr="//field[@name='import_grn_ref']" position="attributes">
+                <attribute name="attrs">
+                {'invisible': [('fields_separated', 'ilike', 'import_grn_ref')]}
+                </attribute>
+        </xpath>
+        
+        <xpath expr="//field[@name='location_id']" position="attributes">
+                <attribute name="attrs">
+                {'invisible': [('fields_separated', 'ilike', 'location_id')]}
+                </attribute>
+        </xpath>
+        
+        <xpath expr="//field[@name='gate_in_id']" position="attributes">
+                <attribute name="attrs">
+                {'invisible': [('fields_separated', 'ilike', 'gate_in_id')],'required': [('gate_in_id_required', '=', True)]}
+                </attribute>
+        </xpath>      
+        <xpath expr="//form[1]/sheet[1]/group[1]/group[1]/field[@name='location_id'][1]" position="attributes">
+            <attribute name="attrs">{'invisible': [('fields_separated', 'ilike', 'location_id')]}</attribute>
+        </xpath>
+        
+        <xpath expr="//form[1]/sheet[1]/group[1]/group[1]/field[@name='location_id'][2]" position="replace">
+          <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': ['|',('picking_type_code', '=', 'outgoing'),('fields_separated', 'ilike','location_id')]}"/>
+        </xpath>
+        
+        <xpath expr="//form[1]/sheet[1]/group[1]/group[1]/field[@name='location_dest_id'][1]" position="attributes">
+            <attribute name="attrs">{'invisible': [('fields_separated', 'ilike', 'location_dest_id')]}</attribute>
+        </xpath>
+        
+        <xpath expr="//form[1]/sheet[1]/group[1]/group[1]/field[@name='location_dest_id'][2]" position="replace">
+          <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations" attrs="{'invisible': ['|',('picking_type_code', '=', 'outgoing'),('fields_separated', 'ilike','location_id')]}"/>
+        </xpath>
+        
+    </field>
+</record>
+
+</odoo>

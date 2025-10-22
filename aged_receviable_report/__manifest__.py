@@ -1,0 +1,43 @@
+{
+    'name': 'Aged Receviable Model',
+    'version': '16.0.1.0.2',
+    'summary': 'Custom fields in aged receviable',
+    'sequence': -100,
+    'author': 'Osama Nadeem',
+    'license': 'OPL-1',
+    'website': 'https://www.terabits.xyz',
+    'description':"""
+      
+        """,
+    "price": "29.00",
+    "currency": "USD",
+    # 'depends': ['account_reports','base','account','prodo_x_biafo_ext','contacts','web','stock','purchase_stock','report_xlsx'],
+    'depends': ['account_reports','base','account','contacts','web','stock','purchase_stock','report_xlsx'],
+    'data':[
+        # 'view/jounal_item_view.xml',
+        'security/ir.model.access.csv',       
+        'report/supplier_report.xml',
+        'report/aged_receivable_report.xml',
+        'report/aged_payable_report.xml',
+        #'report/product_ledger_report.xml',
+        'view/aged_receivable_menu_item.xml',
+        'view/aged_payable_menu_item.xml',
+        # 'view/product_ledger_report_menu.xml',
+        # 'report/custom_report_aged_receivable.xml',
+        # 'view/aged_receivable_report_menu_item.xml',
+        # 'view/journal_item_view.xml',
+        # 'view/aged_receviable_report.xml',
+        'view/partner_ledger_menu_item_view.xml',
+        'view/partner_ledger.xml',
+    ],
+    'assets': {
+        'web.assets_backend':[
+            'aged_receviable_report/static/src/components/supplier_ledger_report.js',
+            'aged_receviable_report/static/src/components/supplier_ledger_report.xml',
+        ],
+    },
+    # 'images': ['static/description/banner.png'],
+    'application': True,
+    'installable': True,
+    'auto_install': False,
+}

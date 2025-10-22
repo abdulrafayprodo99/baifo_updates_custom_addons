@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_approval_access,access.approval.access,model_approval_access,,1,1,1,1
+access_approval_view_nodes,access.approval.view.nodes,model_approval_view_nodes,,1,1,1,1
+access_approval_store_nodes,access.approval.store.nodes,model_approval_store_nodes,,1,1,1,1

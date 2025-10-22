@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_equipment_request_view_form_inherit_new" model="ir.ui.view">
+        <field name="name">maintenance.request.form.inherit</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='maintenance_type']" position="after">
+                <field name="wr_no"/>
+                <field name="equipment_id" position="move" />
+                <field name="functional_loc" />
+                <field name="department_id" />
+                <field name="cost_center" />
+
+                <field name="priority" position="move" />
+            </xpath>
+            <xpath expr="//field[@name='priority']" position="replace">
+                <field name="priority"  />
+            </xpath>
+
+
+            <!-- <xpath expr="//field[@name='maintenance_type']" position="after">
+                <field name="frequency"  />
+            </xpath> -->
+            
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="discipline_id"/>
+                <field name="schedule_date" position="move" />
+                <field name="duration"  position="move" />
+                <field name="team_member_ids" invisible="1"/>
+                <field name="job_assignment" domain="[('id', 'in', team_member_ids)]" widget="many2many_tags"/>
+                <field name="job_performer_remarks"/>
+                <field name="job_requester_remarks"/>
+                <field name="remarks"/>
+            </xpath>
+            <xpath  expr="//field[@name='functional_loc']" position="after">
+                <field name="fault_category_id" />
+            </xpath>
+        </field>
+    </record>
+
+     <!-- Define the Equipment Manager Group -->
+    <record id="group_equipment_manager" model="res.groups">
+        <field name="name">Maintenance Request Status Bar</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+    </record>
+
+    <!-- Inherit the View and Apply Group Permissions -->
+    <record id="view_maintenance_request_form_inherit" model="ir.ui.view">
+        <field name="name">maintenance.request.form.inherit</field>
+        <field name="model">maintenance.request</field>
+        <field name="inherit_id" ref="maintenance.hr_equipment_request_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Locate the stage_id field -->
+            <!-- <xpath expr="//field[@name='stage_id']" position="attributes">
+
+            <attribute name="options">
+                {'clickable': '1'} if is_in_equipment_group else {'clickable': '0'}
+            </attribute>
+
+            </xpath> -->
+
+            <xpath expr="//field[@name='stage_id']" position="before">
+                <field name="is_in_equipment_group" invisible="1"/>
+            </xpath>
+
+
+        </field>
+    </record>
+
+
+
+
+
+
+
+   
+
+</odoo>

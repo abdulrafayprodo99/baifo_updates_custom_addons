@@ -1,0 +1,98 @@
+<odoo>
+    <!-- Report Action -->
+    <record id="action_standard_rate_pdf" model="ir.actions.report">
+        <field name="name">Standard Rate Report (BOM)</field>
+        <field name="model">standard.rate.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ol_standard_rate_report.report_standard_rate_pdf</field>
+        <field name="report_file">ol_standard_rate_report.report_standard_rate_pdf</field>
+        <field name="binding_model_id" ref="mrp.model_mrp_bom"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">'Standard Rate Report (BOM)'</field>
+    </record>
+
+<!-- Report Template -->
+<template id="report_standard_rate_pdf">
+    <t t-call="web.html_container">
+        <!-- Header Variables -->
+        <t t-set="company_name" t-value="'Biafo Industries Limited'"/>
+        <t t-set="from_date" t-value="report_data.get('header').get('from_date')"/>
+        <t t-set="to_date" t-value="report_data.get('header').get('to_date')"/>
+        <t t-set="product_details" t-value="report_data.get('header').get('product_details')"/>
+        <t t-set="rows" t-value="sorted(report_data.get('rows'), key=lambda r: r['product'], reverse=True)"/>
+
+        <div style="font-family: Arial, sans-serif; font-size: 12px;">
+            <!-- Title Section -->
+            <div style="text-align: center; margin-bottom: 10px;">
+                <h2 style="margin: 3px; text-transform: uppercase; font-size: 18px; font-weight:bold;">
+                    <t t-esc="company_name"/>
+                </h2>
+                <h3 style="margin: 3px; font-size: 18px; font-weight:bold;">Standard Rates Report (BOM)</h3>
+                <p style="margin: 3px; font-size: 10.5px; font-weight:normal;">
+                    <t t-if="product_details">
+                        ( From Date: <t t-esc="from_date or '-'"/> To: <t t-esc="to_date or '-'"/>,
+                        Product Details: <t t-esc="product_details"/> )
+                    </t>
+                    <t t-if="not product_details">
+                        ( From Date: <t t-esc="from_date or '-'"/> To: <t t-esc="to_date or '-'"/>,
+                        From Product Group: 1 To 9, From Product: 1110001 To 9220004 )
+                    </t>
+                </p>
+            </div>
+
+            <!-- Date and Time Section -->
+            <div style="margin: 3px; border-bottom: 1px solid #000; padding-bottom: 3px; font-size: 10.5px; font-weight:normal;">
+                <span style="float: left;">Date: <t t-esc="time.strftime('%d-%b-%Y')"/></span>
+                <span style="float: right;">Time: <t t-esc="time.strftime('%I:%M %p')"/></span>
+                <div style="clear: both;"/>
+            </div>
+
+            <br/>
+
+            <!-- Table Section -->
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead style="border-top: 1px solid #000; border-bottom: 1px solid #000;">
+                    <tr style="background-color: #f2f2f2; text-align: center;">
+                        <th style="padding: 3px; text-align: left; width: 8%; font-size: 14px; font-weight:bold;">S.No.</th>
+                        <th style="padding: 3px; text-align: left; width: 12%; font-size: 14px; font-weight:bold;">Product</th>
+                        <th style="padding: 3px; text-align: left; width: 30%; font-size: 14px; font-weight:bold;">Description</th>
+                        <th style="padding: 3px; text-align: center; width: 8%; font-size: 14px; font-weight:bold;">Effective Date</th>
+                        <th style="padding: 3px; text-align: right; width: 14.33%; font-size: 14px; font-weight:bold;">Quantity</th>
+                        <th style="padding: 3px; text-align: right; width: 13.34%; font-size: 14px; font-weight:bold;">Unit</th>
+                        <th style="padding: 3px; text-align: right; width: 14.33%; font-size: 14px; font-weight:bold;">Standard Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-set="sno" t-value="1"/>
+                    <t t-foreach="rows" t-as="row">
+                        <tr>
+                            <td style="padding: 5px 3px; text-align: left; width: 8%;font-size: 10.5px; font-weight:normal;">
+                                <t t-esc="sno"/>
+                            </td>
+                            <td style="padding: 5px 3px; text-align: left; width: 12%;font-size: 10.5px; font-weight:normal;">
+                                <t t-esc="row['product']"/>
+                            </td>
+                            <td style="padding: 5px 3px; text-align: left; width: 30%;font-size: 10.5px; font-weight:normal;">
+                                <t t-esc="row['description']"/>
+                            </td>
+                            <td style="padding: 5px 3px; text-align: center; width: 8%;font-size: 10.5px; font-weight:normal;">
+                                <t t-esc="row['effective_date']"/>
+                            </td>
+                            <td style="padding: 5px 3px; text-align: right; width: 14.33%;font-size: 10.5px; font-weight:normal;">
+                                <t t-esc="row['product_qty']"/>
+                            </td>
+                            <td style="padding: 5px 3px; text-align: right; width: 13.34%;font-size: 10.5px; font-weight:normal;">
+                                <t t-esc="row['unit']"/>
+                            </td>
+                            <td style="padding: 5px 3px; text-align: right; width: 14.33%;font-size: 10.5px; font-weight:normal;">
+                                <t t-esc="'{:,.2f}'.format(row['standard_rate'])"/>
+                            </td>
+                        </tr>
+                        <t t-set="sno" t-value="sno + 1"/>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+    </t>
+</template>
+</odoo>

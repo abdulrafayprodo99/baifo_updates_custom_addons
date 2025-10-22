@@ -1,0 +1,223 @@
+<odoo>
+	<template id="report_inventory_all_template">
+		<t t-call="web.basic_layout">
+			<div class="header w-100">
+				<h1 class="text-center">
+					Biafo Industries Limited
+				</h1>
+				<h2 class="text-center">
+					Inventory List (Closing)
+				</h2>
+				<h5 class="text-center">
+					(
+					<t t-if="from_date" t-esc="'From: '+from_date +', To: '+to_date+' ,'" />
+					<t t-if="from_product" t-esc="'From: '+from_product +', To: '+to_product + ' ,'" />
+					Rupees, Stock Items)
+				</h5>
+				<div class="row w-100">
+					<div class="col-6">
+						<p>
+							Date: &amp;nbsp;
+							<t t-esc="datetime.datetime.now().strftime('%d-%b-%Y')" />
+						</p>
+					</div>
+					<div class="col-6">
+						<p style="text-align:right;">
+							Time: &amp;nbsp;
+							<t t-esc="datetime.datetime.now().strftime('%I:%M %p')" />
+						</p>
+					</div>
+				</div>
+				<br />
+				<div class="row w-100 py-1" style="border-top:1px solid black;border-bottom:1px solid black;">
+					<div class="col-1" style="font-weight:bolder;text-align:left;font-size:8px;">
+						Product Code
+					</div>
+					<div class="col-2" style="font-weight:bolder;text-align:left;font-size:8px;">
+						Description
+					</div>
+					<div class="col-1" style="font-weight:bolder;text-align:left;font-size:8px;">
+						Units
+					</div>
+					<div class="col-2 px-2">
+						<div class="row">
+							<div class="col-12 pb-1" style="font-weight:bolder;text-align:center;font-size:8px;border-bottom:1px solid black;">
+								Opening
+							</div>
+						</div>
+						<div class="row">
+							<div t-attf-class="{{'col-4' if with_amount == 'amount_true' else 'col-6'}}" style="font-size:8px;">
+								Quantity
+							</div>
+							<div t-attf-class="{{'col-4' if with_amount == 'amount_true' else 'col-6'}}" style="font-size:8px;">
+								Rate
+							</div>
+							<div t-if="with_amount == 'amount_true'" class="col-4" style="font-size:8px;">
+								Amount
+							</div>
+						</div>
+					</div>
+					<div class="col-2 px-2">
+						<div class="row">
+							<div class="col-12 pb-1" style="font-weight:bolder;text-align:center;font-size:8px;border-bottom:1px solid black;">
+								In
+							</div>
+						</div>
+						<div class="row">
+							<div t-attf-class="{{'col-4' if with_amount == 'amount_true' else 'col-6'}}" style="font-size:8px;">
+								Quantity
+							</div>
+							<div t-attf-class="{{'col-4' if with_amount == 'amount_true' else 'col-6'}}" style="font-size:8px;">
+								Rate
+							</div>
+							<div t-if="with_amount == 'amount_true'" class="col-4" style="font-size:8px;">
+								Amount
+							</div>
+						</div>
+					</div>
+					<div class="col-2 px-2">
+						<div class="row">
+							<div class="col-12 pb-1" style="font-weight:bolder;text-align:center;font-size:8px;border-bottom:1px solid black;">
+								Out
+							</div>
+						</div>
+						<div class="row">
+							<div t-attf-class="{{'col-4' if with_amount == 'amount_true' else 'col-6'}}" style="font-size:8px;">
+								Quantity
+							</div>
+							<div t-attf-class="{{'col-4' if with_amount == 'amount_true' else 'col-6'}}" style="font-size:8px;">
+								Rate
+							</div>
+							<div t-if="with_amount == 'amount_true'" class="col-4" style="font-size:8px;">
+								Amount
+							</div>
+						</div>
+					</div>
+					<div class="col-2 px-2">
+						<div class="row">
+							<div class="col-12 pb-1" style="font-weight:bolder;text-align:center;font-size:8px;border-bottom:1px solid black;">
+								Closing
+							</div>
+						</div>
+						<div class="row">
+							<div t-attf-class="{{'col-4' if with_amount == 'amount_true' else 'col-6'}}" style="font-size:8px;">
+								Quantity
+							</div>
+							<div t-attf-class="{{'col-4' if with_amount == 'amount_true' else 'col-6'}}" style="font-size:8px;">
+								Rate
+							</div>
+							<div t-if="with_amount == 'amount_true'" class="col-4" style="font-size:8px;">
+								Amount
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="page" style="font-family:Segoe UI;">
+				<div class="qwerty">
+					<t t-set="total_amount_opening" t-value="0" />
+					<t t-set="total_amount_in" t-value="0" />
+					<t t-set="total_amount_out" t-value="0" />
+					<t t-set="total_amount_closing" t-value="0" />
+					<t t-foreach="products" t-as="pr">
+                    <div class="row w-100 py-1" style="page-break-inside:avoid;">
+							<div class="col-1" style="font-weight:bolder;text-align:left;font-size:8px;">
+								<t t-esc="pr['product_code']" />
+							</div>
+							<div class="col-2" style="font-weight:bolder;text-align:left;font-size:8px;">
+								<t t-esc="pr['name']" />
+							</div>
+							<div class="col-1" style="font-weight:bolder;text-align:left;font-size:8px;">
+								<t t-esc="pr['unit']" />
+							</div>
+							<div class="col-2 px-2">
+								<div class="row py-1">
+									<div t-attf-class="{{'col-4' if with_amount == 'amount_true' else 'col-6'}}" style="font-size:8px;">
+										<t t-esc="round(pr['opening'],2)" />
+									</div>
+									<div t-attf-class="{{'col-4' if with_amount == 'amount_true' else 'col-6'}}" style="font-size:8px;">
+										<t t-esc="round(pr['rate'],2)" />
+									</div>
+									<div t-if="with_amount == 'amount_true'" class="col-4" style="font-size:8px;">
+										<t t-esc="round(float(pr['opening']) * float(pr['rate']),2)" />
+									</div>
+									<t t-set="total_amount_opening" t-value="total_amount_opening + (float(pr['opening']) * float(pr['rate']))" />
+								</div>
+							</div>
+							<div class="col-2 px-2">
+								<div class="row py-1">
+									<div t-attf-class="{{'col-4' if with_amount == 'amount_true' else 'col-6'}}" style="font-size:8px;">
+										<t t-esc="round(pr['activity_in'],2)" />
+									</div>
+									<div t-attf-class="{{'col-4' if with_amount == 'amount_true' else 'col-6'}}" style="font-size:8px;">
+										<t t-esc="round(pr['rate'],2)" />
+									</div>
+									<div t-if="with_amount == 'amount_true'" class="col-4" style="font-size:8px;">
+										<t t-esc="round(float(pr['activity_in']) * float(pr['rate']),2)" />
+									</div>
+									<t t-set="total_amount_in" t-value="total_amount_in + (float(pr['activity_in']) * float(pr['rate']))" />
+								</div>
+							</div>
+							<div class="col-2 px-2">
+								<div class="row py-1">
+									<div t-attf-class="{{'col-4' if with_amount == 'amount_true' else 'col-6'}}" style="font-size:8px;">
+										<t t-esc="round(pr['activity_out'],2)" />
+									</div>
+									<div t-attf-class="{{'col-4' if with_amount == 'amount_true' else 'col-6'}}" style="font-size:8px;">
+										<t t-esc="round(pr['rate'],2)" />
+									</div>
+									<div t-if="with_amount == 'amount_true'" class="col-4" style="font-size:8px;">
+										<t t-esc="round(float(pr['activity_out']) * float(pr['rate']),2)" />
+									</div>
+									<t t-set="total_amount_out" t-value="total_amount_out + (float(pr['activity_out']) * float(pr['rate']))" />
+								</div>
+							</div>
+							<div class="col-2 px-2">
+								<div class="row py-1">
+									<div t-attf-class="{{'col-4' if with_amount == 'amount_true' else 'col-6'}}" style="font-size:8px;">
+										<t t-esc="round(pr['qty'],2)" />
+									</div>
+									<div t-attf-class="{{'col-4' if with_amount == 'amount_true' else 'col-6'}}" style="font-size:8px;">
+										<t t-esc="round(pr['rate'],2)" />
+									</div>
+									<div t-if="with_amount == 'amount_true'" class="col-4" style="font-size:8px;">
+										<t t-esc="round(float(pr['qty']) * float(pr['rate']),2)" />
+									</div>
+									<t t-set="total_amount_closing" t-value="total_amount_closing + (float(pr['qty']) * float(pr['rate']))" />
+								</div>
+							</div>
+							<!--
+							<div t-attf-class="{{'col-1' if with_amount == 'amount_true' else 'col-2'}}" style="text-align:right;"><t t-esc="round(pr['qty'],2)"/></div>
+							<div t-attf-class="{{'col-1' if with_amount == 'amount_true' else 'col-2'}}" style="text-align:right;"><t t-esc="round(pr['rate'],2)"/></div>
+							<div t-if="with_amount == 'amount_true'" class="col-2" style="text-align:right;"><t t-esc="round(float(pr['qty']) * float(pr['rate']),2)"/></div>
+							-->
+						</div>
+					</t>
+					<div t-if="with_amount == 'amount_true'" class="row w-100 p-1">
+						<div class="offset-2 col-2">
+							<b>
+								Total :
+							</b>
+						</div>
+						<div class="offset-1 col-1" style="text-align:right;font-weight:bolder;border-top:1px solid black;border-bottom:1px solid black;font-size:8px;">
+							<t t-esc="round(total_amount_opening,2)" />
+						</div>
+						<div class="offset-1 col-1" style="text-align:right;font-weight:bolder;border-top:1px solid black;border-bottom:1px solid black;font-size:8px;">
+							<t t-esc="round(total_amount_in,2)" />
+						</div>
+						<div class="offset-1 col-1" style="text-align:right;font-weight:bolder;border-top:1px solid black;border-bottom:1px solid black;font-size:8px;">
+							<t t-esc="round(total_amount_out,2)" />
+						</div>
+						<div class="offset-1 col-1" style="text-align:right;font-weight:bolder;border-top:1px solid black;border-bottom:1px solid black;font-size:8px;">
+							<t t-esc="round(total_amount_closing,2)" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="footer" style="height:20px;">
+				<span />
+			</div>
+		</t>
+	</template>
+</odoo>
+		

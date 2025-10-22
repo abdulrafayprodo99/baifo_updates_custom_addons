@@ -1,0 +1,21 @@
+<odoo>
+    <record id="view_budget_move_lines_tree" model="ir.ui.view">
+        <field name="name">budget.move.lines.tree</field>
+        <field name="model">budget.move.lines</field>
+        <field name="arch" type="xml">
+            <tree string="Budget Move Lines" create="false">
+                <field name="budget_id"/>
+                <field name="budgetary_position_id"/>
+                <field name="reference"/>
+                <field name="old_reference"/>
+                <field name="budget_approved"/>
+                <field name="budget_consumed_gl"/>
+                <field name="pr_budget"/>
+                <field name="po_budget"/>
+                <field name="invoice_budget"/>
+                <field name="cumulative_budget"/>
+                <field name="budget_remaining"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

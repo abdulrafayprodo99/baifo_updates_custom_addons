@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_purchase_request_line_make_purchase_order_inherit" model="ir.ui.view">
+        <field name="name">Purchase.Request.Line.Make.Purchase.Order.Inherit</field>
+        <field name="model">purchase.request.line.make.purchase.order</field>
+        <field name="inherit_id" ref="purchase_request.view_purchase_request_line_make_purchase_order"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='purchase_order_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='sync_data_planned']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_purchase_order_view" model="ir.ui.view">
+        <field name="name">Purchase Order Inherit View</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='purchase_delivery_invoice']//group[@name='invoice_info']/field[@name='fiscal_position_id']"
+                   position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="inherit_purchase_order_deliver_to_view" model="ir.ui.view">
+        <field name="name">Purchase Order Deliver To Inherit View</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='picking_type_id']" position="attributes">
+                <attribute name="domain">[('code', '=', 'incoming'), '|', ('warehouse_id', '=', False),
+                    ('warehouse_id.company_id', '=', company_id), ('id', 'not in', [6, 58])]
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
+
+
+
+

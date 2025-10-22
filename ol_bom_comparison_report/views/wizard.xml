@@ -1,0 +1,48 @@
+<odoo>
+    
+    <record id="view_standard_rate_report_wizard_form" model="ir.ui.view">
+        <field name="name">bom.comparison.report.wizard.form</field>
+        <field name="model">bom.comparison.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="BOM Comparison Report">
+                <group>
+                    <group string="Date">
+                        <field name="from_date"/>
+                        <field name="to_date"/>
+                        <field name="reference"  widget="many2many_tags" attrs="{'invisible':[('product_filter','!=','single')]}"/>
+                        <field name="lot_sequence_id"  widget="many2many_tags" attrs="{'invisible':[('product_filter','!=','single')]}"/>
+                    </group>
+                    <group string="Product">
+                        <field name="product_domain" invisible="1" />
+                        <field name="batches" />
+                        <field name="product_filter" widget="radio"/>
+                        <field name="product_ids" widget="many2many_tags" attrs="{'invisible':[('product_filter','!=','single')]}" domain="[('id','in',product_domain)]" />
+                        <field name="from_product" attrs="{'invisible':[('product_filter','!=','range')]}" domain="[('id','in',product_domain)]"/>
+                        <field name="to_product"   attrs="{'invisible':[('product_filter','!=','range')]}" domain="[('id','in',product_domain)]"  />
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_print_excel_report" type="object" string="Print Excel Report" class="btn-primary"/>
+                    <button name="action_print_pdf_report" type="object" string="Print PDF Report" class="btn-primary"/>
+                    <button name="action_cancel" type="object" string="Cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_bom_comparsion_report_wizard_form" model="ir.actions.act_window">
+        <field name="name">BOM Comparison Report Wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">bom.comparison.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem 
+        id="submenu_bom_comparsion_report_wizard" 
+        name="BOM Comparison Report" 
+        parent="mrp.menu_mrp_reporting" 
+        action="action_bom_comparsion_report_wizard_form"
+        sequence='90'/>
+
+</odoo>

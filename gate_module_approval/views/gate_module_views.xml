@@ -1,0 +1,22 @@
+<odoo>
+    <record id="view_stock_picking_form_inherit_approval" model="ir.ui.view">
+        <field name="name">stock.picking.form.approval.buttons</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/header[1]" position="after">
+                <header attrs="{'invisible': [('picking_type_id', 'not in', [6, 17, 20, 21])]}" >
+                    <button name="action_prepared" type="object" string="Prepared"
+                            attrs="{'invisible': [('approval_state_return_picking', '!=', 'draft')]}" class="btn-primary"/>
+                    <button name="action_verified" type="object" string="Verified"
+                            attrs="{'invisible': [('approval_state_return_picking', '!=', 'prepared')]}" class="btn-info"/>
+                    <button name="action_approved" type="object" string="Approved"
+                            attrs="{'invisible': [('approval_state_return_picking', '!=', 'verified')]}" class="btn-success"/>
+                    <field name="approval_state_return_picking" widget="statusbar"
+                           statusbar_visible="draft,prepared,verified,approved"/>
+                </header>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

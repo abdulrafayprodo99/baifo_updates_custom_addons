@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding='utf-8'?>
+<odoo>
+
+    <record id="sale_order_form_view_modified_for_currency_rates" model='ir.ui.view'>
+        <field name='name'>sale.order.form.view.inherited.for.currency.rates</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='order_details']//field[@name='payment_term_id']" position="after">
+                <field name="currency_name" invisible="1" />
+                <field  name="currency_rate" attrs="{'invisible': [('currency_name','=','PKR')], 'readonly': [('state', '!=', 'draft')]}" />
+                    <!-- <button style="margin-left:5%;width:20%;" name="apply_currency_rate" type="object" string="Apply currency Rate" class="btn-primary"/> -->
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="paperformat_sale_projection" model="report.paperformat">
+        <field name="name">A4 Sale Projection</field>
+        <field name="default" eval="True" />
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">30</field>
+        <field name="margin_bottom">20</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">20</field>
+        <field name="dpi">90</field>
+    </record>
+
+<template id="sale_projection_report">
+    <t t-call="web.html_container">
+        <t t-set="data_dict" t-value="docs.get_data()"/>
+        <t t-set="data" t-value="data_dict[0]"/>
+        <t t-set="totals" t-value="data_dict[1]"/>
+        <t t-set="fiscal_year" t-value="docs[0].fiscal_year"/>
+        <t t-set="company" t-value="env.company"/>
+      <t t-call="web.basic_layout">
+            <div class="page">
+                <style>
+                    .sales-report-table {
+                        border-collapse: collapse;
+                        width: 100%;
+                    }
+
+                    .sales-report-table th,
+                    .sales-report-table td {
+                        border: 1px solid black;
+                        padding: 5px;
+                    }
+
+                    .sales-report-table th {
+                        text-align: center;
+                    }
+
+                    .sales-report-table td.sector {
+                        text-align: left;
+                    }
+
+                    .sales-report-table td.amount {
+                        text-align: right;
+                    }
+
+                    .header {
+                        background-color: #d9e2f3;
+                    }
+
+                    .sub-header {
+                        background-color: #e7eff6;
+                    }
+
+                    .highlight {
+                        font-weight: bold;
+                        background-color: #f7f7f7;
+                    }
+                </style>
+
+                <div>
+                  <div class="header">
+            <div class="header_working">
+                <div class="row">
+                    <div class="col-1">
+                        <span t-field="env.company.logo" t-options-widget="&quot;image&quot;" style="display:inline-block;width:40px;display:inline-block;width:50px"/>
+                    </div>
+                    <div class="col-10">
+                        <div class="row">
+                            <center>
+                                <b>
+                                    <span style="font-size:20px">Biafo Industries Limited</span>
+                                </b>
+                            </center>
+                        </div>
+                        <div class="row">
+                            <b>
+                                <center>
+                                    <!--<span t-field='doc.name'/>-->
+                                    <span style="font-size:18px">Sales Projection Report</span>
+                                </center>
+                            </b>
+                        </div>
+                    </div>
+                    <!-- Doc No Section moved here -->
+                    <div class="col-1" style="text-align:right; font-size:12px;">
+                        <!--<span>Doc No: </span>-->
+                        <t t-set="ISO_NUMBER" t-value="env['iso'].search([('id','=',3)])"/>
+                        <!--<t t-esc="ISO_NUMBER.iso_number"/>-->
+                    </div>
+                </div>
+            </div>
+            <div class="sencond_line" style="font-size:13px;">
+                <div class="row">
+                    <!--<div class="col-6" style="text-align:left">-->
+                    <!--    <span>Date: </span>-->
+                        
+                    <!--    <t t-set="a" t-value="context_timestamp(datetime.datetime.now()).strftime('%d-%m-%Y %I:%M:%S %p')"/>-->
+            
+                    <!--    <t t-esc="a"/>-->
+                    <!--</div>-->
+                    <!--<div class="col-6" style="text-align:right">-->
+                    <!--    <span>Doc No: </span>-->
+                    <!--    <t t-set="ISO_NUMBER" t-value="env['iso'].search([('id','=',3)])"/>-->
+                    <!--    <t t-esc="ISO_NUMBER.iso_number"/>-->
+                    <!--</div>-->
+                  </div>
+            </div>
+            <div class="row" style="border:1px solid black"/></div>
+            <br/>
+            <br/>
+                    <h2>Sales Target Vs Actual Sales</h2>
+                    <h4>Upto <t t-esc="datetime.datetime.today().strftime('%d %b %Y')"/></h4>
+                    <table class="sales-report-table">
+                        <tr class="header">
+                            <th rowspan="2">SECTOR</th>
+                            <th colspan="2">Annual Comparison</th>
+                            <th colspan="8">Quarterly Comparison</th>
+                        </tr>
+                        <tr class="header">
+                            <th>Annual Target <br/><t t-esc="str(int(fiscal_year)-1)+'-'+fiscal_year"/></th>
+                            <th>Actual Sales <br/><t t-esc="str(int(fiscal_year)-1)+'-'+fiscal_year"/></th>
+                            <th colspan="2">Q1</th>
+                            <th colspan="2">Q2</th>
+                            <th colspan="2">Q3</th>
+                            <th colspan="2">Q4</th>
+                        </tr>
+                        <tr class="sub-header">
+                            <th/>
+                            <th/>
+                            <th/>
+                            <th>Projected Sales</th>
+                            <th>Actual Sales</th>
+                            <th>Projected Sales</th>
+                            <th>Actual Sales</th>
+                            <th>Projected Sales</th>
+                            <th>Actual Sales</th>
+                            <th>Projected Sales</th>
+                            <th>Actual Sales</th>
+                        </tr>
+                        <t t-foreach="data.items()" t-as="sector">
+                            <t t-if="sector[0] != 'Foreign Export'">
+                                <tr>
+                                    <td class="sector"><t t-esc="sector[0]"/></td>
+                                    <td class="amount"><t t-esc="'{:,}'.format(int(sector[1]['annual_target']))"/></td>
+                                    <td class="amount"><t t-esc="'{:,}'.format(int(sector[1]['annual_sales']))"/></td>
+                                    <td class="amount"><t t-esc="'{:,}'.format(int(sector[1]['q1_target']))"/></td>
+                                    <td class="amount"><t t-esc="'{:,}'.format(int(sector[1]['q1_sales']))"/></td>
+                                    <td class="amount"><t t-esc="'{:,}'.format(int(sector[1]['q2_target']))"/></td>
+                                    <td class="amount"><t t-esc="'{:,}'.format(int(sector[1]['q2_sales']))"/></td>
+                                    <td class="amount"><t t-esc="'{:,}'.format(int(sector[1]['q3_target']))"/></td>
+                                    <td class="amount"><t t-esc="'{:,}'.format(int(sector[1]['q3_sales']))"/></td>
+                                    <td class="amount"><t t-esc="'{:,}'.format(int(sector[1]['q4_target']))"/></td>
+                                    <td class="amount"><t t-esc="'{:,}'.format(int(sector[1]['q4_sales']))"/></td>
+                                </tr>
+                            </t>
+                        </t>
+                        <tr class="highlight">
+                            <td class="sector">Sub Total</td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(totals['annual_target'] - data['Foreign Export']['annual_target']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(totals['annual_sales'] - data['Foreign Export']['annual_sales']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(totals['q1_target'] - data['Foreign Export']['q1_target']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(totals['q1_sales'] - data['Foreign Export']['q1_sales']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(totals['q2_target'] - data['Foreign Export']['q2_target']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(totals['q2_sales'] - data['Foreign Export']['q2_sales']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(totals['q3_target'] - data['Foreign Export']['q3_target']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(totals['q3_sales'] - data['Foreign Export']['q3_sales']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(totals['q4_target'] - data['Foreign Export']['q4_target']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(totals['q4_sales'] - data['Foreign Export']['q4_sales']))"/></td>
+                        </tr>
+                        <tr>
+                            <td class="sector">Foreign Export</td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(data['Foreign Export']['annual_target']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(data['Foreign Export']['annual_sales']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(data['Foreign Export']['q1_target']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(data['Foreign Export']['q1_sales']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(data['Foreign Export']['q2_target']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(data['Foreign Export']['q2_sales']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(data['Foreign Export']['q3_target']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(data['Foreign Export']['q3_sales']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(data['Foreign Export']['q4_target']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(data['Foreign Export']['q4_sales']))"/></td>
+                        </tr>
+                        <tr class="highlight">
+                            <td class="sector">Grand TOTAL</td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(totals['annual_target']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(totals['annual_sales']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(totals['q1_target']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(totals['q1_sales']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(totals['q2_target']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(totals['q2_sales']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(totals['q3_target']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(totals['q3_sales']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(totals['q4_target']))"/></td>
+                            <td class="amount"><t t-esc="'{:,}'.format(int(totals['q4_sales']))"/></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="footer" style="font-family:Segoe UI">
+                            <div class="row" style="border:1px solid black"/>
+                            <div class="row mt-1">
+                                <div class="col-1">
+                                    <img class="img-fluid" src="/web/image/373-9fced58c/unnamed.jpg"/>
+                                </div>
+                                 <div class="col-5" style="text-align:center">
+                
+                                  <span>Printed by </span>
+                                  <span t-esc="env.user.name or 'Unknown User'"/>
+                
+                           
+                              </div>
+                                            <div class="col-4" style="text-align:right">
+                                  <t t-set="current_time" t-value="time.strftime('%d/%m/%Y %H:%M:%S')"/>
+                                  <span t-esc="current_time"/>
+                                  <t t-if="report_type == 'pdf'">
+                                      <span style="margin-left: 15px;">Page: <span class="page"/> / <span class="topage"/></span>
+                                  </t>
+                              </div>
+                                <!--<div class="col-1"/>-->
+                                <!--<div class="col-4" style="text-align:left">-->
+                                <!--    <span/>-->
+                                <!--</div>-->
+                                <div class="col-2" style="text-align:right">
+                                    <div t-if="report_type == 'pdf'" class="text-muted">
+                                    Page: 
+                                
+                                
+                                    
+                                        
+                                        
+                                        
+                                        <span class="page"/> / 
+                                
+                                
+                                    
+                                        
+                                        
+                                        
+                                        <span class="topage"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            </div>
+        </t>
+    </t>
+</template>
+
+
+    <report 
+        id="ol_sale_projection_report_action"
+        model="sale.projection.report.wizard"
+        string="Sale Projection"
+        report_type="qweb-pdf"
+        name="ol_sale_projection_report.sale_projection_report"
+        file="ol_sale_projection_report.sale_projection_report"
+        paperformat="ol_sale_projection_report.paperformat_sale_projection"
+        print_report_name="object._get_report_name()"
+    />
+</odoo>

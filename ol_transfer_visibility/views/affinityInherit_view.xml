@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<record id="view_picking_inherit" model="ir.ui.view">
+    <field name="name">picking.form.inherit</field>
+    <field name="model">stock.picking</field>
+    <field name="inherit_id" ref="prodo_x_biafo_ext.stock_picking_inherited_form_"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='customer_license_id']" position="attributes">
+            <attribute name="attrs">
+                {'invisible': ['|',('fields_separated', 'ilike', 'customer_license_id'),('picking_type_id', '=', 5)]}
+            </attribute>
+        </xpath>
+        <xpath expr="//field[@name='intimation_id']" position="attributes">
+            <attribute name="attrs">
+                {'invisible': ['|',('fields_separated', 'ilike', 'intimation_id'),('picking_type_id', '=', 5)]}
+            </attribute>
+        </xpath>
+    </field>
+</record>
+</odoo>

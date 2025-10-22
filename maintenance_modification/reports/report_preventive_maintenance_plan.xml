@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_preventive_maintenance_plan_template"  >
+        <t t-call="web.basic_layout">
+			<style>
+				table {
+					width: 100%;
+					border-collapse: collapse;
+				}
+	
+				th, td {
+					border: 1px solid black;
+					padding: 10px; /* Adds spacing inside cells */
+					text-align: center; /* Centers content */
+					vertical-align: middle; /* Ensures content is vertically aligned */
+					white-space: nowrap; /* Prevents text from wrapping */
+				}
+	
+				tr {
+					min-height: 50px; /* Ensures a consistent row height */
+				}
+	
+				td {
+					min-height: 50px; /* Prevents cells from collapsing */
+				}
+	
+				/* Set minimum width for specific columns */
+				th:nth-child(2), td:nth-child(2), /* Date */
+				th:nth-child(5), td:nth-child(5), /* Start Time */
+				th:nth-child(6), td:nth-child(6)  /* End Time */
+				{
+					min-width: 130px; /* Adjust width to prevent collapsing */
+				}
+	
+				/* Ensure the "Performed By" column keeps a minimum width */
+				th:nth-child(8), td:nth-child(8) {
+					min-width: 150px;
+				}
+	
+				/* Allow Job Description column to wrap text */
+				th:nth-child(3), td:nth-child(3) {
+					white-space: normal; /* Allow text to wrap in the Job Description column */
+					word-wrap: break-word; /* Ensure words break and wrap */
+					text-align: center; /* Align text to the left for better readability */
+				}
+	
+				/* Style for "Performed By" badges */
+				td span {
+					display: inline-block;
+					padding: 5px 10px;
+					border-radius: 10px;
+					background-color: #F9E0D9;
+					min-width: 100px; /* Prevents shrinking */
+					text-align: center;
+				}
+	
+			</style>
+			
+			<t t-set="company" t-value="env.company" />
+			<!-- <link href="https://fonts.googleapis.com/css2?family=Roboto" rel="stylesheet"/> -->
+			<!-- Header Section -->
+			<div class="header">
+				<div class="row align-items-center mt-3">
+					<!-- Logo -->
+					<div class="col-3 text-start">
+						<img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 60px;" alt="Logo" />
+					</div>
+					<!-- Header -->
+					<div class="col-5 text-center">
+						<h3 style="margin: 0;">
+							<span t-field="company.name" />
+						</h3>
+						<h3 style="font-size: 16px; font-weight: bold; margin-top: 5px; padding-bottom: 5px;">
+							PREVENTIVE MAINTENANCE PLAN (PMP)
+						</h3>
+					</div>
+				</div>
+				<div class="row align-items-center pt-1" style="border:1px solid black;">
+					<div class="offset-3 col-5 text-center">
+						<h3 style="font-size: 15px; font-weight: bold; margin-top: 5px; padding-bottom: 5px;">
+							<t t-esc="team"/>
+						</h3>
+					</div>
+				</div>
+				<div class="row pt-1" style="border:1px solid black;">
+					<div class="offset-3 col-5 text-center">
+						<h3 style="font-size: 14px; font-weight: bold; margin-top: 5px; padding-bottom: 5px;">
+							MONTH:
+							<t t-esc="month" />
+						</h3>
+					</div>
+				</div>
+			</div>
+			<div class="page w-100 pt-3" style="font-family:Segoe UI; font-size:15px">
+				<table style="width:100%;" border="1">
+					<thead>
+						<tr style="border:1px solid black;">
+							<th>
+								Sr.No
+							</th>
+                            <th>
+								Schedule Date
+							</th>
+                            <th>
+								Job Description
+							</th>
+							<th>
+								Equipment
+							</th>
+							<th>
+								Functional Location
+							</th>
+							<th>
+								W.R No.
+							</th>
+                            <th>
+								Remarks
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+                    <t t-set="sr_no" t-value="1" />
+						<tr t-foreach="list(requests)" t-as="req">
+							<td>
+								<t t-esc="sr_no" />
+							</td>
+                            <td>
+								<t t-esc="req['proposed_date'] if req['proposed_date'] else '-'" />
+							</td>
+                            <td style="text-align: left;">
+								<t t-esc="req['description'] if req['description'] else '-'" />
+							</td>
+							<td>
+								<t t-esc="req['equipment'] if req['equipment'] else '-'" />
+							</td>
+                            <td>
+								<t t-esc="req['functional_location'] if req['functional_location'] else '-'" />
+							</td>
+							<td>
+								<t t-esc="req['wr_no'] if req['wr_no'] else '-'" />
+							</td>
+							<td>
+								<t t-esc="req['remarks'] if req['remarks'] else '-'" />
+							</td>
+                        <t t-set="sr_no" t-value="sr_no + 1" />
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</t>
+	</template>
+
+    <record id="btn_report_preventive_maintenance_plan" model="ir.actions.report">
+        <field name="name">Preventive Maintenance Plan (PMP)</field>
+        <field name="model">preventive.maintenance.plan.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">maintenance_modification.report_preventive_maintenance_plan_template</field>
+        <field name="report_file">maintenance_modification.report_preventive_maintenance_plan_template</field>
+        <!-- <field name="paperformat_id" ref="report_qweb_paperformat" /> -->
+    </record>
+
+</odoo>

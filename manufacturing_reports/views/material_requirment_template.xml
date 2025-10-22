@@ -1,0 +1,241 @@
+<odoo>
+    <!-- Paper Format for Material Requirement Report -->
+    <record id="paperformat_material_requirement" model="report.paperformat">
+        <field name="name">Material Requirement Report Format</field>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">1</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_spacing">35</field>
+        <field name="dpi">90</field>
+        <field name="header_line">False</field>
+        <field name="disable_shrinking">False</field>
+    </record>
+
+    <record id="action_material_requirement_pdf" model="ir.actions.report">
+        <field name="name">Material Requirement Report</field>
+        <field name="model">material.requirement.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">manufacturing_reports.report_material_requirement_pdf</field>
+        <field name="report_file">manufacturing_reports.report_material_requirement_pdf</field>
+        <field name="binding_model_id" eval="False" />
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="manufacturing_reports.paperformat_material_requirement" />
+        <field name="print_report_name">'Material Requirement Report'</field>
+    </record>
+
+
+    <template id="report_material_requirement_pdf">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page" style="font-size:12px;">
+                    <h3 style="text-align: center; font-size: 12px; font-weight: bold;">Biafo
+                        Industries Limited</h3>
+
+                    <p style="text-align: center;">
+                        <t t-esc="report_data.get('plans', '')" />
+                    </p>
+
+                    <!--<div
+                    style="border-top: 1px solid black; padding: 5px 0; margin-top:7px;"/>-->
+
+                    <t t-set="grand_total" t-value="0" />
+
+                    <div class="page" style="font-size: 12px;">
+                        <!-- Table Header with Black Text and Borders -->
+                        <table class="table" style="  table-layout: fixed;">
+                                 <thead style="border-top: 2px solid black; border-bottom: 2px solid black;">
+                                <tr>
+                                    <th style="text-align: left; font-weight: bold; width: 5%; color: black;">S.
+                                        No.</th>
+                                    <th style="text-align: left; font-weight: bold; width: 10%; color: black;">PDO
+                                        ID</th>
+                                    <th style="text-align: left; font-weight: bold; width: 6%; color: black;">Doc
+                                        Type</th>
+                                    <th style="text-align: left; font-weight: bold; width: 20%; color: black;">
+                                        Customer</th>
+                                    <th style="text-align: left; font-weight: bold; width: 10%; color: black;">Sale
+                                        Order</th>
+                                    <th style="text-align: left; font-weight: bold; width: 10%; color: black;">Dispatch
+                                        Date</th>
+                                    <th style="text-align: left; font-weight: bold; width: 10%; color: black;">Product
+                                        Code</th>
+                                    <th style="text-align: left; font-weight: bold; width: 15%; color: black;">
+                                        Product</th>
+                                    <th style="text-align: left; font-weight: bold; width: 5%; color: black;">
+                                        Unit</th>
+                                    <th style="text-align: left; font-weight: bold; width: 8%; color: black;">
+                                        Demand Qty</th>
+                                    <th style="text-align: left; font-weight: bold; width: 7%; color: black;">
+                                        MO Qty</th>
+                                    <th style="text-align: left; font-weight: bold; width: 10%; color: black;">
+                                        Inprocess Qty</th>
+                                    <th style="text-align: left; font-weight: bold; width: 7%; color: black;">
+                                        Remaining Qty</th>
+                                    <th style="text-align: left; font-weight: bold; width: 10%; color: black;">Prod.
+                                        Date From</th>
+                                    <th style="text-align: left; font-weight: bold; width: 10%; color: black;">Prod.
+                                        Date To</th>
+                                    <th style="text-align: left; font-weight: bold; width: 10%; color: black;">
+                                        Remarks</th>
+                                </tr>
+                            </thead>
+                        </table>
+
+                        <t t-foreach="report_data['data']" t-as="report">
+                            <t t-set="report_has_records" t-value="False" />
+                            <t t-foreach="report['lines'].items()" t-as="item">
+                                <t t-set="lines" t-value="item[1]" />
+                                <t t-if="len(lines) &gt; 0">
+                                    <t t-set="report_has_records" t-value="True" />
+                                </t>
+                            </t>
+
+                            <t t-if="report_has_records">
+                                <!-- Category name after the table header -->
+                                <t t-set="category_index" t-value="0" />
+                                <t t-foreach="report['lines'].items()" t-as="item">
+                                    <t t-set="category" t-value="item[0]" />
+                                    <t t-set="lines" t-value="item[1]" />
+
+                                    <t t-if="lines and len(lines) &gt; 0">
+                                        <t t-set="category_total" t-value="0" />
+
+                                        <!-- Category name after the table header -->
+                                        <h5
+                                            style="margin-top: 10px; text-decoration: underline; font-size:12px;">
+                                            <t t-esc="category.upper()" />
+                                        </h5>
+
+                                        <table class="table"
+                                            style="border-style: hidden; table-layout: fixed;">
+                                            <tbody>
+                                                <t t-set="counter" t-value="0" />
+                                                <t t-foreach="lines" t-as="item_line">
+                                                    <t t-if="item_line and len(item_line) &gt; 0">
+                                                        <t t-set="counter" t-value="counter + 1" />
+                                                        <t t-set="category_total"
+                                                            t-value="category_total + item_line['qty']" />
+                                                        <t t-set="grand_total"
+                                                            t-value="grand_total + item_line['qty']" />
+
+                                                        <tr>
+                                                            <td
+                                                                style="text-align: left; border: none; width: 5%;">
+                                                                <t t-esc="counter" />
+                                                            </td>
+                                                            <td
+                                                                style="text-align: left; border: none; width: 10%;">
+                                                                <t t-esc="item_line['pdo_id']" />
+                                                            </td>
+                                                            <td
+                                                                style="text-align: left; border: none; width: 6%;">
+                                                                <t
+                                                                    t-esc="item_line['doc_type'].capitalize()" />
+                                                            </td>
+                                                            <td
+                                                                style="text-align: left; border: none; width: 20%;">
+                                                                <t t-esc="item_line['customer']" />
+                                                            </td>
+                                                            <td
+                                                                style="text-align: left; border: none; width: 10%;">
+                                                                <t
+                                                                    t-esc="item_line['sale_order_no']" />
+                                                            </td>
+                                                            <td
+                                                                style="text-align: left; border: none; width: 10%;">
+                                                                <t
+                                                                    t-esc="item_line['dispatch_date']" />
+                                                            </td>
+                                                            <td
+                                                                style="text-align: left; border: none; width: 10%;">
+                                                                <t t-esc="item_line['product_code']" />
+                                                            </td>
+                                                            <td
+                                                                style="text-align: left; border: none; width: 15%;">
+                                                                <t t-esc="item_line['product']" />
+                                                            </td>
+                                                            <td
+                                                                style="text-align: left; border: none; width: 5%;">
+                                                                <t t-esc="item_line['unit']" />
+                                                            </td>
+                                                            <td
+                                                                style="text-align: right; border: none; width: 8%;">
+                                                                <t
+                                                                    t-esc="'{:,.0f}'.format(item_line['qty'])" />
+                                                            </td>
+                                                            <td
+                                                                style="text-align: right; border: none; width: 7%;">
+                                                                <t
+                                                                    t-esc="'{:,.0f}'.format(item_line['mo_qty'])" />
+                                                            </td>
+                                                            <td
+                                                                style="text-align: right; border: none; width:10%;">
+                                                                <t
+                                                                    t-esc="'{:,.0f}'.format(item_line['process_qty'])" />
+                                                            </td>
+                                                            <td
+                                                                style="text-align: right; border: none; width: 7%;">
+                                                                <t
+                                                                    t-esc="'{:,.0f}'.format(item_line['remaining_qty'])" />
+                                                            </td>
+                                                            <td
+                                                                style="text-align: right; border: none; width: 10%;">
+                                                                <t t-esc="item_line['date_from']" />
+                                                            </td>
+                                                            <td
+                                                                style="text-align: right; border: none; width: 10%;">
+                                                                <t t-esc="item_line['date_to']" />
+                                                            </td>
+                                                            <td
+                                                                style="text-align: right; border: none; width: 10%;">
+                                                                <t t-esc="item_line['remarks']" />
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </t>
+                                            </tbody>
+                                        </table>
+
+                                        <t t-set="category_index" t-value="category_index + 1" />
+                                    </t>
+                                </t>
+                            </t>
+                        </t>
+
+                        <!--<div
+                        style="border-top: 2px solid black; padding-top: 5px; margin-top:
+                        10px;"/>-->
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="footer" style="font-family: Segoe UI; font-size:12px;">
+                        <div class="row" style="border: 1px solid black;" />
+                        <div class="row mt-1">
+                            <div class="col-6">
+                                <span>Odoo Powered By Odolution</span>
+                            </div>
+                            <!--<div
+                            class="col-6" style="text-align: center;">-->
+                            <!--    <span>Powered By Odolution</span>-->
+                            <!--</div>-->
+                            <div class="col-6" style="text-align: right;">
+                                <t t-set="current_time"
+                                    t-value="(datetime.datetime.now()+datetime.timedelta(hours=5)).strftime('%d/%m/%Y %H:%M:%S')" />
+                                <span t-esc="current_time" />
+                                <t t-if="report_type == 'pdf'">
+                                    <span style="margin-left: 15px;">Page: <span class="page" /> / <span
+                                            class="topage" /></span>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+
+</odoo>

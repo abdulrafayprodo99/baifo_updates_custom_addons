@@ -1,0 +1,50 @@
+<odoo>
+    <data noupdate="1">
+        <!-- Define the sequence for return stock picking -->
+        <record id="seq_stock_return_picking_import" model="ir.sequence">
+            <field name="name">Return Stock Picking Sequence Import</field>
+            <field name="code">stock.return.sequence.import</field>
+            <field name="padding">4</field>
+            <field name="prefix">RTN-IM-%(year)s-%(month)s-</field>
+            <field name="implementation">no_gap</field>
+        </record>
+
+        <record id="seq_stock_return_picking_local" model="ir.sequence">
+            <field name="name">Return Stock Picking Sequence Local</field>
+            <field name="code">stock.return.sequence.local</field>
+            <field name="padding">4</field>
+            <field name="prefix">RTN-LO-%(year)s-%(month)s-</field>
+            <field name="implementation">no_gap</field>
+        </record>
+
+        <record id="seq_stock_return_picking_consumable" model="ir.sequence">
+            <field name="name">Return Stock Picking Sequence Consumable and Services Factory</field>
+            <field name="code">stock.return.sequence.consumable</field>
+            <field name="padding">4</field>
+            <field name="prefix">RTN-CF-%(year)s-%(month)s-</field>
+            <field name="implementation">no_gap</field>
+        </record>
+        <record id="seq_stock_return_picking_consumable_hf" model="ir.sequence">
+            <field name="name">Return Stock Picking Sequence Consumable and Services Head Office</field>
+            <field name="code">stock.return.sequence.consumable.hf</field>
+            <field name="padding">4</field>
+            <field name="prefix">RTN-CH-%(year)s-%(month)s-</field>
+            <field name="implementation">no_gap</field>
+        </record>
+        <record id="seq_stock_return_picking_fixed_asset" model="ir.sequence">
+            <field name="name">Return Stock Picking Sequence Fixed Asset</field>
+            <field name="code">stock.return.sequence.fixed.asset</field>
+            <field name="padding">4</field>
+            <field name="prefix">RTN-FA-%(year)s-%(month)s-</field>
+            <field name="implementation">no_gap</field>
+        </record>
+
+        <record id="seq_stock_return_picking_customer" model="ir.sequence">
+            <field name="name">Return Stock Picking Sequence Customer</field>
+            <field name="code">stock.return.sequence.customer</field>
+            <field name="padding">4</field>
+            <field name="prefix">RTN-CUS-%(year)s-%(month)s-</field>
+            <field name="implementation">no_gap</field>
+        </record>
+    </data>
+</odoo>

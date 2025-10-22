@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<template id="general_ledger">
+		<link href="https://fonts.googleapis.com/css2?family=EB+Garamond" rel="stylesheet"/>
+		<style>
+        * {
+            font-family: 'EB Garamond', serif !important;
+        }
+    </style>
+		<div class="font-class">
+			<t t-call="account_financial_report.html_container">
+				<t t-foreach="docs" t-as="o">
+					<t-call t-call="account_financial_report.internal_layout">
+						<t t-call="account_financial_report.report_general_ledger_base" />
+					</t-call>
+				</t>
+			</t>
+		</div>
+	</template>
+
+
+
+	<template id="report_general_ledger_base">
+		<!-- Saved flag fields into variables, used to define columns display -->
+		<t t-set="foreign_currency" t-value="foreign_currency"/>
+		<t t-set="filter_partner_ids" t-value="filter_partner_ids"/>
+		<!-- Defines global variables used by internal layout -->
+		<t t-set="title">
+			<t t-out="company_name"/></t>
+		<div class="page">
+			<div class="row" style="margin: 0; padding: 0;">
+				<h4 class="mt0" t-esc="title or 'Odoo Report'" style="text-align: center; margin: 0; padding: 0;"/>
+			</div>
+			<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; text-align: center; margin: 0; padding: 0;">
+				<div style="display: flex; align-items: center; margin: 0; padding: 0;">
+					<div style="margin-left: 10px; margin: 0; padding: 0;">
+                           General Ledger
+                       </div>
+				</div>
+			</div>
+			<div style="display: flex; justify-content: center; align-items: center; width: 100%; text-align: center; margin: 0; padding: 0; font-size: 0.7rem">
+				<div style="margin: 0; padding: 0;">
+                            From: 
+					<span t-esc="date_from" t-options="{&quot;widget&quot;: &quot;date&quot;, &quot;format&quot;: &quot;dd-MM-yyyy&quot;}"/> 
+                            To: 
+					<span t-esc="date_to" t-options="{&quot;widget&quot;: &quot;date&quot;, &quot;format&quot;: &quot;dd-MM-yyyy&quot;}"/>
+				</div>
+			</div>
+			<!--         <div class="act_as_row" style="display: flex !important; justify-content: space-between !important; align-items: center !important; margin-bottom: 10px !important; padding-bottom: 5px !important; font-size: 12px !important; border-bottom: 1px solid #000 !important;">-->
+			<!--    <div style="font-weight: bold !important; margin: 0 !important; padding: 0 !important; background: none !important; border: none !important;">-->
+			<!--        Date: <span t-esc="time.strftime('%d-%b-%Y')"/>-->
+			<!--    </div>-->
+			<!--    <div style="font-weight: bold !important; margin: 0 !important; padding: 0 !important; background: none !important; border: none !important;">-->
+			<!--        Time: <span t-esc="time.strftime('%I:%M %p')"/>-->
+			<!--    </div>-->
+			<!--</div>-->
+			<!-- Display table headers for lines -->
+			<div class="act_as_thead" style="border: none !important; background-color: transparent !important; font-szie:0.7rem !importatnt">
+				<div class="act_as_row labels" style="border: none !important; background-color: transparent !important; font-size: 0.8rem !important; border-bottom: 1px solid black;">
+					<!--## date-->
+					<div class="act_as_cell first_column" style="width: 10%; text-align: left; padding-top: 5px;  background-color: transparent !important; border-bottom: 1px solid black;">
+                            Date: 
+						<span t-esc="time.strftime('%d-%b-%Y')"/>
+					</div>
+					<!--## move-->
+					<div class="act_as_cell" style="color: transparent; width: 5%; text-align: left; padding-top: 5px;  background-color: transparent !important; border-bottom: 1px solid black;">Document</div>
+					<!--## ref - label-->
+					<div class="act_as_cell" style="color: transparent; width: 20%; text-align: left; padding-top: 5px;  background-color: transparent !important; border-bottom: 1px solid black;">
+                            Narration
+                        </div>
+					<t t-if="show_analytic_tags">
+						<!--## analytic tags-->
+						<div class="act_as_cell" style="color: transparent; width: 7%; text-align: left; padding-top: 5px; background-color: transparent !important;border-bottom: 1px solid black; ">Tags</div>
+					</t>
+					<!--## debit-->
+					<div class="act_as_cell amount" style="color: transparent; width: 10%; text-align: right; padding-top: 5px; background-color: transparent !important; border-bottom: 1px solid black;">Debit</div>
+					<!--## credit-->
+					<div class="act_as_cell amount" style="color: transparent;  width: 10%; text-align: right; padding-top: 5px;  background-color: transparent !important; border-bottom: 1px solid black;">Credit</div>
+					<!--## balance cumulated-->
+					<div class="act_as_cell amount" style="width: 10%; text-align: right; padding-top: 5px;  background-color: transparent !important; border-bottom: 1px solid black !important;">
+                              Time: 
+						<span id="current-time"/>
+						<script type="text/javascript">
+                             function updateTime() {
+                                 var now = new Date();
+                                 var hours = now.getHours() % 12 || 12;
+                                 var minutes = now.getMinutes();
+                                 var ampm = now.getHours() &gt;= 12 ? 'PM' : 'AM';
+                                 var timeString = ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2) + ' ' + ampm;
+                                 document.getElementById('current-time').textContent = timeString;
+                             }
+                         
+                             // Update time every minute
+                             updateTime();
+                             setInterval(updateTime, 60000);
+                         </script>
+					</div>
+				</div>
+			</div>
+			<div class="" style="border: none !important; background-color: transparent !important; font-szie:0.7rem !importatnt">
+				<div class="act_as_row labels" style="border: none !important; background-color: transparent !important; font-size: 0.8rem !important; border-bottom: 1px solid black;">
+					<!--## date-->
+					<div class="act_as_cell first_column" style="color: transparent; width: 10%; text-align: left; padding-top: 5px;  background-color: transparent !important; ">
+                         Date: 
+						<span t-esc="time.strftime('%d-%b-%Y')"/>
+					</div>
+					<!--## move-->
+					<div class="act_as_cell" style="color: transparent; width: 5%; text-align: left; padding-top: 5px;  background-color: transparent !important;">Document</div>
+					<!--## ref - label-->
+					<div class="act_as_cell" style="color: transparent; width: 5%; text-align: left; padding-top: 5px;  background-color: transparent !important; ">
+                         Narration
+                     </div>
+					<t t-if="show_analytic_tags">
+						<!--## analytic tags-->
+						<div class="act_as_cell" style="color: transparent; width: 7%; text-align: left; padding-top: 5px; background-color: transparent !important;">Tags</div>
+					</t>
+					<!--## debit-->
+					<div class="act_as_cell amount" style="color: transparent; width: 13%; text-align: right; padding-top: 5px; background-color: transparent !important; ">Debit</div>
+					<!--## credit-->
+					<div class="act_as_cell amount" style="color: transparent;  width: 13%; text-align: right; padding-top: 5px;  background-color: transparent !important; ">Credit</div>
+					<!--## balance cumulated-->
+					<div class="act_as_cell amount" style="font-weight: 600; width: 24%; text-align: center; padding-top: 5px;  background-color: transparent !important; border-bottom: 1px solid black;">
+                         Rupee
+                     </div>
+				</div>
+			</div>
+			<div class="" style="border: none !important; background-color: transparent !important; font-szie:0.7rem !importatnt">
+				<div class="act_as_row labels" style="border: none !important; background-color: transparent !important; font-size: 0.8rem !important; border-bottom: 1px solid black;">
+					<!--## date-->
+					<div class="act_as_cell first_column" style=" width: 6%; text-align: left; padding-top: 5px;  background-color: transparent !important; ">
+                         Date
+                     </div>
+					<!--## move-->
+					<div class="act_as_cell" style=" width: 7%; text-align: left; padding-top: 5px;  background-color: transparent !important;">Document</div>
+						<!-- Partner Name -->
+					<div class="act_as_cell left" style="width: 10.75%; text-align: left;padding-top: 5px; padding-left:45px;border: none !important; background-color: transparent !important;">
+                         Partner Name
+                     </div>
+					<!-- Analytical Account -->
+					<div class="act_as_cell left" style="width: 10.75%; text-align: left;padding-top: 5px; padding-left:15px; border: none !important; background-color: transparent !important;">
+                         Analytical Account
+                     </div>
+					<!--## ref - label-->
+					<div class="act_as_cell" style="width: 15%; text-align: left; padding-top: 5px; padding-left:45px; padding-right:20px;   background-color: transparent !important; ">
+                         Narration
+                     </div>
+				
+					<!--## debit-->
+					<div class="act_as_cell amount" style=" width: 10%; text-align: right; padding-top: 5px; background-color: transparent !important; ">Debit</div>
+					<!--## credit-->
+					<div class="act_as_cell amount" style=" width: 10%; text-align: right; padding-top: 5px;  background-color: transparent !important; ">Credit</div>
+					<!--## balance cumulated-->
+					<div class="act_as_cell amount" style="width: 10%; text-align: right; padding-top: 5px;  background-color: transparent !important; ">
+                         Closing Balance
+                     </div>
+				</div>
+			</div>
+			<t t-foreach="general_ledger" t-as="account">
+				<div class="page_break">
+					<!-- Display account header -->
+					<div class="act_as_table list_table" style="margin-top: 10px;"/>
+					<div style="display: flex; justify-content: left; align-items: flex-start; width: 100%;">
+						<div class="account_title" style=" text-align: left; margin-top: 0; margin-bottom: 0;">
+							<span t-esc="account['code']"/> - 
+							<span t-esc="account['name']"/>
+						</div>
+					</div>
+					<!-- Display account move lines and footer -->
+					<t t-if="'list_grouped' not in account">
+						<t t-set="type" t-value="&quot;account_type&quot;"/>
+						<t t-call="account_financial_report.report_general_ledger_lines">
+							<t t-set="account_or_group_item_object" t-value="account"/></t>
+						<t t-call="account_financial_report.report_general_ledger_ending_cumul">
+							<t t-set="account_or_group_item_object" t-value="account"/>
+							<t t-set="type" t-value="&quot;account_type&quot;"/></t>
+					</t>
+					<t t-if="'list_grouped' in account">
+						<t t-foreach="account['list_grouped']" t-as="group_item">
+							<t t-set="type" t-value="&quot;grouped_type&quot;"/>
+							<div class="page_break">
+								<!-- Display partner header -->
+								<div class="act_as_caption account_title">
+									<span t-esc="group_item['name']"/>
+								</div>
+								<!-- Display partner move lines -->
+								<t t-call="account_financial_report.report_general_ledger_lines">
+									<t t-set="account_or_group_item_object" t-value="group_item"/></t>
+								<!-- Display partner footer -->
+								<t t-call="account_financial_report.report_general_ledger_ending_cumul">
+									<t t-set="account_or_group_item_object" t-value="group_item"/>
+									<t t-set="type" t-value="&quot;grouped_type&quot;"/></t>
+							</div>
+						</t>
+						<!-- Display account footer if no partner filters -->
+						<t t-if="not filter_partner_ids">
+							<t t-call="account_financial_report.report_general_ledger_ending_cumul">
+								<t t-set="account_or_group_item_object" t-value="account"/>
+								<t t-set="type" t-value="&quot;account_type&quot;"/></t>
+						</t>
+					</t>
+				</div>
+			</t>
+		</div>
+		<t t-call="account_financial_report.report_grand_totals_custom_format">
+			<t t-set="general_ledger" t-value="general_ledger"/></t>
+	</template>
+
+
+
+	<template id="account_financial_report.report_general_ledger_filters"></template>
+	<template id="account_financial_report.report_general_ledger_lines">
+		<div class="act_as_table data_table" style="width: 100%; border: none !important; background-color: transparent !important;">
+			<!-- Display table headers for lines -->
+			<!-- Display first line with initial balance -->
+			<div class="act_as_row lines" style="border: none !important; background-color: transparent !important;">
+				<!--## date-->
+				<div class="act_as_cell" style="width: 6%; text-align: left; padding-top: 5px; border: none !important; background-color: transparent !important;"/>
+				<!--## move-->
+				<div class="act_as_cell" style="width: 9%; text-align: left; padding-top: 5px; border: none !important; background-color: transparent !important;"/>
+				
+				<!-- Partner Name Column -->
+				<div class="act_as_cell left" style="width: 5.75%; text-align: left; padding-left: 40px; padding-top: 5px; border: none !important; background-color: transparent !important;">
+					<span style="color: transparent;">
+                            Partner Name
+                        </span>
+				</div>
+				<!-- Analytical Account Column -->
+				<div class="act_as_cell left" style="width: 5.75%; text-align: left; padding-left: 10px; padding-top: 5px; border: none !important; background-color: transparent !important;">
+					<span style="color: transparent;">
+                            Analytical Account
+                        </span>
+				</div>
+				<!--## ref - label-->
+				<div class="act_as_cell amount" style="width: 13.5%; text-align: left; padding-left: 30px; padding-top: 5px; border: none !important; background-color: transparent !important;">
+					<t t-if="type == 'account_type'">Initial balance</t>
+					<t t-if="type == 'grouped_type'">
+						<t t-if="'partners' in account">Partner initial balance</t>
+						<t t-if="'taxes' in account">Tax initial balance</t>
+					</t>
+				</div>
+				<t t-set="misc_domain" t-value="[('account_id', '=', account['id']),('date', '&lt;', date_from)]"/>
+				<t t-set="misc_grouped_domain" t-value="[('partner_id', '=', account_or_group_item_object['id'])]" t-if="'partners' in account"/>
+				<t t-set="misc_grouped_domain" t-value="[]" t-else=""/>
+				
+				<!--## debit-->
+				<div class="act_as_cell amount" style="color: transparent; width: 10%; text-align: right; padding-top: 5px; border: none !important; background-color: transparent !important;">
+					<t t-set="debit_domain" t-value="[('debit', '&lt;&gt;', 0)]"/>
+					<t t-if="type == 'account_type'">
+						<span t-att-domain="misc_domain+debit_domain" res-model="account.move.line" style="color: transparent;">
+							<!-- <t t-out="'{:,.2f}'.format(account_or_group_item_object['init_bal']['debit'])"/> -->
+						</span>
+					</t>
+					<t t-if="type == 'grouped_type'">
+						<span t-att-domain="misc_domain+debit_domain+misc_grouped_domain" res-model="account.move.line" style="color: transparent;">
+							<!-- <t t-out="'{:,.2f}'.format(account_or_group_item_object['init_bal']['debit'])"/> -->
+						</span>
+					</t>
+				</div>
+
+				<!--## credit-->
+				<div class="act_as_cell amount" style="color: transparent; width: 10%; text-align: right; padding-top: 5px; border: none !important; background-color: transparent !important;">
+					<t t-set="credit_domain" t-value="[('credit', '&lt;&gt;', 0)]"/>
+					<t t-if="type == 'account_type'">
+						<span t-att-domain="misc_domain+credit_domain" res-model="account.move.line">
+							<!-- <t t-out="'{:,.2f}'.format(account_or_group_item_object['init_bal']['credit'])"/> -->
+						</span>
+					</t>
+					<t t-if="type == 'grouped_type'">
+						<span t-att-domain="misc_domain+credit_domain+misc_grouped_domain" res-model="account.move.line">
+							<!-- <t t-out="'{:,.2f}'.format(account_or_group_item_object['init_bal']['credit'])"/> -->
+						</span>
+					</t>
+				</div>
+				<!--## balance cumulated-->
+				<div class="act_as_cell amount" style="width: 10%; text-align: right; padding-top: 5px; border: none !important; background-color: transparent !important;">
+					<t t-if="type == 'account_type'">
+						<span t-att-domain="misc_domain" res-model="account.move.line">
+							<t t-out="'{:,.2f}'.format(account_or_group_item_object['init_bal']['balance'])"/>
+						</span>
+					</t>
+					<t t-if="type == 'grouped_type'">
+						<span t-att-domain="misc_domain+misc_grouped_domain" res-model="account.move.line">
+							<t t-out="'{:,.2f}'.format(account_or_group_item_object['init_bal']['balance'])"/>
+						</span>
+					</t>
+				</div>
+				<t t-if="foreign_currency">
+					<t t-if="account['currency_id']">
+						<t t-set="account_currency" t-value="currency_model.browse(account['currency_id'])"/>
+						<div class="act_as_cell amount" style="width: 5%; text-align: right; padding-top: 5px; border: none !important; background-color: transparent !important;">
+							<t t-if="type == 'account_type'">
+								<span t-att-domain="misc_domain" res-model="account.move.line">
+									<t t-out="'{:,.2f}'.format(account_or_group_item_object['init_bal']['bal_curr'])"/>
+								</span>
+							</t>
+							<t t-if="type == 'grouped_type'">
+								<span t-att-domain="misc_domain+misc_grouped_domain" res-model="account.move.line">
+									<t t-out="'{:,.2f}'.format(account_or_group_item_object['init_bal']['bal_curr'])"/>
+								</span>
+							</t>
+						</div>
+						<div class="act_as_cell amount" style="width: 5%; text-align: right; padding-top: 5px; border: none !important; background-color: transparent !important;">
+							<t t-if="type == 'account_type'">
+								<span t-att-domain="misc_domain" res-model="account.move.line">
+									<t t-out="'{:,.2f}'.format(account_or_group_item_object['init_bal']['bal_curr'])"/>
+								</span>
+							</t>
+							<t t-if="type == 'grouped_type'">
+								<span t-att-domain="misc_domain+misc_grouped_domain" res-model="account.move.line">
+									<t t-out="'{:,.2f}'.format(account_or_group_item_object['init_bal']['bal_curr'])"/>
+								</span>
+							</t>
+						</div>
+					</t>
+				</t>
+			</div>
+			<!-- Display each line -->
+			<t t-set="total_bal_curr" t-value="account_or_group_item_object['init_bal'].get('bal_curr', 0)"/>
+			<t t-foreach="account_or_group_item_object['move_lines']" t-as="line">
+				<div class="act_as_row lines" style="border: none !important; background-color: transparent !important;">
+					<!--## date-->
+					<div class="act_as_cell left" style="width: 6%; text-align: left; padding-top: 5px; border: none !important; background-color: transparent !important;">
+						<t t-if="line['id']">
+							<span t-att-res-id="line['id']" res-model="account.move.line" view-type="form">
+								<t t-esc="line['date']" t-options="{'widget': 'date'}"/>
+							</span>
+						</t>
+						<t t-else="">
+							<span>
+								<t t-esc="line['date']" t-options="{'widget': 'date'}"/>
+							</span>
+						</t>
+					</div>
+					<!--## move-->
+					<div class="act_as_cell left" style="width: 9%; text-align: left; padding-top: 5px; border: none !important; background-color: transparent !important;">
+						<t t-if="line['entry_id']">
+							<span t-att-res-id="line['entry_id']" res-model="account.move" view-type="form">
+								<t t-out="line['entry']"/>
+							</span>
+						</t>
+					</div>
+					<!-- Partner Name Column -->
+					<div class="act_as_cell left" style="width: 10.75%; text-align: left; padding-left: 20px; padding-right:20px; padding-top: 5px; border: none !important; background-color: transparent !important;">
+						<t t-if="'partner_name' in line and line['partner_name']">
+							<t t-out="line['partner_name']"/></t>
+						<t t-else="">
+							<span style="color: transparent;">
+            Partner Name
+        </span>
+						</t>
+					</div>
+					<!-- Analytical Account Column -->
+					<div class="act_as_cell left" style="width: 10.75%; text-align: left;  padding-right:20px; padding-top: 5px; border: none !important; background-color: transparent !important;">
+						<t t-if="'cost_center_name' in line and line['cost_center_name']">
+							<t t-out="line['cost_center_name']"/>
+							<t t-if="'cost_center_code' in line and line['cost_center_code']">
+            - 
+								<t t-out="line['cost_center_code']"/></t>
+						</t>
+						<t t-else="">
+							<span style="color: transparent;">
+            Analytical Account
+        </span>
+						</t>
+					</div>
+
+<div class="act_as_cell left" style="width: 3.5%; text-align: left;padding-left: 30px; padding-right:20px; padding-top: 5px; border: none !important; background-color: transparent !important;">
+						<t t-if="line['memo']">
+							<span t-att-res-id="line['id']" res-model="account.move.line" view-type="form">
+								<t t-out="line['memo']"/>
+							</span>
+						</t>
+						<t t-else="">
+							<span t-if="line['name']">
+								<t t-out="line['name']"/>
+							</span>
+							<span t-else="">
+							  <span style="color: transparent !important;">Something something</span>
+								<!-- If both name and ref are empty -->
+								<!-- Optionally, you can add a placeholder or leave it empty -->
+							</span>
+						</t>
+					</div>
+
+
+
+
+
+					
+					<!--## debit-->
+					<div class="act_as_cell amount" style="width: 10%; text-align: right; padding-top: 5px; border: none !important; background-color: transparent !important;">
+						<t t-if="line['id']">
+							<span t-att-res-id="line['id']" res-model="account.move.line" view-type="form">
+								<t t-out="'{:,.2f}'.format(line['debit'])"/>
+							</span>
+						</t>
+						<t t-else="">
+							<span>
+								<t t-out="'{:,.2f}'.format(line['debit'])"/>
+							</span>
+						</t>
+					</div>
+					<!--## credit-->
+					<div class="act_as_cell amount" style="width: 10%; text-align: right; padding-top: 5px; border: none !important; background-color: transparent !important;">
+						<t t-if="line['id']">
+							<span t-att-res-id="line['id']" res-model="account.move.line" view-type="form">
+								<t t-esc="'{:,.2f}'.format(line['credit'])"/>
+							</span>
+						</t>
+						<t t-else="">
+							<span>
+								<t t-esc="'{:,.2f}'.format(line['credit'])"/>
+							</span>
+						</t>
+					</div>
+					<!--## balance cumulated-->
+					<div class="act_as_cell amount" style="width: 10%; text-align: right; padding-top: 5px; border: none !important; background-color: transparent !important;">
+						<t t-if="line['id']">
+							<span t-att-res-id="line['id']" res-model="account.move.line" view-type="form">
+								<t t-out="'{0:,.2f}'.format(line['new_balance'])"/>
+							</span>
+						</t>
+						<t t-else="">
+							<span>
+								<t t-out="'{:,.2f}'.format(line['new_balance'])"/>
+							</span>
+						</t>
+					</div>
+					<t t-if="foreign_currency">
+						<t t-if="line['currency_id']">
+							<t t-set="line_currency" t-value="currency_model.browse(line['currency_id'][0])"/>
+							<t t-set="total_bal_curr" t-value="total_bal_curr + line['bal_curr']"/>
+							<!--## amount_currency-->
+						</t>
+					</t>
+				</div>
+			</t>
+		</div>	
+	</template>
+	<template id="account_financial_report.report_general_ledger_ending_cumul">
+		<div class="act_as_table list_table" style="width: 100%;">
+			<div class="act_as_row " style="font-weight: 600;  padding-bottom: 5px; padding-top: 5px;">
+				<t t-if="type == 'account_type'">
+					<!-- <div class="act_as_cell first_column" style="width: 20%; border-right: none !important;  text-align: left; padding-top: 5px;"><span t-esc="account['code']"/> - <span t-esc="account['name']"/></div> -->
+					<div class="act_as_cell right" style="width: 35%; border-right: none !important;text-align: left; padding-top: 5px;">
+                        Ending balance
+                    </div>
+				</t>
+				<t t-if="type == 'grouped_type'">
+					<!-- <div class="act_as_cell first_column" style="width: 20%; border-right: none !important; text-align: left; padding-top: 5px;"/> -->
+					<div class="act_as_cell right" style="width: 35%; border-right: none !important;  text-align: left; padding-top: 5px;">
+						<t t-if="'partners' in account">Partner ending balance</t>
+						<t t-if="'taxes' in account">Tax ending balance</t>
+					</div>
+				</t>
+				<!-- Analytical Account -->
+				<div class="act_as_cell left" style="color: transparent; width: 4.5%; text-align: left;padding-top: 5px; border: none !important; background-color: transparent !important;">
+                        Analytic_distribution
+                    </div>
+				<!-- Analytical Account -->
+				<div class="act_as_cell left" style="color: transparent; width: 4.5%; text-align: left;padding-top: 5px; border: none !important; background-color: transparent !important;">
+                        Analytic_distribution
+                    </div>
+				<!--## debit-->
+				<div class="act_as_cell amount" style="width: 10%; border-right: none !important;  text-align: right; padding-top: 5px; border-top: 1px solid black !important; border-bottom: 1px solid black !important;">
+					<span t-esc="'{:,.2f}'.format(account_or_group_item_object['fin_bal']['debit'] - account_or_group_item_object['init_bal']['debit'])"/>
+				</div>
+				<!--## credit-->
+				<div class="act_as_cell amount" style="width: 10%; border-right: none !important; text-align: right; padding-top: 5px; border-top: 1px solid black !important; border-bottom: 1px solid black !important;">
+					<span t-esc="'{:,.2f}'.format(account_or_group_item_object['fin_bal']['credit'] - account_or_group_item_object['init_bal']['credit'])"/>
+				</div>
+				<!--## balance cumulated-->
+				<div class="act_as_cell amount" style="width: 10%; border-right: none !important; text-align: right; padding-top: 5px; border-top: 1px solid black !important; border-bottom: 1px solid black !important;">
+					<span t-esc="'{:,.2f}'.format(account_or_group_item_object['fin_bal']['balance'])"/>
+				</div>
+			</div>
+		</div>
+	</template>
+	<template id="report_grand_totals_custom_format">
+		<t t-set="total_debit" t-value="0.0"/>
+		<t t-set="total_credit" t-value="0.0"/>
+		<t t-set="total_balance" t-value="0.0"/>
+		<t t-foreach="general_ledger" t-as="ledger">
+			<t t-set="total_debit" t-value="(total_debit or 0.0) + (ledger['fin_bal']['debit'] or 0.0) - (ledger['init_bal']['debit'] or 0.0)"/>
+			<t t-set="total_credit" t-value="(total_credit or 0.0) + (ledger['fin_bal']['credit'] or 0.0) - (ledger['init_bal']['credit'] or 0.0)"/>
+			<t t-set="total_balance" t-value="(total_balance or 0.0) + (ledger['fin_bal']['balance'] or 0.0)"/></t>
+		<div class="act_as_table list_table" style="width: 100%;padding-top: 20px !important;">
+			<div class="act_as_row" style="font-weight: 700; padding-top: 10px;">
+				<!-- <div class="act_as_cell first_column" style=" color: transparent; width: 20%; border-right: none !important; text-align: left; padding-top: 20px;">
+                        Grand Totals
+                    </div> -->
+				<div class="act_as_cell right" style="width: 35%; border-right: none !important; ; text-align: left; padding-top: 20px;">
+					<span>Grand Total</span>
+				</div>
+				<!-- Analytical Account -->
+				<div class="act_as_cell left" style="color: transparent; width: 4.5%; text-align: left;padding-top: 5px; border: none !important; background-color: transparent !important;">
+                        Analytic_distribution
+                    </div>
+				<!-- Analytical Account -->
+				<div class="act_as_cell left" style="color: transparent; width: 4.5%; text-align: left;padding-top: 5px; border: none !important; background-color: transparent !important;">
+                        Analytic_distribution
+                    </div>
+				<div class="act_as_cell amount" style="width: 10%; border-right: none !important;  text-align: right; padding-top: 20px; border-bottom: 1px solid black !important;">
+					<span t-esc="'{:,.2f}'.format(total_debit)"/>
+				</div>
+				<div class="act_as_cell amount" style="width: 10%; border-right: none !important; text-align: right; padding-top: 20px;  border-bottom: 1px solid black !important;">
+					<span t-esc="'{:,.2f}'.format(total_credit)"/>
+				</div>
+				<div class="act_as_cell amount" style="width: 10%; border-right: none !important;  text-align: right; padding-top: 20px;  border-bottom: 1px solid black !important;">
+					<span t-esc="'{:,.2f}'.format(total_balance)"/>
+				</div>
+			</div>
+		</div>
+	</template>
+</odoo>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit Vendor form -->
+    <record id="view_res_partner_inherit_scheme" model="ir.ui.view">
+        <field name="name">view.res.partner.inherit.scheme</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form[1]/sheet[1]/notebook[1]" position="inside">
+                <page string="Attestations" name="attestation_page">
+                <group name="attestation_details_page">
+                    <group name="attestation_details_page_left">
+                        <field name="attestation_rfq_id"/>
+                        <field name="attestation_po_id" />
+                        <field name="attestation_so_id" />
+                        <field name="attestation_sq_id" />
+                        <field name="attestation_si_id" />
+                    </group>
+                    <group name="attestation_details_page_right"/>
+                </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- For Tree View -->
+    <record id="view_attestation_model_tree" model="ir.ui.view">
+        <field name="name">view.attestation.model.tree</field>
+        <field name="model">attestation.model</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="attestation_type"/>
+            </tree>
+        </field>
+    </record>
+        
+    <!-- For Form View -->
+    <record id="view_attestation_model_form" model="ir.ui.view">
+        <field name="name">view.attestation.model.form</field>
+        <field name="model">attestation.model</field>
+        <field name="arch" type="xml">
+            <!-- <form js_class ="view_form_disable"> -->
+            <form >
+
+                
+               <header>
+                        <button name="action_prepared" attrs="{'invisible': [('approval_state', '!=', False)]}" string="Prepared" type="object" class="oe_highlight"/>
+                        <button name="action_approve"  attrs="{'invisible': [('approval_state', '!=', 'prepared')]}" string="Approved" type="object" class="oe_highlight"/>
+                        <button name="action_reject"  attrs="{'invisible': [('approval_state', 'not in', ['prepared','approve'])]}" string="Reject" type="object" class="oe_highlight"/>
+                        <field name="approval_state" widget="statusbar" statusbar_visible="prepared,approve" />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group name="attestation_details">
+                        <group name="attestation_section_1">
+                            <field name="doc_type"/>
+                            <field name="so_state" attrs="{'invisible': ['|', ('doc_type', '=', False),('doc_type','in',['po','sale_invoice'])]}"/>
+                            <field name="attestation_type" attrs="{'invisible': ['|', ('doc_type', '=', False),('doc_type','in',['so','sale_invoice'])]}"/>
+                        </group>
+
+                        <group name="attestation_section_2">
+                            <field name="attestation_content"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Approval Logs">    
+                            <group col='2'>
+                                <group>
+                                    <field name="prepared_by" />
+                                    <field name="prepared_timestamp"/>
+                                    <field name="Approve_by" />
+                                    <field name="approve_timestamp"/>
+                                </group>
+                                <group>
+                                    <field name="reject_note" readonly="1"/>
+                                    <field name="readonly_check" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- For Menu Items -->
+    <record id="attestation_model_action" model="ir.actions.act_window">
+        <field name="name">Attestations</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">attestation.model</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                 Create Your First Record
+            </p>
+        </field>
+    </record>
+
+    <!-- <menuitem id="attestation_model_root" name="Attestations" parent="" sequence="10" /> -->
+    <menuitem id="attestation_model_module_purchase" name="Attestations" parent="" action="attestation_model_action" sequence="9" />
+    <!-- <menuitem id="attestation_model_module_sale" name="Attestations" parent="sale.sale_order_menu" action="attestation_model_action" sequence="21" /> -->
+    <!-- purchase.menu_procurement_management -->
+</odoo>

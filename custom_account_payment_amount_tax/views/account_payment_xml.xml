@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_account_supplier_payment_tree_inherit" model="ir.ui.view">
+        <field name="name">account.payment.tree.inherit</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_supplier_payment_tree"/>
+        <field name="arch" type="xml">
+            <!-- Locate the vendor field and insert fields after it -->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="amount"/>
+                <field name="tax_amount_custom"/>
+            </xpath>
+
+            <xpath expr="//field[@name='amount_company_currency_signed']" position="attributes">
+                <attribute name="string">Net Amount</attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount']" position="attributes">
+                <attribute name="string">Gross Amount</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

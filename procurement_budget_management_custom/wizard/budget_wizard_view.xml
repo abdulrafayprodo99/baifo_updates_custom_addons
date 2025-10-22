@@ -1,0 +1,42 @@
+<odoo>
+    <!-- Form View for Budget Wizard -->
+    <record id="view_budget_wizard_form" model="ir.ui.view">
+        <field name="name">procurement.budget.wizard.form</field>
+        <field name="model">procurement.budget.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Budget Wizard">
+                <group>
+                    <field name="opex_hide" invisible="1"/>
+                    <field name="budget" />
+                    <field name="budget_type"/>
+                    <field name="date_from" attrs="{'invisible':[('opex_hide','==', True)]}"/>
+                    <field name="date_to" attrs="{'invisible':[('opex_hide','==', True)]}"/>
+                </group>
+                <footer>
+                    <button string="Print Opex Report" type="object" name="print_budget_report" class="btn-primary" attrs="{'invisible':[('opex_hide','==', True)]}"/>
+                    <button string="Print Capex Report" type="object" name="print_capex_report" class="btn-primary" attrs="{'invisible':[('opex_hide','==', False)]}"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Define the Action to open the wizard -->
+    <record id="action_budget_wizard" model="ir.actions.act_window">
+        <field name="name">Budget Report</field>
+        <field name="res_model">procurement.budget.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+
+    </record>
+
+    <!-- Define the Menu Item -->
+    <menuitem id="menu_procurement_budget_management" name="Procurement Budget Management"
+    parent="procurement_budget_management_menu_item"/>
+ 
+    <menuitem id="menu_budget_wizard" name="Budget Report"
+              parent="procurement_budget_management_menu_item"
+              action="action_budget_wizard"/>
+
+</odoo>
+ 

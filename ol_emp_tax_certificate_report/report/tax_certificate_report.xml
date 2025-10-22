@@ -1,0 +1,394 @@
+<odoo>
+    <template id="certificate_report_template">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+
+                <t t-foreach="docs" t-as="doc">
+                    <div class="page" style="padding: 20px; font-family: Arial, sans-serif; font-size: 12px; line-height: 1.6;">
+                        <!-- Title Section -->
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <h2 style="margin: 0; font-weight: bold;">
+                            Certificate of Collection or Deduction of Income Tax (including salary)
+                            </h2>
+                            <p style="margin: 0;">(Under Rule 42)</p>
+                        </div>
+
+                        <!-- Top Information -->
+                        <div style="margin-bottom: 20px; width: 100%; text-align: justify;">
+                            <span style="display: inline-block; width: 33%; text-align: left;">
+                                <t t-set="sequence" t-value="env['ir.sequence'].next_by_code('tax.certificate.seq')"/>
+                                <strong>S.No.: <t t-esc="sequence"/>
+                                </strong>
+                            </span>
+                            <span style="display: inline-block; width: 33%; text-align: center;">
+                                <strong>Original/Duplicate</strong>
+                            </span>
+                            <span style="display: inline-block; width: 33%; text-align: right;">
+                                <strong>Date of Issue: </strong>
+                                <t t-esc="datetime.date.today()"/>
+                            </span>
+                        </div>
+
+
+
+
+
+                        <!-- Certificate Body -->
+                        <div style="margin-bottom: 20px;">
+                            <t t-set="payslips" t-value="env['hr.payslip'].search([('employee_id.id', '=', doc.id),('state','=','done')])"/>
+                            <t t-set="total_income_tax" t-value="sum(payslips.mapped('line_ids').filtered(lambda line: line.name == 'Income Tax').mapped('total'))"/>
+                            <p>
+                                <span style="display: inline-block; width: 33%; text-align: left;">
+                                Certified that the sum of Rupees:
+                                </span>
+                                <span style="display: inline-block; width: 33%; text-align: center;">
+                                    <strong>
+                                        <u>
+                                            <!--<t t-set="fiscal_year_start" t-value="datetime.date(doc.company_id.compute_fiscalyear_dates(datetime.date.today())"/>-->
+                                            <!-- <t t-set="fiscal_year_end" t-value="datetime.date(doc.company_id.compute_fiscalyear_dates(datetiem.date.today())"/>-->
+
+
+
+                                            <!--</u>-->
+                                            <!--<t t-set="payslips" t-value="env['hr.payslip'].search([('employee_id.id', '=', doc.id)])"/>-->
+
+                                            <t t-esc="round(total_income_tax,2)" t-options="{'widget': 'monetary','display_currency':doc.currency_id}"/>
+                                        </u>
+                                    </strong>
+                                </span>
+                                <span style="display: inline-block; width: 33%; text-align: right;">
+                                (Amount in figures)
+                                </span>
+                            </p>
+
+                            <p>
+                                <span style="display: inline-block; width: 20%; text-align: left;">
+
+                                </span>
+                                <span style="display: inline-block; width: 45%; text-align: center;">
+                                    <strong>
+                                        <u>
+                                            <t t-esc="doc.amount_to_words(total_income_tax)"/>
+                                            <!-- Twenty One Thousand Eight Hundred And Fifty Seven Rupees -->
+                                        </u>
+                                    </strong>
+                                </span>
+                                <span style="display: inline-block; width: 33%; text-align: right;">
+                                (Amount in words)
+                                </span>
+                            </p>
+                            <p>
+                                <!--<span style="display: inline-block; width: 50%; text-align: center;">-->
+
+                                <!--</span>-->
+                                <span style="display: inline-block; width: 100%; text-align: center;">
+                                    <u>
+                                        <strong>SALARY</strong>
+                                    </u>
+                                </span>
+                            </p>
+                            <p>
+                                <span style="display: inline-block; width: 48%; text-align: LEFT;">
+                                on account of income tax has been deducted/collected from :
+        
+                                </span>
+                                <span style="display: inline-block; width: 45%; text-align: CENTER;border-bottom: 1px solid black;">
+                                    <strong>
+                                        <t t-esc="doc.name"/>
+                                    </strong>
+                                </span>
+                            </p>
+                            <p>
+                                <span style="display: inline-block; width: 48%; text-align: LEFT;">
+                                Having National Tax Number (if any):
+        
+                                </span>
+                                <span style="display: inline-block; width: 45%; text-align: CENTER;border-bottom: 1px solid black;">
+                                    <strong>
+                                        <t t-esc="doc.user_partner_id.vat"/>
+                                    </strong>
+                                </span>
+                            </p>
+                            <p>
+                                <span style="display: inline-block; width: 48%; text-align: LEFT;">
+                                Holder of CNIC No. (in case of an individual):
+        
+                                </span>
+                                <span style="display: inline-block; width: 45%; text-align: CENTER;border-bottom: 1px solid black;">
+                                    <strong>
+                                        <t t-esc="doc.identification_id"/>
+                                    </strong>
+                                </span>
+                            </p>
+                            <p>
+                                <span style="display: inline-block; width: 48%; text-align: LEFT;">
+                                On (Date of collection/deduction):
+        
+                                </span>
+                                <span style="display: inline-block; width: 45%; text-align: CENTER;border-bottom: 1px solid black;">
+                                    <strong>
+                                        <t t-esc="doc.slip_ids[0].date"/>
+                                    </strong>
+                                </span>
+                            </p>
+                            <p>
+                                <span style="display: inline-block; width: 30%; text-align: LEFT;">
+                                Or during the period
+                                </span>
+                                <span style="display: inline-block; width: 10%; text-align: center;">
+                                From:
+                                </span>
+                                <span style="display: inline-block; width: 10%; text-align: center;border-bottom: 1px solid black;">
+                                    <strong>Jul-24</strong>
+                                </span>
+                                <span style="display: inline-block; width: 5%; text-align: center;">
+                                To:
+                                </span>
+                                <span style="display: inline-block; width: 10%; text-align: center;border-bottom: 1px solid black;">
+                                    <strong>Jun-25</strong>
+                                </span>
+                            </p>
+                            <p>
+                                <span style="display: inline-block; width: 48%; text-align: LEFT;">
+                                Under Section:
+        
+                                </span>
+                                <span style="display: inline-block; width: 45%; text-align: CENTER;border-bottom: 1px solid black;">
+                                    <strong>149</strong>
+                                </span>
+                            </p>
+                            <p>
+                                <span style="display: inline-block; width: 48%; text-align: LEFT;">
+                                On account of:
+        
+                                </span>
+                                <span style="display: inline-block; width: 45%; text-align: CENTER;border-bottom: 1px solid black;">
+                                    <strong>Salary</strong>
+                                </span>
+                            </p>
+                            <p>
+                                <span style="display: inline-block; width: 48%; text-align: LEFT;">
+                                Vide (particulars of LC, Contract, etc.):
+        
+                                </span>
+                                <span style="display: inline-block; width: 45%; text-align: CENTER;border-bottom: 1px solid black;">
+                                    <strong/>
+                                </span>
+                            </p>
+                            <p>
+                                <span style="display: inline-block; width: 48%; text-align: LEFT;">
+                                On the value/amount of Rupee:
+        
+                                </span>
+                                <span style="display: inline-block; width: 45%; text-align: CENTER; border-bottom: 1px solid black;">
+                                    <t t-set="annual_gross_amount" t-value="sum(payslips.mapped('line_ids').filtered(lambda line: line.name == 'Gross').mapped('total'))"/>
+                                    <strong>
+                                        <t t-esc="round(annual_gross_amount,2)" t-options="{'widget': 'monetary','display_currency':doc.currency_id}"/>
+                                    </strong>
+                                    <strong/>
+                                </span>
+                            </p>
+
+                            <!--<p>-->
+                            <!--    Vide (particulars of LC, Contract, etc.): <strong>XXXXX</strong>-->
+                            <!--</p>-->
+                            <!--<p>-->
+                            <!--    On the value/amount of Rupee: <strong>XXXXX</strong>-->
+                            <!--</p>-->
+                        </div>
+
+                        <!-- Tax Deposit Details -->
+                        <div style="margin-bottom: 20px;">
+                            <p>
+                                <strong>
+                                This is to further certify that the tax collected/deducted has been deposited in the Federal
+                                Government Account as per the following details:
+                                </strong>
+                            </p>
+                            <table style="width: 100%; border-collapse: collapse; text-align: center;">
+                                <thead>
+                                    <tr>
+                                        <th style="padding: 5px;">Date of Deposit</th>
+                                        <th style="padding: 5px;">SBP/NBP/Treasury</th>
+                                        <th style="padding: 5px;">Branch/City</th>
+                                        <th style="padding: 5px;">Account</th>
+                                        <th style="padding: 5px;">(Rupees)</th>
+                                        <th style="padding: 5px;">Challan/Treasury No./CPR No.</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="height: 40px;">
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                    </tr>
+                                    <tr style="height: 40px;">
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                    </tr>
+                                    <tr style="height: 40px;">
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                    </tr>
+                                    <tr style="height: 40px;">
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                    </tr>
+                                    <tr style="height: 40px;">
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                        <td style="padding: 5px; border-bottom: 1px solid black;"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Company Information -->
+                        <div>
+                            <p>
+                                <strong>Company/Office Collecting/Deducting the Tax:</strong>
+                            </p>
+                            <br/>
+                            <p>
+                                <span style="display: inline-block; width: 10%; text-align: LEFT;">
+                                Name:
+        
+                                </span>
+                                <span style="display: inline-block; width: 25%; text-align: LEFT;border-bottom: 1px solid black;">
+                                    <strong>
+                                        <t t-esc="doc.company_id.name"/>
+                                    </strong>
+                                </span>
+                                <span style="display: inline-block; width: 10%; text-align: right;">
+                                Signature:
+        
+                                </span>
+                                <span style="display: inline-block; width: 20%; text-align: right; border-bottom: 1px solid black;">
+                                    <strong/>
+                                </span>
+                                <br/>
+                                <br/>
+                                <span style="display: inline-block; width: 44%; text-align: right;">
+                                Name:
+        
+                                </span>
+                                <span style="display: inline-block; width: 20%; text-align: right; border-bottom: 1px solid black;">
+                                    <strong/>
+                                </span>
+                            </p>
+                            <p>
+                                <span style="display: inline-block; width: 10%; text-align: LEFT;">
+                                ADDRESS:
+        
+                                </span>
+                                <span style="display: inline-block; width: 25%; text-align: LEFT; border-bottom: 1px solid black;">
+                                    <strong>
+                                        <t t-esc="doc.company_id.street"/>
+                                    </strong>
+                                </span>
+                                <span style="display: inline-block; width: 20%; text-align: LEFT;">
+                                    <!--Signature:-->
+
+                                </span>
+                                <span style="display: inline-block; width: 20%; text-align: LEFT;">
+                                    <!--<strong>XXXXX</strong>-->
+                                </span>
+                                <span style="display: inline-block; width: 50%; text-align: right;">
+                                DESIGNATION:
+        
+                                </span>
+                                <span style="display: inline-block; width: 20%; text-align: right;border-bottom: 1px solid black;">
+                                    <strong/>
+                                </span>
+                            </p>
+                            <p>
+                                <span style="display: inline-block; width: 10%; text-align: LEFT;">
+                                NTN:
+        
+                                </span>
+                                <span style="display: inline-block; width: 25%; text-align: CENTER;border-bottom: 1px solid black;">
+                                    <strong>
+                                        <t t-esc="doc.company_id.vat"/>
+                                    </strong>
+                                    <strong/>
+                                </span>
+                                <span style="display: inline-block; width: 9%; text-align: right;">
+                                SEAL:
+        
+                                </span>
+                                <span style="display: inline-block; width: 25%; text-align: LEFT;border-bottom: 1px solid black;">
+                                    <strong/>
+                                </span>
+                            </p>
+                            <p>
+                                <span style="display: inline-block; width: 10%; text-align: LEFT;">
+                                DATE:
+        
+                                </span>
+                                <span style="display: inline-block; width: 25%; text-align: CENTER;border-bottom: 1px solid black;">
+                                    <strong>
+                                        <t t-esc="datetime.date.today()"/>
+                                    </strong>
+                                </span>
+                            </p>
+                            <!--<span style="display: inline-block; width: 30%; text-align: LEFT;">-->
+                            <!--  DATE:-->
+
+                            <!--</span>-->
+                            <!--<span style="display: inline-block; width: 25%; text-align: LEFT;border-bottom: 1px solid black;">-->
+                            <!--      <strong>XXXXX</strong>-->
+                            <!--</span>-->
+                            <!--</p>-->
+                            <!--<table style="width: 100%; border-collapse: collapse;">-->
+                            <!--    <tr>-->
+                            <!--        <td style="width: 50%; padding: 5px; border-bottom: 1px solid black;">Name: <strong>[Company Name]</strong></td>-->
+                            <!--        <td style="width: 50%; padding: 5px; text-align: right; border-bottom: 1px solid black;">Signature: _______________________</td>-->
+                            <!--    </tr>-->
+                            <!--    <tr>-->
+                            <!--        <td style="padding: 5px; border-bottom: 1px solid black;">Address: <strong>XXXXX</strong></td>-->
+                            <!--        <td style="padding: 5px; text-align: right; border-bottom: 1px solid black;">Seal: _______________________</td>-->
+                            <!--    </tr>-->
+                            <!--    <tr>-->
+                            <!--        <td style="padding: 5px; border-bottom: 1px solid black;">Designation: <strong>XXXXX</strong></td>-->
+                            <!--        <td style="padding: 5px;"/>-->
+                            <!--    </tr>-->
+                            <!--    <tr>-->
+                            <!--        <td style="padding: 5px; border-bottom: 1px solid black;">NTN (if any): <strong>XXXXX</strong></td>-->
+                            <!--        <td style="padding: 5px;"/>-->
+                            <!--    </tr>-->
+                            <!--    <tr>-->
+                            <!--        <td style="padding: 5px; border-bottom: 1px solid black;">Date: <strong>12/08/2024</strong></td>-->
+                            <!--        <td style="padding: 5px;"/>-->
+                            <!--    </tr>-->
+                            <!--</table>-->
+
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+
+    <report id="tax_certificate_report_action" model="hr.employee" string="Tax Certificate" report_type="qweb-pdf" name="ol_emp_tax_certificate_report.certificate_report_template" file="ol_emp_tax_certificate_report.certificate_report_template" print_report_name="'Tax Certificate - %s' % (object.name)" />
+
+
+</odoo>

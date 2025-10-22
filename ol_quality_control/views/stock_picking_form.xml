@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="stock_picking_view_form_inherit_quality_check" model="ir.ui.view">
+
+        <field name="name">stock.picking.form.inherit.quality.check</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="quality_control.stock_picking_view_form_inherit_quality" />
+        <field name="arch" type="xml">
+            <data>
+                <xpath
+                    expr="//button[@name='action_open_quality_check_picking' and contains(@class, 'oe_stat_button') and not(contains(@class, 'text-success')) and not(contains(@class, 'text-danger'))]"
+                    position="attributes">
+                    <attribute name="invisible">1</attribute>
+
+                </xpath>
+                <xpath
+                    expr="//button[@name='action_open_quality_check_picking' and contains(@class, 'oe_stat_button') and contains(@class, 'text-success')]"
+                    position="attributes">
+                    <attribute name="invisible">1</attribute>
+
+                </xpath>
+                <xpath
+                    expr="//button[@name='action_open_quality_check_picking' and contains(@class, 'oe_stat_button') and contains(@class, 'text-danger')]"
+                    position="attributes">
+                    <attribute name="invisible">1</attribute>
+
+                </xpath>
+
+            </data>
+        </field>
+    </record>
+
+    <record id="stock_picking_view_form_inherit_rqi" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.rqi</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+
+            <div name="button_box" position="inside">
+                <field name="rqi_count" invisible="1" />
+                <field name="fail_count" invisible="1" />
+                <field name="pass_count" invisible="1" />
+                <field name="todo_count" invisible="1" />
+                <button
+                    name="action_open_quality_check_picking_todo"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-list"
+                    string="QC Todo"
+                    attrs="{'invisible': [('todo_count', '=', 0)]}"
+                    groups="quality.group_quality_user"
+                >
+                    <field name="todo_count" widget="statinfo" string="Qc ToDo" />
+                </button>
+
+                <button
+                    name="action_open_quality_check_picking_pass"
+                    type="object"
+                    class="oe_stat_button text-success"
+                    icon="fa-check-circle"
+                    string="QC Pass"
+                    attrs="{'invisible': [('pass_count', '=', 0)]}"
+                    groups="quality.group_quality_user"
+                >
+                    <field name="pass_count" widget="statinfo" string="Qc Pass" />
+                </button>
+
+                <button
+                    name="action_open_quality_check_picking_fail"
+                    type="object"
+                    class="oe_stat_button text-danger"
+                    icon="fa-times-circle"
+                    string="QC Fail"
+                    attrs="{'invisible': [('fail_count', '=', 0)]}"
+                    groups="quality.group_quality_user"
+                >
+                    <field name="fail_count" widget="statinfo" string="Qc Fails" />
+                </button>
+
+                <button
+                    name="action_view_rqi_records"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-exclamation-triangle"
+                    string="QIR"
+                    attrs="{'invisible': [('rqi_count', '=', 0)]}">
+                    <!-- <field name="rqi_count" widget="statinfo" string="QIR" /> -->
+                </button>
+                
+                <field name="prepare_visibility" invisible="1" />
+            </div>
+            
+            <xpath expr="//button[@name='action_toggle_is_locked']" position="replace" />
+            <xpath expr="//button[@name='button_validate']" position="after">
+                
+                <button
+                    name="check_availabilty"
+                    type="object"
+                    class="oe_stat_button"
+                    string="Check Availability"
+                    >
+                   </button>
+            </xpath>
+
+
+        </field>
+    </record>
+    <record id="stock_move_line_view_tree_inherit_rqi" model="ir.ui.view">
+        <field name="name">stock.move.line.tree.inherit.rqi</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree" />
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='reserved_uom_qty']" position="before">
+                <field name="gross_wgt" />
+            </xpath>
+        </field>
+    </record>
+    <record id="affinity_x_biafo_ext_inherit" model="ir.ui.view">
+        <field name="name">affinity.x.biafo.ext.inherit</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="prodo_x_biafo_ext.stock_picking_inherited_form_" />
+        <field name="arch" type="xml">
+
+            <!-- <xpath expr="//button[@name='action_prepare2']" position="after">
+                <field name ="checks" invisible="1"/>
+            </xpath> -->
+            <xpath expr="//button[@name='action_prepare2']" position="attributes">
+                <attribute name="attrs">
+
+                    {'invisible': 
+                    ['|',('approval_state', '!=',
+                    False),
+                    ('prepare_visibility','=',False),
+                    ]}
+
+
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

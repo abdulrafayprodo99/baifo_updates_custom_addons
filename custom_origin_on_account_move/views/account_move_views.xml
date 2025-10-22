@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Inherit the account move form partner dropdown template -->
+        <record id="view_account_move_form_inherit_partner_inherit" model="ir.ui.view">
+            <field name="name">account.move.form.partner.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="dropdown_contact.view_account_move_form_inherit_partner"/>
+            <field name="arch" type="xml">
+                <!-- Example modification: Add a custom field under partner_id field -->
+                <xpath expr="//field[@name='new_partner_id']" position="after">
+                    <field name="origin_name"/>
+                </xpath>
+
+                <!-- Example: Modify an existing section -->
+               
+            </field>
+        </record>
+    </data>
+</odoo>

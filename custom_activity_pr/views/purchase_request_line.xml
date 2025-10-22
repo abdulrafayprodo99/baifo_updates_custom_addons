@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ubaid -->
+    <record id="purchase_request_line_tree_inherit_price" model="ir.ui.view">
+    <field name="name">purchase.request.line.tree.inherit</field>
+    <field name="model">purchase.request.line</field>
+    <field name="inherit_id" ref="purchase_request.purchase_request_line_tree" />
+    <field name="arch" type="xml">
+        <field name="estimated_cost" position="after">
+            <field name="po_unit_price" />
+        </field>
+        </field>
+    </record>
+
+</odoo>

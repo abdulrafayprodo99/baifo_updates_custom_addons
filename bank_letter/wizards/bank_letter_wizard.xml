@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="view_bank_letter_wizard_form" model="ir.ui.view">
+        <field name="name">bank.letter.wizard.form</field>
+        <field name="model">bank.letter.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Bank Letter">
+                <group>
+                    <field name="bank_id" required="1" />
+                    <!-- <field name="bank_name" required="1" />
+                    <field name="account_number" required="1" /> -->
+                    <field name="payslip_ids" readonly="1" widget="many2many_tags" required="1" />
+                </group>
+                <footer>
+                    <button string="PDF Report" type="object" name="generate_pdf_report"
+                        class="btn-primary" />
+                    <button string="Excel Report" type="object" name="generate_excel_report"
+                        class="btn-secondary" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_bank_letter_wizard" model="ir.actions.act_window">
+        <field name="name">Bank Letter Wizard</field>
+        <field name="res_model">bank.letter.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_payslip_ids': active_ids}</field>
+    </record>
+</odoo>

@@ -1,0 +1,88 @@
+<odoo>
+    <data>
+        <record id="view_account_payment_form_inherit_partner" model="ir.ui.view">
+            <field name="name">account.payment.form.inherit.partner_id</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='group1']/field[3]" position="replace">
+                    <!-- <field name="partner_id" context="{'default_is_company': True}" string="Customer" 
+                           options="{'no_quick_create': True}" 
+                           domain="[('id', 'in', partner_ids)]"
+                           attrs="{'readonly': [('state', '!=', 'draft')], 
+                                   'invisible': ['|', ('partner_type', '!=', 'customer'), ('is_internal_transfer', '=', True)]}"/>
+                             -->
+                             <label for="partner_id" string="Customer" style="font-weight:bold;" attrs="{'invisible': [('payment_type', '=', 'outbound')]}"/>
+                             <label for="partner_id" string="Vendor" style="font-weight:bold;" attrs="{'invisible': [('payment_type', '=', 'inbound')]}"/>
+                            <field name="new_partner_id" options="{'no_create': True}" nolabel="1" domain="[('id', 'in', partner_ids)]"/>  
+                </xpath>
+                <xpath expr="//group[@name='group1']/field[4]" position="attributes">
+                    <attribute name="attrs">{"invisible": 1 }</attribute>
+                    <!-- <field name="partner_id" context="{'default_is_company': True}" string="Vendor" 
+                           options="{'no_quick_create': True}" 
+                           domain="[('id', 'in', vendor_domain)]"
+                           attrs="{'readonly': [('state', '!=', 'draft')], 
+                                   'invisible': ['|', ('partner_type', '!=', 'supplier'), ('is_internal_transfer', '=', True)]}"/> -->
+                </xpath>
+
+                <!-- <xpath expr="//group[@name='group1']/field[3]" position="replace">
+                    <field name="partner_id" context="{'default_is_company': True}" string="Customer" 
+                           options="{'no_quick_create': True}" 
+                           domain="get_customer_domain()"
+                           attrs="{'readonly': [('state', '!=', 'draft')], 
+                                   'invisible': ['|', ('partner_type', '!=', 'customer'), ('is_internal_transfer', '=', True)]}"/>
+                </xpath>
+                <xpath expr="//group[@name='group1']/field[4]" position="replace">
+                    <field name="partner_id" context="{'default_is_company': True}" string="Vendor" 
+                           options="{'no_quick_create': True}" 
+                           domain="get_vendor_domain()"
+                           attrs="{'readonly': [('state', '!=', 'draft')], 
+                                   'invisible': ['|', ('partner_type', '!=', 'supplier'), ('is_internal_transfer', '=', True)]}"/>
+                </xpath> -->
+                
+                <xpath expr="//group[@name='group1']/field[@name='partner_id']" position="before">
+                    <field name="customer_domain" attrs="{'invisible': True}"/>  
+                    <field name="partner_ids" attrs="{'invisible': True}"/>  
+                    <field name="new_partner_id" options="{'no_create': True}" domain="[('id', 'in', partner_ids)]" attrs="{'invisible': True}"/>  
+
+                    
+                    <field name="vendor_domain" attrs="{'invisible': True}"/>   
+                </xpath>
+                <!-- Uncomment the following block if needed -->
+                <!-- <xpath expr="//group[@name='group1']/field[5]" position="attributes">
+                    <attribute name="attrs">{"invisible": 1}</attribute>
+                </xpath> -->
+            </field>
+        </record>
+        
+
+        <record id="view_account_move_form_inherit_partner" model="ir.ui.view">
+            <field name="name">account.move.form.inherit.partner_id</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@id='header_left_group']/field[@name='partner_shipping_id']" position="replace">
+                    <!-- <field name="customer_domain" attrs="{'invisible': True}"/>   
+                    <field name="vendor_domain" attrs="{'invisible': True}"/> 
+                         -->
+                         <field name="partner_ids" attrs="{'invisible': True}"/>  
+                         <label for="partner_id" string="Customer" style="font-weight:bold;" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
+                         <label for="partner_id" string="Vendor" style="font-weight:bold;" attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
+                        <field name="new_partner_id" options="{'no_create': True}" nolabel="1"  domain="[('id', 'in', partner_ids)]" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
+                </xpath>
+                <xpath expr="//group[@id='header_left_group']/label" position="attributes">
+                    <attribute name="attrs">{"invisible": 1 }</attribute>
+                </xpath>
+                <xpath expr="//group[@id='header_left_group']/label[2]" position="attributes">
+                    <attribute name="attrs">{"invisible": 1 }</attribute>
+                </xpath>
+                <xpath expr="//group[@id='header_left_group']/field" position="attributes">
+                    <attribute name="attrs">{"invisible": 1 }</attribute>
+                    <!-- <field name="partner_id" domain="[('id', 'in', customer_domain)]" nolabel="1" context="{'default_is_company': True}" string="Customer" options="{'no_quick_create': True}"  attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}"/>
+                    <field name="partner_id" domain="[('id', 'in', vendor_domain)]"  nolabel="1" context="{'default_is_company': True}" string="Vendor" options="{'no_quick_create': True}" attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/> -->
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

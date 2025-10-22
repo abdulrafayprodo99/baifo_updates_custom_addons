@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_discipline,discipline,model_discipline,,1,1,1,1
+access_fault_category,fault_category,model_fault_category,,1,1,1,1
+access_functional_location,functional_location,model_functional_location,,1,1,1,1
+machine_history_sheet_wizard,machine_history_sheet_wizard,model_machine_history_sheet_wizard,,1,1,1,1
+machine_history_sheet_wizard_all,machine_history_sheet_wizard_all,model_machine_history_sheet_wizard_all,,1,1,1,1
+preventive_maintenance_plan_wizard,preventive_maintenance_plan_wizard,model_preventive_maintenance_plan_wizard,,1,1,1,1
+preventive_maintenance_report_wizard,preventive_maintenance_report_wizard,model_preventive_maintenance_report_wizard,,1,1,1,1

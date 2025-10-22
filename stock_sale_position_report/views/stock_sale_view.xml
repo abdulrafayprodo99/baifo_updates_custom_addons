@@ -1,0 +1,127 @@
+<odoo>
+    <data>
+        <!-- Paper Format for Stock and Sale Position Report -->
+        <record id="paperformat_stock_sale_position_custom" model="report.paperformat">
+            <field name="name">Stock and Sale Position Report Format</field>
+            <field name="format">A4</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">10</field>
+            <field name="margin_bottom">10</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+            <field name="header_line">False</field>
+            <field name="disable_shrinking">False</field>
+        </record>
+
+        <record id="action_stock_sale_position_pdf_custom" model="ir.actions.report">
+            <field name="name">Stock and Sale Position Report</field>
+            <field name="model">stock.sale.position.wizard.custom</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stock_sale_position_report.report_stock_sale_position_pdf_custom</field>
+            <field name="report_file">stock_sale_position_report.report_stock_sale_position_pdf_custom</field>
+            <field name="binding_model_id" eval="False"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="manufacturing_reports.paperformat_stock_sale_position"/>
+            <field name="print_report_name">'Stock and Sale Position Report'</field>
+        </record>
+
+        <template id="report_stock_sale_position_pdf_custom">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- Header Section -->
+                        <h3 style="text-align: center; font-size: 20px;">Biafo Industries Limited</h3>
+                        <h4 style="text-align: center; font-size: 20px;">Stock &amp; Sales Position</h4>
+        
+                        <p style="text-align: center;">
+                            <strong>From Product:</strong> [<t t-esc="report_data[0].get('product_code', '')"/>] -  <t t-esc="report_data[0].get('product_description', '')"/> | 
+                            <strong>To Product:</strong> [<t t-esc="report_data[0].get('product_code', '')"/>] - <t t-esc="report_data[0].get('product_description', '')"/> | 
+                            <!-- <strong>Period:</strong> <t t-esc="report_data[0].get('opening', {}).get('qty', '')"/> - <t t-esc="report_data[0].get('closing', {}).get('amount', '')"/> -->
+                            <strong>Period:</strong> <t t-esc="from_date"/> - <t t-esc="to_date"/>
+                        </p>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>
+                                Date: <t t-esc="time.strftime('%d/%m/%Y')"/>
+                            </span>
+                            <span style="float: right;">
+                                Time: <t t-esc="time.strftime('%H:%M:%S')"/>
+                            </span>
+                        </div>
+                        <div style="border-top: 1px solid black; padding: 5px 0; margin-top:7px;"/>
+        
+                        <div class="footer" style="font-family:Segoe UI">
+                            <div class="row" style="border:1px solid black"/>
+                            <div class="row mt-1">
+                                <div class="col-1">
+                                    <span>Odoo</span>
+                                </div>
+                                <div class="col-6" style="text-align:center">
+                                    <span>Powered By Odolution </span>
+                                </div>
+                                <div class="col-5" style="text-align:right">
+                                    <t t-set="current_time" t-value="time.strftime('%d/%m/%Y %H:%M:%S')"/>
+                                    <span t-esc="current_time"/>
+                                    <t t-if="report_type == 'pdf'">
+                                        <span style="margin-left: 15px;">Page: <span class="page"/> / <span class="topage"/></span>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <!-- Product Data Table -->
+                        <div class="page">
+                            <!-- Table Heading, This Will Be Displayed Only Once -->
+                            <table class="table table-bordered" style="border-style: hidden;">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: left; font-weight: bold; color: black; width: 5%;">S. No.</th>
+                                        <th style="text-align: left; font-weight: bold; color: black; width: 10%;">Product Code</th>
+                                        <th style="text-align: left; font-weight: bold; color: black; width: 20%;">Product Description</th>
+                                        <th style="text-align: left; font-weight: bold; color: black; width: 5%;">Unit</th>
+                                        <th style="text-align: right; font-weight: bold; color: black; width: 12%;">Opening</th>
+                                        <th style="text-align: right; font-weight: bold; color: black; width: 12%;">Production</th>
+                                        <th style="text-align: right; font-weight: bold; color: black; width: 12%;">Purchase</th>
+                                        <th style="text-align: right; font-weight: bold; color: black; width: 12%;">Sale</th> 
+                                        <th style="text-align: right; font-weight: bold; color: black; width: 12%;">Consumption</th> 
+                                        <th style="text-align: right; font-weight: bold; color: black; width: 12%;">Closing</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Loop through report_data (this will display the actual data) -->
+                                    <t t-set="counter" t-value="0"/>
+                                    <t t-foreach="report_data" t-as="product">
+                                        <t t-set="counter" t-value="counter + 1"/>
+                                               <t t-if="not (product.get('opening', {}).get('qty', 0)==0 and product.get('production', {}).get('qty', 0) == 0 and product.get('sales', {}).get('qty', 0)==0)"> 
+
+                                        
+                                        <tr>
+                                            <td style="text-align: left; border: none; width: 5%;"> <t t-esc="counter"/> </td>
+                                            <td style="text-align: left; border: none; width: 10%;"> <t t-esc="product.get('product_code', '')"/> </td>
+                                            <td style="text-align: left; border: none; width: 20%;"> <t t-esc="product.get('product_description', '')"/> </td>
+                                            <td style="text-align: left; border: none; width: 5%;"> <t t-esc="product.get('product_unit', '')"/> </td>
+                                            <td style="text-align: right; border: none; width: 12%;"> <t t-esc="'{:,.2f}'.format(product.get('opening', {}).get('qty', 0))"/> </td>
+                                            <td style="text-align: right; border: none; width: 12%;"> <t t-esc="'{:,.2f}'.format(product.get('production', {}).get('qty', 0))"/> </td>
+                                            <td style="text-align: right; border: none; width: 12%;"> <t t-esc="'{:,.2f}'.format(product.get('purchases', {}).get('qty', 0))"/> </td>
+                                            <td style="text-align: right; border: none; width: 12%;"> <t t-esc="'{:,.2f}'.format(abs(product.get('sales', {}).get('qty', 0)))"/> </td>
+                                            <td style="text-align: right; border: none; width: 12%;"> <t t-esc="'{:,.2f}'.format(product.get('consumption', {}).get('qty', 0))"/> </td>
+                                            <td style="text-align: right; border: none; width: 12%;"> 
+                                                <t t-set="closing" t-value="(product.get('opening', {}).get('qty', 0) + product.get('production', {}).get('qty', 0)) +product.get('sales', {}).get('qty', 0)"/>
+                                                <t t-esc="'{:,.2f}'.format(closing)"/> 
+                                            </td>
+                                        </tr>
+                                         </t> 
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+
+
+    </data>
+
+</odoo>

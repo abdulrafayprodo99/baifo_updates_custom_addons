@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_wht_receipt_wizard,wht.receipt.wizard,model_wht_receipt_wizard,,1,1,1,1
+access_cprm_update_wizard,cprm.update.wizard,model_cprm_update_wizard,,1,1,1,1
+access_tax_payment_report_wizard,tax.payment.report.wizard,model_tax_payment_report_wizard,,1,1,1,1
+access_payment_wht_line_report_wizard,payment.wht.line.report.wizard,model_payment_wht_line_report_wizard,,1,1,1,1
+access_payment_wht_line_report,payment.wht.line.report,model_payment_wht_line_report,,1,1,1,1

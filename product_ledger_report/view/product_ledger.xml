@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+
+    <record id="product_ledger_wizard" model="ir.ui.view">
+        <field name="name">product.ledger.report.wizard</field>
+        <field name="model">product.ledger.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Product Ledger Report">
+                <group name="filters">
+                    <group>
+                        <field name="product_filter"/>
+                        <field name="product_ids" options="{'create': false, 'create_edit': false}"
+                               widget="many2many_tags"
+                               attrs="{'invisible':[('product_filter','in',['range', 'all'])]}"/>
+                        <field name="from_product" options="{'no_create': True, 'no_create_edit':True}"
+                               attrs="{'invisible':[('product_filter','in',['manual', 'all'])]}"/>
+                        <field name="to_product" options="{'no_create': True, 'no_create_edit':True}"
+                               attrs="{'invisible':[('product_filter','in',['manual', 'all'])]}"/>
+                    </group>
+                    <group>
+                        <field name="location_filter"/>
+                        <field name="location_ids" options="{'create': false, 'create_edit': false}"
+                               widget="many2many_tags" attrs="{'invisible':[('location_filter','!=','manual')]}"/>
+                    </group>
+                    <group>
+                        <field name="date_filter"/>
+                        <field name="from_date" attrs="{'invisible':[('date_filter','!=','range')]}"/>
+                        <field name="to_date" attrs="{'invisible':[('date_filter','!=','range')]}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Print" type="object" name="get_report" class="btn-primary"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="product_action_ledger" model="ir.actions.act_window">
+        <field name="name">Product Ledger Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.ledger.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="product_ledger_wizard"/>
+        <field name="target">new</field>
+    </record>
+    <menuitem
+            id="product_ledger_menu_id"
+            name="Product Ledger Report"
+            parent="stock.menu_warehouse_report"
+            action="product_action_ledger"
+            sequence="99"/>
+    <record id="product_ledger_wizard" model="ir.ui.view">
+        <field name="name">product.ledger.report.wizard</field>
+        <field name="model">product.ledger.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Product Ledger Report">
+                <group name="filters">
+                    <group>
+                        <field name="product_filter"/>
+                        <field name="product_ids" options="{'create': false, 'create_edit': false}"
+                               widget="many2many_tags"
+                               attrs="{'invisible':[('product_filter','in',['range', 'all'])]}"/>
+                        <field name="from_product" options="{'no_create': True, 'no_create_edit':True}"
+                               attrs="{'invisible':[('product_filter','in',['manual', 'all'])]}"/>
+                        <field name="to_product" options="{'no_create': True, 'no_create_edit':True}"
+                               attrs="{'invisible':[('product_filter','in',['manual', 'all'])]}"/>
+                    </group>
+                     <group>
+                        <field name="category_filter"/>
+                        <field name="category_ids" options="{'create': false, 'create_edit': false}" widget="many2many_tags"
+                                               attrs="{'invisible':[('category_filter','!=','manual')]}"/>
+                    </group>
+                    <group>
+                        <field name="location_filter"/>
+                        <field name="location_ids" options="{'create': false, 'create_edit': false}" widget="many2many_tags"
+                            attrs="{'invisible':[('location_filter','!=','manual')]}"/>
+                    </group>
+                    <group>
+                        <field name="date_filter"/>
+                        <field name="from_date" attrs="{'invisible':[('date_filter','!=','range')]}"/>
+                        <field name="to_date" attrs="{'invisible':[('date_filter','!=','range')]}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Print PDF" type="object" name="get_report" class="btn-primary"/>
+                    <button string="Print Excel" type="object" name="download_report" class="btn-primary"/>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="product_action_ledger" model="ir.actions.act_window">
+        <field name="name">Product Ledger Report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.ledger.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="product_ledger_wizard"/>
+        <field name="target">new</field>
+    </record>
+    <menuitem
+            id="product_ledger_menu_id"
+            name="Product Ledger Report"
+            parent="stock.menu_warehouse_report"
+            action="product_action_ledger"
+            sequence="99"/>
+</odoo>

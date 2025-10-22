@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_request_form_readonly" model="ir.ui.view">
+        <field name="name">purchase.request.form.readonly</field>
+        <field name="model">purchase.request</field>
+        <field name="inherit_id" ref="prodo_x_biafo_ext.purchase_request_inherited_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='pr_type']" position="attributes">
+                <attribute name="attrs">{'readonly': [('headoffice_state', '=', 'approve')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='opex_type']" position="attributes">
+                <attribute name="attrs">{'readonly': [('headoffice_state', '=', 'approve')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='opex_sub_type']" position="attributes">
+                <attribute name="attrs">{'readonly': [('headoffice_state', '=', 'approve')]}</attribute>
+            </xpath>
+             <xpath expr="//form" position="attributes">
+                <attribute name="js_class">view_form_disable</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+  
+</odoo>

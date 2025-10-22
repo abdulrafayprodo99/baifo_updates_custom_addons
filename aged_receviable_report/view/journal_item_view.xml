@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>  
+    <record id="contact_view_inherit" model="ir.ui.view">
+        <field name="name">contact view inherit</field>
+        <field name="model">res.partner</field>
+        <field name="mode">extension</field>
+        <field name="inherit_id" ref="base.view_partner_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='display_name']" position="before">
+                <field name="new_code"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
