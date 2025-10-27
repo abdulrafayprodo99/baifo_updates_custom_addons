@@ -28,22 +28,34 @@
                                attrs="{'invisible': [('modify_action', 'not in', ('asset_transfer'))]}"/>
                         <!--                        At field-->
                         <field name="asset_name"
-                               attrs="{'invisible': [('modify_action', 'not in', ('asset_transfer'))]}"/>
+                               attrs="{'invisible': [('modify_action', 'not in', ('asset_transfer'))]}" required="1"/>
                         <field name="asset_model_id"
                                attrs="{'invisible': [('modify_action', 'not in', ('asset_transfer'))]}"
                                context="{'default_state': 'model'}"
                                options="{'no_quick_create': True}"
+                               required="1"
                         />
+                        <field name="transfer_date"
+                               attrs="{'invisible': [('modify_action', 'not in', ('asset_transfer'))]}" required="1"/>
                         <field name="fixed_asset_account"
-                               attrs="{'invisible': [('modify_action', 'not in', ('asset_transfer'))]}"/>
+                               attrs="{'invisible': [('modify_action', 'not in', ('asset_transfer'))]}" readonly="1"/>
                         <field name="dep_asset_account"
-                               attrs="{'invisible': [('modify_action', 'not in', ('asset_transfer'))]}"/>
+                               attrs="{'invisible': [('modify_action', 'not in', ('asset_transfer'))]}" readonly="1"/>
                         <field name="exp_asset_account"
-                               attrs="{'invisible': [('modify_action', 'not in', ('asset_transfer'))]}"/>
+                               attrs="{'invisible': [('modify_action', 'not in', ('asset_transfer'))]}" readonly="1"/>
+                        <field name="asset_method"
+                               attrs="{'invisible': [('modify_action', 'not in', ('asset_transfer'))]}" required="1"/>
+                        <field name="asset_progress_factor"
+                               attrs="{'invisible': [('modify_action', 'not in', ('asset_transfer'))]}"
+                               widget="percentage" required="1"/>
+                        <field name="asset_prorata_computation_type"
+                               attrs="{'invisible': [('modify_action', 'not in', ('asset_transfer'))]}" required="1"/>
+
 
                         <label for="method_number"
-                               attrs="{'invisible': [('modify_action', 'not in', ('modify', 'resume'))]}"/>
-                        <div class="o_row" attrs="{'invisible': [('modify_action', 'not in', ('modify', 'resume'))]}">
+                               attrs="{'invisible': [('modify_action', 'not in', ('modify', 'resume','asset_transfer'))]}"/>
+                        <div class="o_row"
+                             attrs="{'invisible': [('modify_action', 'not in', ('modify', 'resume','asset_transfer'))]}">
                             <field name="method_number" required="1"/>
                             <field name="method_period" required="1" nolabel="1"/>
                         </div>
