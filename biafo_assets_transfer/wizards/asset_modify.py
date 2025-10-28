@@ -160,4 +160,5 @@ class AssetModify(models.TransientModel):
         })
         self.attach_jv_to_asset(jv, account_asset)
         account_asset.validate()
-        account_asset.depreciation_move_ids = [(6, 0, jv.ids)]
+        self.asset_id.depreciation_move_ids = [(4, jv.id)]
+
