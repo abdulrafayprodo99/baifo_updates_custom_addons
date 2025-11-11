@@ -14,7 +14,7 @@
     'data':[
         # 'security/ir.model.access.csv',
         "view/_cost_field.xml",
-        "view/_contact_field_in_purchase.xml",
+        # "view/_contact_field_in_purchase.xml",
         "view/purchase_order_view_form.xml",
         ],
     # 'images': ['static/description/banner.png'],

@@ -5,7 +5,7 @@
         <field name="model">purchase.request</field>
         <field name="inherit_id" ref="purchase_request.view_purchase_request_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='group_id']" position="after">
+            <xpath expr="//sheet//group//group//field[@name='group_id']" position="after">
                 <field name="user_id_readonly" invisible='1' />
                 <field name="user_id" attrs="{'readonly':[('user_id_readonly','=',False)]}" />
               </xpath>

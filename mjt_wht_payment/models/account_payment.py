@@ -103,6 +103,7 @@ class AccountPayment(models.Model):
     is_wht_trx = fields.Boolean(string="Multiple Writeoff")
     is_pass_writeoff = fields.Boolean(string="is Pass Writeoff", help="pass write-off journal items with multi account")
     bukti_potong_ids = fields.One2many("bukti.potong.payment", 'payment_id', string="Bukti potong Line")
+    cheque_number = fields.Char(string="Cheque Number")
 
     @api.onchange('is_internal_transfer')
     def _onchange_product(self):

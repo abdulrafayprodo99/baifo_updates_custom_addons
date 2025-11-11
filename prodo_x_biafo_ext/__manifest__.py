@@ -4,8 +4,7 @@
     'category': 'Sales',
     'sequence': 1,
     'author': 'Muhammad Bilal , Hamza Khattak',
-    'depends': ['base','production_demand_plan','quality','stock','purchase_request'
-    ],
+    'depends': ['base','production_demand_plan','quality','stock','purchase_request'],
 
     'data': [
         'security/ir.model.access.csv',

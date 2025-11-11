@@ -1,6 +1,8 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 import logging
+from math import copysign
+
 
 _logger = logging.getLogger(__name__)
 
@@ -81,8 +83,7 @@ class AssetModify(models.TransientModel):
 
     def attach_jv_to_asset(self, jv, account_asset):
         last_dep_debit = jv.line_ids.filtered(
-            lambda line_item: line_item.account_id.id == self.fixed_asset_account.id and
-                              line_item.debit == self.current_value
+            lambda line_item: line_item.account_id.id == self.fixed_asset_account.id
         )
         account_asset.write({
             'original_move_line_ids': [(6, 0, last_dep_debit.ids)]
@@ -140,12 +141,21 @@ class AssetModify(models.TransientModel):
         ]
 
         # Step 3: Attach Lines to Move
-        journal_entry.write({'line_ids': lines})
+        journal_entry.write({'line_ids': lines,
+            'depreciation_value': self.current_value,
+            'asset_remaining_value': 0.0,
+                             })
+        # jv.write({
+        #     # 'asset_original_value': self.asset_id.original_value,
+        #     'depreciation_value': self.current_value,
+        #     'asset_remaining_value': 0.0,
+        # })
         journal_entry.action_post()
         return journal_entry
 
     def validate_asset_transfer(self):
-        jv = self.create_jv()
+        asset_jv = self.transfer_asset()
+        # jv = self.create_jv()
         account_asset = self.env['account.asset'].create({
             'name': self.asset_name,
             'original_value': self.current_value,
@@ -156,9 +166,20 @@ class AssetModify(models.TransientModel):
             'method': self.asset_method,
             'method_progress_factor': self.asset_progress_factor,
             'prorata_computation_type': self.asset_prorata_computation_type,
-            'method_number': self.method_number
+            'method_number': self.method_number,
         })
-        self.attach_jv_to_asset(jv, account_asset)
+        jv = self.env['account.move'].browse(asset_jv[1])
+
+        self.attach_jv_to_asset(jv,account_asset)
+
         account_asset.validate()
-        self.asset_id.depreciation_move_ids = [(4, jv.id)]
+
+    def transfer_asset(self):
+        self.ensure_one()
+        if self.gain_account_id == self.asset_id.account_depreciation_id or self.loss_account_id == self.asset_id.account_depreciation_id:
+            raise UserError(_("You cannot select the same account as the Depreciation Account"))
+        invoice_lines = self.env['account.move.line'] if self.modify_action == 'dispose' else self.invoice_line_ids
+
+        return self.asset_id._get_transfer_moves([invoice_lines], self.transfer_date,self.fixed_asset_account,self.dep_asset_account,self.asset_name)
+
 

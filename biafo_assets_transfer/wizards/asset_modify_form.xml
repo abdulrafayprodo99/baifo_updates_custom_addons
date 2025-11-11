@@ -36,7 +36,7 @@
                                required="1"
                         />
                         <field name="transfer_date"
-                               attrs="{'invisible': [('modify_action', 'not in', ('asset_transfer'))]}" required="1"/>
+                               attrs="{'invisible': [('modify_action', 'not in', ('asset_transfer'))]}"/>
                         <field name="fixed_asset_account"
                                attrs="{'invisible': [('modify_action', 'not in', ('asset_transfer'))]}" readonly="1"/>
                         <field name="dep_asset_account"
